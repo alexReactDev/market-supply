@@ -1,0 +1,28 @@
+{
+  "name": "market-supply-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Api for market supply app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start-dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "js",
+    "api",
+    "rest",
+    "api",
+    "express"
+  ],
+  "author": "Alex",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

@@ -2,6 +2,7 @@
   "name": "market-supply",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:4500/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.2",
     "@testing-library/jest-dom": "^5.16.2",
@@ -21,7 +22,9 @@
     "typescript": "^4.5.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"nodemon ./api/index.js\" \"react-scripts start\"",
+    "start-api": "nodemon ./api/index.js",
+    "start-client": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -45,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^7.0.0",
     "node-sass": "^7.0.1"
   }
 }
