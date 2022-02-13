@@ -1,0 +1,28 @@
+@import '../../styles/variables.scss';
+
+.links {
+	display: flex;
+	margin: 0px -20px;
+}
+
+.links__link {
+	position: relative;
+	padding: 0px 20px;
+	list-style: none;
+	color: $fontCLight;
+
+	&::after {
+		content: '';
+		display: block;
+		width: 2px;
+		height: 100%;
+		position: absolute;
+		right: 0px;
+		top: 0px;
+		background-color: $fontCLight;
+	}
+
+	&:last-child::after {
+		display: none;
+	}
+}
