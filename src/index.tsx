@@ -1,8 +1,11 @@
 import { render } from 'react-dom';
-import setupStore from './redux';
-import history from './history';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
+import setupStore from './redux';
+import history from './history';
+import App from './components/App';
+
+import './styles/index.scss';
 
 const store = setupStore();
 

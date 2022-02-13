@@ -1,0 +1,12 @@
+.wrapper {
+	display: flex;
+	flex-direction: column;
+}
+
+.wrapper__body {
+	flex: 1 1 auto;
+}
+
+.wrapper__basement {
+	flex-shrink: 0;
+}
