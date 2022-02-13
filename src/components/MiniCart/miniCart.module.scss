@@ -1,0 +1,32 @@
+@import '../../styles/variables.scss';
+
+.cart {
+	display: flex;
+}
+
+.cart__picture {
+	width: 40px;	
+	height: 40px;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: $red;
+
+	img {
+		margin-left: -3px;
+	}
+}
+
+.cart__body {
+	padding-left: 4px;
+}
+
+.cart__title, .cart__total {
+	color: $fontCLight;
+}
+
+.cart__title {
+	margin-bottom: 3px;
+	padding-left: 3.5px;
+}
