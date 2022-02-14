@@ -1,4 +1,5 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
+import Burger from "../Burger";
 import Links from "../Links";
 import Logo from "../Logo";
 import MiniCart from "../MiniCart";
@@ -7,6 +8,18 @@ import TopNav from "../TopNav";
 import style from './header.module.scss';
 
 const Header: FC<{}> = () => {
+
+	const [menuOpen, setState] = useState(true);
+
+	const [adaptive, setAdaptive] = useState(document.documentElement.clientWidth > 1024 ? false : true);
+
+	useEffect(() => {
+		const resizeHandler = () => setAdaptive(document.documentElement.clientWidth > 1024 ? false : true);
+
+		window.addEventListener('resize', resizeHandler);
+
+		return () => window.removeEventListener('resize', resizeHandler);
+	})
 
 	const headerLinks = [
 		{
@@ -36,16 +49,31 @@ const Header: FC<{}> = () => {
 			<div className="content">
 				<div className={style.header__body}>
 					<Logo className={style.header__logo} />
-					<div className={style.header__content}>
+					<Burger className={style.header__burger} active={menuOpen} onClick={() => setState(!menuOpen)} />
+					<div className={`${style.header__content} ${menuOpen ? style.header__content_active : ""}`}>
 						<Links className={style.header__links} links={headerLinks} />
 						<div className={style.header__items}>
 							<Search className={style.header__search} />
 							<MiniCart className={style.header__cart} />
 						</div>
+						{
+							adaptive
+							?
+							<TopNav className={`${style.header__nav} ${menuOpen ? style.header__nav_active : ""}`} />
+							:
+							null
+						}
 					</div>
 				</div>
 			</div>
-			<TopNav />
+			{
+				adaptive
+				?
+				null
+				:
+				<TopNav className={style.header__nav} />
+			}
+			
 		</div>
 	)
 }

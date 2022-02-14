@@ -26,3 +26,13 @@
 		display: none;
 	}
 }
+
+@media(max-width: $md2) {
+	.links {
+		flex-wrap: wrap;
+	}
+
+	.links__link {
+		padding: 5px 20px;
+	}
+}

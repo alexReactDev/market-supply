@@ -29,3 +29,9 @@
 	border: none;
 	padding: 12px 25px;
 }
+
+@media(max-width: $md4) {
+	.search__input {
+		padding: 8px 15px;
+	}
+}
