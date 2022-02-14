@@ -1,0 +1,56 @@
+@import '../../styles/variables.scss';
+
+.burger {
+	position: relative;
+	width: 30px;
+	height: 24px;
+}
+
+.burger::before, .burger::after, .burger__stripe {
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 2px;
+	background-color: $white;
+}
+
+.burger::before, .burger::after {
+	content: '';
+}
+
+.burger::before {
+	top: 0px;
+}
+
+.burger__stripe {
+	top: calc(50% - 1px);
+}
+
+.burger::after {
+	bottom: 0px;
+}
+
+.burger_active {
+	.burger__stripe {
+		display: none;
+	}
+
+	&::before, &::after {
+		top: calc(50% - 1px);
+	}
+
+	&::before {
+		transform: rotate(-45deg);
+	}
+
+	&::after {
+		transform: rotate(45deg);
+	}
+}
+
+@media (max-width: $md4) {
+	.burger {
+		width: 24px;
+		height: 20px;
+	}
+}
