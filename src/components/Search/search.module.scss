@@ -1,0 +1,30 @@
+@import '../../styles/variables.scss';
+
+.search {
+	display: inline-flex;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.search__controls {
+	width: 50px;
+	display: flex;
+}
+
+.search__button {
+	flex: 1;
+	border: none;
+	background: url('../../images/icons/search.png') center no-repeat;
+	background-color: $red;
+}
+
+.search__field {
+	display: flex;
+}
+
+.search__input {
+	flex: 1;
+	box-sizing: border-box;
+	border: none;
+	padding: 12px 25px;
+}
