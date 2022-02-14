@@ -1,0 +1,37 @@
+@import '../../styles/variables.scss';
+
+.header {
+	background-color: $lightblack;
+}
+
+.header__body {
+	display: flex;
+	justify-content: space-between;
+}
+
+.header__logo {
+	display: flex;
+	align-items: center;
+}
+
+.header__content {
+	flex-basis: 60%;
+}
+
+.header__links {
+	margin: 20px -20px;
+	justify-content: flex-end;
+}
+
+.header__items {
+	display: flex;
+	margin-bottom: 20px;
+}
+
+.header__search {
+	flex: 1;
+}
+
+.header__cart {
+	margin: 0px 15px 0px 40px;
+}
