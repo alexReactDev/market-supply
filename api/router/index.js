@@ -7,16 +7,40 @@ router.get("/categories/:category", (req, res, next) => {
 
 	const reqCategory = req.params.category;
 	const page = +req.query.page || 1;
+	const sort = req.query.sort || "default";
 
 	if(fixtures.categories[reqCategory]) {
-		const category = fixtures.categories[reqCategory];
+		const initialCategory = fixtures.categories[reqCategory];
+		const products = fixtures.products;
+		let category;
+
+		switch(sort) {
+			case "low-price":
+				category = initialCategory.concat().sort((a, b) => products[a].price - products[b].price);
+			break;
+			case "high-price":
+				category = initialCategory.concat().sort((a, b) => products[b].price - products[a].price);
+			break;
+			case "low-rate":
+				category = initialCategory.concat().sort((a, b) => products[a].rate - products[b].rate);
+			break;
+			case "high-rate":
+				category = initialCategory.concat().sort((a, b) => products[b].rate - products[a].rate);
+			break;
+			default:
+				category = initialCategory;
+		}
+		
 		const pageLength = process.env.PAGE_LENGTH;
 		const totalPages = Math.ceil(category.length / pageLength);
 		const data = category.slice(pageLength * page - pageLength, pageLength * page);
 
+		console.log(data);
+
 		res.send({
 			page,
 			totalPages,
+			sort,
 			data,
 		});
 	}
