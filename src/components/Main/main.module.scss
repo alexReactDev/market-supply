@@ -1,0 +1,17 @@
+.main__body {
+	display: flex;
+}
+
+.main__aside, .main__body {
+	box-sizing: border-box;
+}
+
+.main__aside {
+	flex-basis: 27%;
+	padding-right: 20px;
+}
+
+.main__content {
+	flex-basis: 73%;
+	padding-left: 20px;
+}
