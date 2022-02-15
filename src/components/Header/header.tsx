@@ -9,7 +9,7 @@ import style from './header.module.scss';
 
 const Header: FC<{}> = () => {
 
-	const [menuOpen, setState] = useState(true);
+	const [menuOpen, setState] = useState(false);
 
 	const [adaptive, setAdaptive] = useState(document.documentElement.clientWidth > 1024 ? false : true);
 

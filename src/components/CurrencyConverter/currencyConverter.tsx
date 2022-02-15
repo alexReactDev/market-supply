@@ -5,7 +5,6 @@ interface IProps {
 }
 
 const CurrencyConverter: FC<IProps> = ({ value }) => {
-	console.log(value);
 	return(
 		<>
 		{`$ ${value.toFixed(2)}`}
