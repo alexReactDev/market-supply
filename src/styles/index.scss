@@ -4,6 +4,11 @@
 
 body {
 	font-family: $defFont;
+	background-color: $bgColor;
+}
+
+#root {
+	height: 100%;
 }
 
 .content {
