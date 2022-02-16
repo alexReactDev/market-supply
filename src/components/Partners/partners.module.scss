@@ -1,0 +1,38 @@
+@import '../../styles/variables.scss';
+
+.partners {
+	background-color: $red;
+}
+
+.partners__list {
+	margin: 0px -40px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.partners__partner {
+	margin: 40px 40px;
+	list-style: none;
+}
+
+.partners__img {
+	max-width: 100%;
+}
+
+@media(max-width: $md1) {
+	.partners__list {
+		margin: 0px -60px;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	.partners__partner {
+		margin: 40px 60px;
+	}
+}
+
+@media(max-width: $md4) {
+	.partners__partner {
+		margin: 15px 40px;
+	}
+}
