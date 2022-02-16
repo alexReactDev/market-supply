@@ -39,7 +39,7 @@
 
 .header__burger {
 	display: none;
-	z-index: 10;
+	z-index: 100;
 	align-self: center;
 }
 
@@ -57,6 +57,7 @@
 
 		&_active {
 			position: fixed;
+			z-index: 99;
 			top: 0px;
 			left: 0px;
 			width: 100%;

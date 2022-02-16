@@ -21,6 +21,11 @@ const Header: FC<{}> = () => {
 		return () => window.removeEventListener('resize', resizeHandler);
 	})
 
+	useEffect(() => {
+		if(menuOpen) document.body.style.overflowY = 'hidden';
+		else document.body.style.overflowY = "auto";
+	})
+
 	const headerLinks = [
 		{
 			link: '/account',

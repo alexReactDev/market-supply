@@ -5,6 +5,7 @@
 body {
 	font-family: $defFont;
 	background-color: $bgColor;
+	overflow-x: hidden;
 }
 
 #root {
