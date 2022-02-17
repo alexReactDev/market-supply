@@ -1,7 +1,25 @@
 const express = require("express");
-const fixtures = require("../fixtures2.json");
+const fixtures = require("../fixtures3.json");
 
 const router = new express.Router();
+
+router.get("/categories", (req, res) => {
+
+	const initialCategories = fixtures.categories;
+	const categories = [];
+
+	for (let cat in initialCategories) {
+		const { URLName, name, isPublic } = initialCategories[cat];
+
+		categories.push({
+			URLName,
+			name,
+			isPublic
+		})
+	}
+
+	res.send(categories);
+})
 
 router.get("/categories/:category", (req, res, next) => {
 
@@ -9,43 +27,44 @@ router.get("/categories/:category", (req, res, next) => {
 	const page = +req.query.page || 1;
 	const sort = req.query.sort || "default";
 
-	if(fixtures.categories[reqCategory]) {
-		const initialCategory = fixtures.categories[reqCategory];
-		const products = fixtures.products;
-		let category;
+	if(!fixtures.categories[reqCategory]) next();
 
-		switch(sort) {
-			case "low-price":
-				category = initialCategory.concat().sort((a, b) => products[a].price - products[b].price);
-			break;
-			case "high-price":
-				category = initialCategory.concat().sort((a, b) => products[b].price - products[a].price);
-			break;
-			case "low-rate":
-				category = initialCategory.concat().sort((a, b) => products[a].rate - products[b].rate);
-			break;
-			case "high-rate":
-				category = initialCategory.concat().sort((a, b) => products[b].rate - products[a].rate);
-			break;
-			default:
-				category = initialCategory;
-		}
-		
-		const pageLength = process.env.PAGE_LENGTH;
-		const totalPages = Math.ceil(category.length / pageLength);
-		const data = category.slice(pageLength * page - pageLength, pageLength * page);
+	const category = fixtures.categories[reqCategory];
+	const initialCategoryProducts = category.products;
+	const products = fixtures.products;
+	let categoryProducts;
 
-		console.log(data);
-
-		res.send({
-			page,
-			totalPages,
-			sort,
-			data,
-		});
+	switch(sort) {
+		case "low-price":
+			categoryProducts = initialCategoryProducts.concat().sort((a, b) => products[a].price - products[b].price);
+		break;
+		case "high-price":
+			categoryProducts = initialCategoryProducts.concat().sort((a, b) => products[b].price - products[a].price);
+		break;
+		case "low-rate":
+			categoryProducts = initialCategoryProducts.concat().sort((a, b) => products[a].rate - products[b].rate);
+		break;
+		case "high-rate":
+			categoryProducts = initialCategoryProducts.concat().sort((a, b) => products[b].rate - products[a].rate);
+		break;
+		case "alphabet":
+			categoryProducts = initialCategoryProducts.concat().sort((a, b) => products[a].name.localeCompare(products[b].name, "en", {sensitivity: "accent"}));
+		break;
+		default:
+			categoryProducts = initialCategoryProducts;
 	}
+	
+	const pageLength = process.env.PAGE_LENGTH;
+	const totalPages = Math.ceil(categoryProducts.length / pageLength);
+	const data = categoryProducts.slice(pageLength * page - pageLength, pageLength * page);
 
-	next();
+	res.send({
+		page,
+		totalPages,
+		sort,
+		data,
+	});
+
 });
 
 router.get("/product/:id", (req, res, next) => {
