@@ -5,12 +5,14 @@ import history from "../../history";
 import cart from "./cart";
 import currency from "./currency";
 import categories from "./categories";
+import initialized from "./initialized";
 
 const rootReducer = combineReducers({
 	router: connectRouter(history),
 	cart,
 	currency,
-	categories
+	categories,
+	initialized,
 })
 
 export default rootReducer;
