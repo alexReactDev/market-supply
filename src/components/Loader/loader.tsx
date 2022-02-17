@@ -1,5 +1,6 @@
 import { FC } from "react"
 import style from "./loader.module.scss";
+import loader from "../../images/loader/loader.gif";
 
 interface IState {
 	className?: string
@@ -8,7 +9,7 @@ interface IState {
 const Loader: FC<IState> = ({ className="" }) => {
 	return(
 		<div className={`${className} ${style.loader}`}>
-			<div className={`spinner-grow ${style.loader__spinner}`} />
+			<img className={style.loader__spinner} src={loader} alt="Loading..." />
 		</div>
 	)
 }
