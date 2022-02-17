@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { INIT } from "../../constants";
+import { TInitAction } from "../actions";
 
 interface ICategory {
 	page: number,
@@ -6,94 +8,22 @@ interface ICategory {
 	done: boolean,
 	loading: boolean,
 	products: string[],
-	error: Error | null
+	error: Error | null,
+	name: string,
+	isPublic: boolean
 }
 
 interface IState {
 	[key: string]: ICategory
 }
 
-const initialState: IState = {
-	["clothing"]: {
-		page: 1,
-		sort: 'default',
-		done: false,
-		loading: false,
-		products: [],
-		error: null
-	},
-	["electronics"]: {
-		page: 1,
-		sort: 'default',
-		done: false,
-		loading: false,
-		products: [],
-		error: null
-	},
-	["shoes"]: {
-		page: 1,
-		sort: 'default',
-		done: false,
-		loading: false,
-		products: [],
-		error: null
-	},
-	["watches"]: {
-		page: 1,
-		sort: 'default',
-		done: false,
-		loading: false,
-		products: [],
-		error: null
-	},
-	["jewellery"]: {
-		page: 1,
-		sort: 'default',
-		done: false,
-		loading: false,
-		products: [],
-		error: null
-	},
-	["health-and-beauty"]: {
-		page: 1,
-		sort: 'default',
-		done: false,
-		loading: false,
-		products: [],
-		error: null
-	},
-	["kids-and-babies"]: {
-		page: 1,
-		sort: 'default',
-		done: false,
-		loading: false,
-		products: [],
-		error: null
-	},
-	["sports"]: {
-		page: 1,
-		sort: 'default',
-		done: false,
-		loading: false,
-		products: [],
-		error: null
-	},
-	["home-and-garden"]: {
-		page: 1,
-		sort: 'default',
-		done: false,
-		loading: false,
-		products: [],
-		error: null
-	},
-}
-
+const initialState: IState = {}
 interface ICategoryAction {
 	category: string
 }
 
 interface ICategoryLoadedAction extends ICategoryAction {
-	data: Omit<ICategory, "loading">
+	data: Omit<ICategory, "loading" | "isPublic" | "name" | "error">
 }
 
 interface ICategoryErrorAction extends ICategoryAction {
@@ -105,31 +35,53 @@ const categoriesSlice = createSlice({
 	initialState,
 	reducers: {
 		categoryLoadStart(state, action: PayloadAction<ICategoryAction>) {
-			const { payload: { category } } = action;
+			const { category } = action.payload;
 
 			state[category].loading = true;
 		},
 		categoryLoadError(state, action: PayloadAction<ICategoryErrorAction>) {
-			const { payload: { category, error } } = action;
+			const { category, error } = action.payload;
 
 			state[category].loading = false;
 			state[category].error = error;
 		},
 		categoryLoaded(state, action: PayloadAction<ICategoryLoadedAction>) {
-			const { payload: { category, data }} = action;
+			const { category, data } = action.payload;
 
 			state[category] = {
+				...state[category],
 				...data,
 				loading: false,
 				products: [
-					...state[category].products,
+					...data.sort === state[category].sort ? state[category].products : [],
 					...data.products
 				]
 			}
 		},
+	},
+	extraReducers: {
+		[INIT](state, action: TInitAction) {
+			const categories = action.payload.categories;
+
+			categories.forEach((cat) => {
+				state[cat.URLName] = {
+					page: 1,
+					sort: "default",
+					done: false,
+					loading: false,
+					products: [],
+					error: null,
+					name: cat.name,
+					isPublic: cat.isPublic
+				}
+			})
+		}
 	}
 })
 
 export default categoriesSlice.reducer;
 
 export const { categoryLoadStart, categoryLoadError, categoryLoaded } = categoriesSlice.actions;
+
+
+console.log(categoryLoadStart);
