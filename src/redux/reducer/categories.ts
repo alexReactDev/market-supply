@@ -44,6 +44,7 @@ const categoriesSlice = createSlice({
 
 			state[category].loading = false;
 			state[category].error = error;
+			state[category].page = 0;
 		},
 		categoryLoaded(state, action: PayloadAction<ICategoryLoadedAction>) {
 			const { category, data } = action.payload;
@@ -52,6 +53,7 @@ const categoriesSlice = createSlice({
 				...state[category],
 				...data,
 				loading: false,
+				error: null,
 				products: [
 					...data.sort === state[category].sort ? state[category].products : [],
 					...data.products
@@ -65,7 +67,7 @@ const categoriesSlice = createSlice({
 
 			categories.forEach((cat) => {
 				state[cat.URLName] = {
-					page: 1,
+					page: 0,
 					sort: "default",
 					done: false,
 					loading: false,
