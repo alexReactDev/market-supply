@@ -5,7 +5,6 @@ import setupStore from './redux';
 import history from './history';
 import App from './components/App';
 
-import 'bootstrap/dist/css/bootstrap.css';
 import './styles/index.scss';
 
 const store = setupStore();
