@@ -3,6 +3,7 @@ import { AppDispatch, AppState } from ".";
 import { INIT } from "../constants";
 import axios from "axios";
 import { categoryLoaded, categoryLoadError, categoryLoadStart } from "./reducer/categories";
+import { productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 
 export interface IInitData {
 	categories: [{
@@ -40,26 +41,17 @@ interface ICategoryData {
 	data: string[]
 }
 
-export const loadCategoryData = (categoryName: string, newSort?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const loadCategoryDataWithProducts = (categoryName: string, newSort?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	dispatch(categoryLoadStart({category: categoryName}));
 
 	const state = getState();
 	const category = state.categories[categoryName];
 	const catSort = newSort || category.sort;
 
-	try {
-		const categoryData: ICategoryData =  (await axios.get(`/api/categories/${categoryName}?page=${catSort === category.sort ? category.page + 1 : 1}&sort=${catSort}`)).data;
-		const { page, totalPages, sort, data } = categoryData;
+	let categoryData: ICategoryData;
 
-		dispatch(categoryLoaded({
-			category: categoryName,
-			data: {
-				done: page === totalPages,
-				products: data,
-				page,
-				sort,
-			}
-		}))
+	try {
+		categoryData =  (await axios.get(`/api/categories/${categoryName}?page=${catSort === category.sort ? category.page + 1 : 1}&sort=${catSort}`)).data;
 	}
 	catch(e) {
 		console.log(e);
@@ -68,5 +60,39 @@ export const loadCategoryData = (categoryName: string, newSort?: string) => asyn
 			category: categoryName,
 			error: e as Error
 		}))
+
+		return;
 	}
+
+	const { page, totalPages, sort, data } = categoryData;
+
+	dispatch(productsLoadStart(data));
+
+	const rawProducts = await Promise.allSettled(data.map((productId) => axios.get(`/api/product/${productId}`)));
+
+	const products = rawProducts.map((product, index) => {
+		if(product.status === "rejected") return ({
+			id: data[index],
+			error: product.reason
+		})
+		else return ({
+			...product.value.data
+		})
+	})
+
+	const rejectedProducts = products.filter((product) => product.error);
+	if(rejectedProducts.length > 0) dispatch(productsLoadError(rejectedProducts));
+
+	const loadedProducts = products.filter((product) => !product.error);
+	if(loadedProducts.length > 0) dispatch(productsLoaded(loadedProducts));
+
+	dispatch(categoryLoaded({
+		category: categoryName,
+		data: {
+			done: page === totalPages,
+			products: data,
+			page,
+			sort,
+		}
+	}))
 }

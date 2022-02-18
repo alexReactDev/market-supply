@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { loadCategoryData } from "../../redux/actions";
+import { loadCategoryDataWithProducts } from "../../redux/actions";
 import { categories as categoriesSelector, URLPathEnd } from "../../redux/selectors";
 import Loader from "../Loader";
 import Product from "../Product";
@@ -18,7 +18,7 @@ const Categories: FC<{}> = () => {
 			categories[categoryName] &&
 			categories[categoryName].page === 0
 		) {
-			dispatch(loadCategoryData(categoryName));
+			dispatch(loadCategoryDataWithProducts(categoryName));
 		}
 	}, [categoryName])
 	
@@ -27,7 +27,7 @@ const Categories: FC<{}> = () => {
 	const { name, sort, done, loading, products, error } = categories[categoryName];
 
 	const changeSort = (newSort: string) => {
-		dispatch(loadCategoryData(categoryName, newSort));
+		dispatch(loadCategoryDataWithProducts(categoryName, newSort));
 	}
 
 	if(error) return(
@@ -136,7 +136,7 @@ const Categories: FC<{}> = () => {
 						type="button"
 						className={`btn ${style.category__button}`}
 						value="Load more"
-						onClick={() => dispatch(loadCategoryData(categoryName))}
+						onClick={() => dispatch(loadCategoryDataWithProducts(categoryName))}
 					/>
 				</div>
 				:
