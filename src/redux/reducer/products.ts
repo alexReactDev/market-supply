@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface IProduct {
+export interface IProduct {
 	id: string,
 	webId: number,
 	name: string,
@@ -14,17 +14,17 @@ interface IProduct {
 	error: Error | null
 }
 
-interface IProductLoading {
+export interface IProductLoading {
 	id: string,
 	loading: true
 }
 
-interface IProductError extends Partial<IProduct> {
+export interface IProductError extends Partial<IProduct> {
 	id: string,
 	error: Error
 }
 
-interface IState {
+export interface IState {
 	[key: string]: IProduct | IProductLoading | IProductError
 }
 

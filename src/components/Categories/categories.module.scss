@@ -2,6 +2,7 @@
 
 .category {
 	margin: 30px 0px;
+	box-shadow: 0px 0px 5px 0px rgb(219, 219, 219);
 	background-color: $white;
 }
 
@@ -70,16 +71,17 @@
 
 .category__item {
 	flex: 1 1 25%;
-	margin-bottom: 25px;
+	box-sizing: border-box;
+	margin-bottom: 30px;
+	padding: 0px 13px;
 	list-style: none;
 	display: flex;
 	justify-content: center;
 }
 
 .category__product {
-	max-width: 100%;
+	width: 100%;
 	box-sizing: border-box;
-	margin: 0px 13px;
 }
 
 .category__buttonField {
@@ -109,6 +111,10 @@
 	.category__selectSortOptions {
 		display: block;
 	}
+
+	.category__item {
+		flex-basis: 33.333%;
+	}
 }
 
 @media(max-width: $md3) {
@@ -130,6 +136,10 @@
 
 	.category__itemsList {
 		padding: 0px 10px;
+	}
+
+	.category__item {
+		flex-basis: 50%;
 	}
 
 	.category__product {
@@ -159,6 +169,7 @@
 	}
 
 	.category__item {
+		flex-basis: 100%;
 		margin-bottom: 15px;
 	}
 }
