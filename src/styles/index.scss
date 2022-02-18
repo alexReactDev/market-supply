@@ -22,3 +22,15 @@ body {
 	text-decoration: none;
 	color: inherit;
 }
+
+.text-center {
+	text-align: center;
+}
+
+.btn {
+	border: none;
+	border-radius: 15px;
+	background-color: $faintRed;
+	color: $fontCLight;
+	font-weight: bold;
+}

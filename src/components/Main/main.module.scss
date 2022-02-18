@@ -1,3 +1,5 @@
+@import "../../styles/variables.scss";
+
 .main__body {
 	display: flex;
 }
@@ -7,11 +9,21 @@
 }
 
 .main__aside {
-	flex-basis: 27%;
+	flex: 1 1 27%;
 	padding-right: 20px;
 }
 
 .main__content {
-	flex-basis: 73%;
+	flex: 1 1 73%;
 	padding-left: 20px;
+}
+
+@media(max-width: $md1) {
+	.main__aside {
+		display: none;
+	}
+
+	.main__content {
+		padding-left: 0px;
+	}
 }
