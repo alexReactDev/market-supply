@@ -1,0 +1,20 @@
+@import "../../styles/variables.scss";
+
+.price {
+	display: flex;
+	justify-content: center;
+	font-size: $defaultFz;
+}
+
+.price__oldValue, .price__value {
+	padding: 0px 8px;
+}
+
+.price__oldValue {
+	color: $grey;
+	text-decoration: line-through;
+}
+
+.price__value {
+	color: $black;
+}
