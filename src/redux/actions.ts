@@ -66,25 +66,29 @@ export const loadCategoryDataWithProducts = (categoryName: string, newSort?: str
 
 	const { page, totalPages, sort, data } = categoryData;
 
-	dispatch(productsLoadStart(data));
+	const nonExistingProducts = data.filter((productId) => !state.products[productId]);
 
-	const rawProducts = await Promise.allSettled(data.map((productId) => axios.get(`/api/product/${productId}`)));
+	if(nonExistingProducts.length > 0) {
+		dispatch(productsLoadStart(nonExistingProducts));
 
-	const products = rawProducts.map((product, index) => {
-		if(product.status === "rejected") return ({
-			id: data[index],
-			error: product.reason
+		const rawProducts = await Promise.allSettled(nonExistingProducts.map((productId) => axios.get(`/api/product/${productId}`)));
+	
+		const products = rawProducts.map((product, index) => {
+			if(product.status === "rejected") return ({
+				id: nonExistingProducts[index],
+				error: product.reason
+			})
+			else return ({
+				...product.value.data
+			})
 		})
-		else return ({
-			...product.value.data
-		})
-	})
-
-	const rejectedProducts = products.filter((product) => product.error);
-	if(rejectedProducts.length > 0) dispatch(productsLoadError(rejectedProducts));
-
-	const loadedProducts = products.filter((product) => !product.error);
-	if(loadedProducts.length > 0) dispatch(productsLoaded(loadedProducts));
+	
+		const rejectedProducts = products.filter((product) => product.error);
+		if(rejectedProducts.length > 0) dispatch(productsLoadError(rejectedProducts));
+	
+		const loadedProducts = products.filter((product) => !product.error);
+		if(loadedProducts.length > 0) dispatch(productsLoaded(loadedProducts));
+	}
 
 	dispatch(categoryLoaded({
 		category: categoryName,
