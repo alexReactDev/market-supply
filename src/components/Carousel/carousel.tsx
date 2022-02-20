@@ -8,10 +8,11 @@ interface IProps {
 	className?: string,
 	title: string,
 	products: string[],
-	maxCards?: 1 | 2 | 3 | 4
+	maxCards?: 1 | 2 | 3 | 4,
+	autoplay?: boolean
 }
 
-const Carousel: FC<IProps> = ({ className="", title, products, maxCards = 1 }) => {
+const Carousel: FC<IProps> = ({ className="", title, products, maxCards = 1, autoplay }) => {
 
 	const [sliderRef, setSliderRef] = useState<any>(null);
 
@@ -21,6 +22,8 @@ const Carousel: FC<IProps> = ({ className="", title, products, maxCards = 1 }) =
 		infinite: true,
 		arrows: false,
 		draggable: false,
+		autoplaySpeed: 2400,
+		autoplay: autoplay,
 		responsive: [
 			{
 				breakpoint: 1024,
