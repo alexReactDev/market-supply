@@ -88,6 +88,3 @@ const categoriesSlice = createSlice({
 export default categoriesSlice.reducer;
 
 export const { categoryLoadStart, categoryLoadError, categoryLoaded } = categoriesSlice.actions;
-
-
-console.log(categoryLoadStart);
