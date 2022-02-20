@@ -18,8 +18,12 @@ interface IState {
 }
 
 const initialState: IState = {}
-interface ICategoryAction {
+interface ICategoryAction extends Partial<ICategory> {
 	category: string
+}
+
+interface ICategoryLoadAction extends ICategoryAction {
+	sortChanging: boolean
 }
 
 interface ICategoryLoadedAction extends ICategoryAction {
@@ -34,10 +38,11 @@ const categoriesSlice = createSlice({
 	name: "categories",
 	initialState,
 	reducers: {
-		categoryLoadStart(state, action: PayloadAction<ICategoryAction>) {
-			const { category } = action.payload;
+		categoryLoadStart(state, action: PayloadAction<ICategoryLoadAction>) {
+			const { category, sortChanging } = action.payload;
 
 			state[category].loading = true;
+			if(sortChanging) state[category].products = [];
 		},
 		categoryLoadError(state, action: PayloadAction<ICategoryErrorAction>) {
 			const { category, error } = action.payload;
@@ -55,7 +60,6 @@ const categoriesSlice = createSlice({
 				loading: false,
 				error: null,
 				products: [
-					...data.sort === state[category].sort ? state[category].products : [],
 					...data.products
 				]
 			}

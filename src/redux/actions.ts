@@ -42,11 +42,11 @@ interface ICategoryData {
 }
 
 export const loadCategoryDataWithProducts = (categoryName: string, newSort?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
-	dispatch(categoryLoadStart({category: categoryName}));
-
 	const state = getState();
 	const category = state.categories[categoryName];
 	const catSort = newSort || category.sort;
+	
+	dispatch(categoryLoadStart({category: categoryName, sortChanging: catSort === category.sort ? false : true}));
 
 	let categoryData: ICategoryData;
 
