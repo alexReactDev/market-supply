@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { Link } from "react-router-dom";
 import logoImg from '../../images/logo/logo.png';
 import style from './logo.module.scss';
 
@@ -9,7 +10,9 @@ interface IProps {
 const Logo: FC<IProps> = ({ className='' }) => {
 	return(
 		<div className={className}>
-			<img className={style.logo__img} src={logoImg} alt="logo" />
+			<Link to="/" className="nav-link">
+				<img className={style.logo__img} src={logoImg} alt="logo" />
+			</Link>
 		</div>
 	)
 }
