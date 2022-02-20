@@ -1,0 +1,47 @@
+@import "../../styles/variables.scss";
+
+.nav {
+	background-color: $white;
+}
+
+.nav__item {
+	position: relative;
+	list-style: none;
+	padding: 0px 15px;
+
+	&::before {
+		content: '';
+		width: 10px;
+		height: 10px;
+		position: absolute;
+		top: calc(50% - 5px);
+		left: 25px;
+		border: solid #a6a6a6 2px;
+		border-radius: 50%;
+	}
+
+	&::after {
+		content: '';
+		width: calc(100% - 30px);
+		height: 1px;
+		position: absolute;
+		bottom: 0px;
+		left: 15px;
+		background-color: $borderC;
+	}
+
+	&:active {
+		background-color: rgb(214, 214, 214);
+	}
+}
+
+.nav__link {
+	display: block;
+	padding: 17px 10px 18px 45px;
+	font-size: $defaultFz;
+	color: $lightblack;
+
+	&:hover {
+		color: $darkgrey;
+	}
+}

@@ -2,7 +2,7 @@ import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { loadCategoryDataWithProducts } from "../../redux/actions";
-import { categories as categoriesSelector, URLPathEnd } from "../../redux/selectors";
+import { categoriesSelector, URLPathEnd } from "../../redux/selectors";
 import Loader from "../Loader";
 import Product from "../Product";
 import style from "./categories.module.scss";
