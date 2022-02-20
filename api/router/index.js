@@ -89,4 +89,9 @@ router.get("/cart", (req, res) => {
 	res.send(fixtures.cart);
 })
 
+router.post("/newsletter", (req, res) => {
+	console.log(`Newsletter subscription request: ${req.body.email}`);
+	res.status(202).send();
+})
+
 module.exports = router;

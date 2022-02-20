@@ -100,3 +100,13 @@ export const loadCategoryDataWithProducts = (categoryName: string, newSort?: str
 		}
 	}))
 }
+
+export const subscribeToNewsletterAction = (email: string) => async () => {
+	try {
+		await axios.post("/api/newsletter", {email});
+		alert("You've subscribed newsletter");
+	}
+	catch(e) {
+		alert("Failed to subscribe. Try again later.")
+	}
+}
