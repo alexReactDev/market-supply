@@ -1,5 +1,5 @@
 const express = require("express");
-const fixtures = require("../fixtures3.json");
+const fixtures = require("../fixtures3.1.json");
 
 const router = new express.Router();
 
