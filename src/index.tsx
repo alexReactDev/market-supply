@@ -5,6 +5,8 @@ import setupStore from './redux';
 import history from './history';
 import App from './components/App';
 
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 import './styles/index.scss';
 
 const store = setupStore();
