@@ -7,7 +7,7 @@ export const categoriesSelector = (state: AppState) => state.categories;
 
 export const initialized = (state: AppState) => state.initialized;
 
-export const products = (state: AppState) => state.products;
+export const productsSelector = (state: AppState) => state.products;
 
 export const URLPath = (state: AppState) => state.router.location.pathname;
 

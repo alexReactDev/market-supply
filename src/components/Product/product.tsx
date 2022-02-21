@@ -1,13 +1,13 @@
 import { FC } from "react";
-import style from "./product.module.scss";
 import { useSelector } from "react-redux";
-import { products as productsSelector } from "../../redux/selectors";
+import { productsSelector } from "../../redux/selectors";
 import { IProduct, IProductError } from "../../redux/reducer/products";
-
-import picturePlaceholder from "../../images/products/placeholder.png";
+import { Link } from "react-router-dom";
 import Price from "../Price";
 import Rate from "../Rate";
-import { Link } from "react-router-dom";
+import style from "./product.module.scss";
+
+import picturePlaceholder from "../../images/products/placeholder.png";
 
 interface IProps {
 	className?: string,
