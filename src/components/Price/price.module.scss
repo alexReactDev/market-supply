@@ -1,6 +1,7 @@
 @import "../../styles/variables.scss";
 
 .price {
+	margin: 0px -8px;
 	display: flex;
 	justify-content: center;
 	font-size: $defaultFz;
@@ -8,6 +9,7 @@
 
 .price__oldValue, .price__value {
 	padding: 0px 8px;
+	white-space: nowrap;
 }
 
 .price__oldValue {
