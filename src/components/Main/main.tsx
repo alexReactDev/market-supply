@@ -20,7 +20,6 @@ const Main: FC<{}> = () => {
 							<Route path="/categories" component={Categories} />
 							<Route path="/product" component={ProductDetails} />
 							<Route path="/cart" component={Cart} />
-							<Route path="/404" component={NotFound} />
 							<Redirect from="*" to="/404" />
 						</Switch>
 					</div>	

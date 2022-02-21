@@ -1,5 +1,6 @@
 import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Route, Switch } from "react-router-dom";
 import { useAppDispatch } from "../../hooks";
 import { initialize } from "../../redux/actions";
 import { initialized as initializedSelector } from "../../redux/selectors";
@@ -7,6 +8,7 @@ import Footer from "../Footer";
 import Header from "../Header";
 import Loader from "../Loader";
 import Main from "../Main";
+import NotFound from "../NotFound";
 import Partners from "../Partners";
 import style from './app.module.scss';
 
@@ -25,7 +27,10 @@ const App: FC<{}> = () => {
 		<div className={style.wrapper}>
 			<div className={style.wrapper__body}>
 				<Header />
-				<Main />
+				<Switch>
+					<Route path="/404" exact component={NotFound} />
+					<Route path="*" component={Main} />
+				</Switch>
 			</div>
 			<div className={style.wrapper__basement}>
 				<Partners />
