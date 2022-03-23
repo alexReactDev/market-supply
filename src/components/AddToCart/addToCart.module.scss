@@ -24,6 +24,11 @@ input::-webkit-inner-spin-button {
 	width: 20px;
 	border: none;
 	border-radius: 5px;
+	box-shadow: 1px 1px 0px 0px rgb(190, 190, 190);
+	
+	&:active {
+		box-shadow: none;
+	}
 }
 
 .addToCart__increment {
@@ -42,7 +47,12 @@ input::-webkit-inner-spin-button {
 	border: none;
 	border-radius: 5px;
 	padding: 5px;
+	box-shadow: 1px 1px 0px 0px rgb(175, 175, 175);
 	color: $white;
 	background-color: $red;
 	font-weight: bolder;
+
+	&:active {
+		box-shadow: none;
+	}
 }
