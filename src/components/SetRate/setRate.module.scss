@@ -1,0 +1,13 @@
+.rate {
+	display: flex;
+}
+
+.rate__star {
+	width: 15px;
+	height: 15px;
+	background: url("../../images/icons/star-empty.png") center / contain no-repeat;
+}
+
+.rate__star_active {
+	background-image: url("../../images/icons/star.png");
+}
