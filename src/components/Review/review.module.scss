@@ -1,0 +1,30 @@
+@import "../../styles/variables.scss";
+
+.review {
+	box-sizing: border-box;
+	padding: 0px 10px;
+}
+
+.review__head {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+
+.review__name {
+	color: $titleC;
+	font-weight: bolder;
+}
+
+.review__text {
+	margin-bottom: 10px;
+	color: $fontC;
+	font-size: $defaultFz;
+	line-height: 1.2em;
+}
+
+.review__date {
+	text-align: right;
+	color: $lightgrey;
+	font-size: 0.8em;
+}
