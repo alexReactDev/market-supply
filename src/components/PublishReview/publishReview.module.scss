@@ -1,0 +1,95 @@
+@import "../../styles/variables.scss";
+
+.publishReview {
+	display: flex;
+	flex-direction: column;
+	padding: 0px 10px;
+}
+
+.publishReview__contacts {
+	display: flex;
+	margin-bottom: 10px;
+}
+
+.publishReview__name, .publishReview__email {
+	position: relative;
+	width: 50%;
+	display: flex;
+
+	input {
+		width: 90%;
+		height: 30px;
+		box-sizing: border-box;
+		padding: 4px;
+	}
+
+	.publishReview__validError {
+		width: 88%;
+		top: -25px;
+	}
+}
+
+.publishReview__validError {
+	width: 100%;
+	position: absolute;
+	padding: 4px;
+	box-shadow: 1px 1px 2px 0px rgb(175, 175, 175);
+	text-align: center;
+	background-color: white;
+}
+
+.publishReview__email  {
+	justify-content: flex-end;
+
+	.publishReview__validError  {
+		right: 0px;
+	}
+}
+
+.publishReview__text {
+	position: relative;
+	margin-bottom: 10px;
+
+	textarea {
+		width: 100%;
+		min-height: 200px;
+		box-sizing: border-box;
+		padding: 6px;
+		resize: none;
+		font-size: $defaultFz;
+	}
+
+	.publishReview__validError {
+		width: 99%;
+		top: -25px;
+	}
+}
+
+.publishReview__controls {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	.publishReview__validError {
+		width: 99%;
+		top: -25px;
+	}
+}
+
+.publishReview__submit {
+
+	input {
+		border: none;
+		border-radius: 5px;
+		padding: 7px 10px;
+		box-shadow: 1px 1px 0px 0px rgb(175, 175, 175);
+		color: $white;
+		background-color: $red;
+		font-weight: bolder;
+	
+		&:active {
+			box-shadow: none;
+		}
+	}
+}
