@@ -18,9 +18,9 @@ const Product: FC<IProps> = ({ className="", id}) => {
 
 	const product = useSelector(productsSelector)[id] as IProduct | IProductError;
 
-	if(!product || product.error) return null;
+	if(!product || product.error || product.loading) return null;
 
-	const { name, price, oldPrice, rate, isNew, pictures} = product as IProduct;
+	const { name, price, oldPrice, rate, isNew, pictures = []} = product as IProduct;
 
 	return(
 		<Link to={`/product/${id}`} className={`${className} ${style.product} nav-link`}>

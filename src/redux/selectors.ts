@@ -8,11 +8,13 @@ export const categoriesSelector = (state: AppState) => state.categories;
 export const initialized = (state: AppState) => state.initialized;
 
 export const productsSelector = (state: AppState) => state.products;
+export const productsDetailsSelector = (state: AppState) => state.productsDetails;
+export const productsReviewsSelector = (state: AppState) => state.productsReviews;
 
-export const URLPath = (state: AppState) => state.router.location.pathname;
+export const URLPathSelector = (state: AppState) => state.router.location.pathname;
 
-export const URLPathEnd = (state: AppState) => {
-	const url = URLPath(state);
+export const URLPathEndSelector = (state: AppState) => {
+	const url = URLPathSelector(state);
 	const cleanUrl = url.endsWith("/") ? url.slice(0, url.length - 1) : url;
 	const urlEnd = cleanUrl.slice(cleanUrl.lastIndexOf("/") + 1);
 

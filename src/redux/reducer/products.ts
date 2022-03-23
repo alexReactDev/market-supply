@@ -11,7 +11,7 @@ export interface IProduct {
 	isNew: boolean,
 	pictures: string[],
 	loading: boolean,
-	error: Error | null
+	error: any
 }
 
 export interface IProductLoading {
@@ -21,7 +21,7 @@ export interface IProductLoading {
 
 export interface IProductError extends Partial<IProduct> {
 	id: string,
-	error: Error
+	error: any
 }
 
 export interface IState {

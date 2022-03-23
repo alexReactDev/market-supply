@@ -1,10 +1,17 @@
 import { createAction, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, AppState } from ".";
 import { INIT } from "../constants";
-import axios from "axios";
 import { categoryLoaded, categoryLoadError, categoryLoadStart } from "./reducer/categories";
-import { productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
+import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
+import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
+import productsReviews, { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
+import Axios from "axios";
+import { productsSelector } from "./selectors";
+import { productDecrement, productIncrement } from "./reducer/cart";
 
+const axios = Axios.create({
+	baseURL: "http://localhost:3000/"
+});
 export interface IInitData {
 	categories: [{
 		URLName: string,
@@ -108,5 +115,107 @@ export const subscribeToNewsletterAction = (email: string) => async () => {
 	}
 	catch(e) {
 		alert("Failed to subscribe. Try again later.")
+	}
+}
+
+export const loadProductByIdAction = (id: string) => async (dispatch: AppDispatch) => {
+	dispatch(productsLoadStart([id]));
+
+	try {
+		const product = (await axios.get(`api/product/${id}`)).data;
+		dispatch(productsLoaded([product]));
+	}
+	catch(e: any) {
+		console.log(e);
+
+		dispatch(productsLoadError([
+			{
+				id,
+				error: e as Error
+			}
+		]));
+	}
+}
+
+export const loadProductDetailsAction = (id: string) => async (dispatch: AppDispatch) => {
+	dispatch(productDetailsLoadStart({id}));
+
+	try {
+		const productDetails = (await axios.get(`/api/product-details/${id}`)).data;
+		dispatch(productDetailsLoaded({
+			id,
+			details: productDetails
+		}));
+	}
+	catch(e) {
+		console.log(e);
+		
+		dispatch(productDetailsLoadError({
+			id,
+			error: e as Error
+		}));
+	}
+}
+
+export const loadProductReviewsAction = (id: string) => async (dispatch: AppDispatch) => {
+	dispatch(productReviewsLoadStart({id}));
+
+	try {
+		const productReviews = (await axios.get(`/api/product-reviews/${id}`)).data;
+		dispatch(productReviewsLoaded({
+			id,
+			reviews: productReviews
+		}));
+	}
+	catch(e) {
+		console.log(e);
+		
+		dispatch(productReviewsLoadError({
+			id,
+			error: e as Error
+		}));
+	}
+}
+
+export const productIncrementAction = (productId: string, amount: number = 1) => (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const productPrice = (productsSelector(state)[productId] as IProduct).price;
+
+	dispatch(productIncrement({
+		productId,
+		productPrice,
+		amount
+	}))
+}
+
+export const productDecrementAction = (productId: string, amount: number = 1) => (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const productPrice = (productsSelector(state)[productId] as IProduct).price;
+
+	dispatch(productDecrement({
+		productId,
+		productPrice,
+		amount
+	}))
+}
+
+interface IReviewToPublish extends IReview {
+	email: string
+}
+
+export const publishReviewAction = (productId: string, review: IReviewToPublish) => async (dispatch: AppDispatch) => {
+	
+	try {
+		const savedReview = (await axios.post(`api/product-reviews/${productId}`, {review})).data;
+
+		dispatch(productReviewsLoaded({
+			id: productId,
+			reviews: [savedReview]
+		}));
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		alert("Failed to publish review. Try again later.");
 	}
 }

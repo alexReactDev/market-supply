@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface IProductDetails {
+export interface IProductDetails {
 	id: string,
 	loading: boolean,
-	error: Error | null,
-	description: string
+	error: any,
+	details: {
+		description: string
+	}
 }
 
 interface IProductDetailsLoading extends Pick<IProductDetails, "id" | "loading"> {}
@@ -43,13 +45,13 @@ const productsDetailsSlice = createSlice({
 			}
 		},
 		productDetailsLoaded(state, action: PayloadAction<IProductDetailsLoadedAction>) {
-			const { id, ...data } = action.payload;
+			const { id, details } = action.payload;
 
 			state[id] = {
 				id,
 				loading: false,
 				error: null,
-				...data
+				details,
 			}
 		}
 	}

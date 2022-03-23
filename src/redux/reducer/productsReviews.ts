@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface IReview {
-	name: string,
+export interface IReview {
+	title: string,
 	rate: number,
 	text: string,
 	timestamp: number
 }
 
-interface IProductReviews {
+export interface IProductReviews {
 	id: string,
 	loading: boolean,
-	error: Error | null,
+	error: any,
 	reviews: IReview[]
 }
 
@@ -49,13 +49,19 @@ const productsReviewsSlice = createSlice({
 			}
 		},
 		productReviewsLoaded(state, action: PayloadAction<IProductReviewsLoadedAction>) {
-			const { id, ...data } = action.payload;
+			const { id, reviews: loadedReviews } = action.payload;
+
+			const reviews = [
+				...loadedReviews,
+				//@ts-ignore
+				...state[id].reviews ? state[id].reviews : []
+			]
 
 			state[id] = {
-				...data,
+				id,
 				loading: false,
 				error: null,
-				id
+				reviews,
 			}
 		}
 	}
