@@ -4,10 +4,10 @@ import { INIT } from "../constants";
 import { categoryLoaded, categoryLoadError, categoryLoadStart } from "./reducer/categories";
 import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
-import productsReviews, { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
+import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
 import Axios from "axios";
 import { productsSelector } from "./selectors";
-import { productDecrement, productIncrement } from "./reducer/cart";
+import { productDecrement, productIncrement, removeProduct } from "./reducer/cart";
 
 const axios = Axios.create({
 	baseURL: "http://localhost:3000/"
@@ -196,6 +196,16 @@ export const productDecrementAction = (productId: string, amount: number = 1) =>
 		productId,
 		productPrice,
 		amount
+	}))
+}
+
+export const removeProductAction = (productId: string) => (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const productPrice = (productsSelector(state)[productId] as IProduct).price;
+
+	dispatch(removeProduct({
+		productId,
+		productPrice
 	}))
 }
 

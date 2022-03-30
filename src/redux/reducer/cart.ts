@@ -27,14 +27,17 @@ const cartSlice = createSlice({
 	reducers: {
 		productIncrement(state, action: PayloadAction<IPayloadWithAmount>) {
 			const { productId, productPrice, amount } = action.payload;
-
-			state.products[productId] = state.products[productId] | 0 + amount;
+			
+			state.products[productId] = (state.products[productId] || 0) + amount;
 			state.total = state.total + productPrice * amount;
 		},
 		productDecrement(state, action: PayloadAction<IPayloadWithAmount>) {
-			const { productId, productPrice, amount } = action.payload;
+			const { productId, productPrice } = action.payload;
+			let { amount } = action.payload;
 
-			state.total = state.total - productPrice * amount > state.products[productId] ? state.products[productId] : amount;
+			if(amount > state.products[productId]) amount = state.products[productId];
+
+			state.total = state.total - productPrice * amount;
 			state.products[productId] = state.products[productId] - amount;
 			if(state.products[productId] <= 0) delete state.products[productId];
 		},

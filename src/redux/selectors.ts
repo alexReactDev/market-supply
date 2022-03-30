@@ -1,7 +1,9 @@
 import { AppState } from ".";
+import { IProduct } from "./reducer/products";
 
 export const cart = (state: AppState) => state.cart;
 export const cartTotal = (state: AppState) => cart(state).total;
+export const cartProductsSelector = (state: AppState) => cart(state).products;
 
 export const categoriesSelector = (state: AppState) => state.categories;
 
@@ -30,4 +32,26 @@ export const publicCategoriesKeysSelector = (state: AppState) => {
 	}
 
 	return publicCategoriesKeys;
+}
+
+export interface IProductWithProps extends IProduct {
+	amount: number,
+	total: number
+}
+
+export const cartProductsWithPropsSelector = (state: AppState) => {
+
+	const cartProducts = cartProductsSelector(state);
+	const cartProductsWithProps = [];
+
+	for (let key in cartProducts) {
+		cartProductsWithProps.push({
+			...productsSelector(state)[key],
+			amount: cartProducts[key],
+			//@ts-ignore
+			total: productsSelector(state)[key].price * cartProducts[key]
+		})
+	}
+
+	return cartProductsWithProps;
 }
