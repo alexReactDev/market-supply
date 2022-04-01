@@ -3,8 +3,8 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Aside from "../Aside";
 import Cart from "../Cart";
 import Categories from "../Categories";
+import Checkout from "../Checkout";
 import HomePage from "../HomePage";
-import NotFound from "../NotFound";
 import ProductDetails from "../ProductDetails";
 import style from './main.module.scss';
 
@@ -20,6 +20,7 @@ const Main: FC<{}> = () => {
 							<Route path="/categories" component={Categories} />
 							<Route path="/product" component={ProductDetails} />
 							<Route path="/cart" component={Cart} />
+							<Route path="/checkout" component={Checkout} />
 							<Redirect from="*" to="/404" />
 						</Switch>
 					</div>	
