@@ -1,0 +1,249 @@
+@import "../../styles/variables.scss";
+
+.checkout {
+	margin: 30px 0px;
+}
+
+.checkout__title {
+	margin-bottom: 10px;
+	font-size: $titleFz;
+	color: $titleC;
+}
+
+.checkout__fieldset {
+	margin-bottom: 20px;
+}
+
+.checkout__userData {
+	margin: 0px -20px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.checkout__field {
+	width: 50%;
+	box-sizing: border-box;
+	margin-bottom: 12px;
+	padding: 0px 20px;
+}
+
+.checkout__input {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 7.5px 5px;
+}
+
+.checkout__deliveryMethod {
+	display: flex;
+	margin: 0px -10px 20px -10px;
+}
+
+.checkout__deliveryMethodOption {
+	width: 50%;
+	border: solid $borderC 1px;
+	margin: 0px 10px;
+}
+
+.deliveryMethodOption {
+	position: relative;
+	box-sizing: border-box;
+	border-radius: 5px;
+	background-color: $white;
+
+	&::before {
+		content: "";
+		position: absolute;
+		top: calc(50% - 8px);
+		right: 25px;
+		width: 16px;
+		height: 16px;
+		border: solid $red 2px;
+		border-radius: 50%;
+	}
+
+	&_active::after {
+		content: "";
+		position: absolute;
+		top: calc(50% - 4px);
+		right: 29px;
+		width: 8px;
+		height: 8px;
+		border: solid $red 2px;
+		border-radius: 50%;
+		background-color: $red;
+	}
+}
+
+.deliveryMethodOption__text {
+	display: inline-block;
+	padding: 25px 35px 25px 20px;
+	color: $darkgrey;
+	font-size: 17px;
+	background: center right no-repeat;
+}
+
+.deliveryMethodOption_pickup {
+	background-image: url("../../images/icons/shop.png");
+}
+
+.deliveryMethodOption_delivery {
+	background-image: url("../../images/icons/delivery.png");
+}
+
+.checkout__pickup {}
+
+.pickup {}
+
+.pickup__select {
+	margin-bottom: 25px;
+	padding: 7.5px 5px;
+}
+
+.pickup__shopDetails {
+	display: flex;
+	border: solid $borderC 1px;
+	background-color: $white;
+}
+
+.pickup__shopInfo {
+	width: 50%;
+	box-sizing: border-box;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.pickup__shopName {
+	margin-bottom: 12px;
+	color: $titleC;
+	font-size: $titleFzSmaller;
+}
+
+.pickup__shopSchedule, .pickup__shopPhone, .pickup__deliveryDate {
+	margin-bottom: 5px;
+	padding-left: 4px;
+	line-height: 1.2em;
+	color: $fontC;
+}
+
+.pickup__map {
+	width: 50%;
+
+	img {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.checkout__delivery {
+	margin: 0px -20px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.checkout__payment {}
+
+.payment {}
+
+.payment__methods {
+	display: flex;
+	margin: 0px -10px 20px -10px;
+}
+
+.payment__method {
+	position: relative;
+	width: 50%;
+	box-sizing: border-box;
+	margin: 0px 10px;
+	border: solid $borderC 1px;
+	border-radius: 5px;
+	background-color: $white;
+
+	&::before {
+		content: "";
+		position: absolute;
+		top: calc(50% - 8px);
+		right: 25px;
+		width: 16px;
+		height: 16px;
+		border: solid $red 2px;
+		border-radius: 50%;
+	}
+
+	&_active::after {
+		content: "";
+		position: absolute;
+		top: calc(50% - 4px);
+		right: 29px;
+		width: 8px;
+		height: 8px;
+		border: solid $red 2px;
+		border-radius: 50%;
+		background-color: $red;
+	}
+}
+
+.payment__methodText {
+	display: inline-block;
+	padding: 25px 35px 25px 20px;
+	color: $darkgrey;
+	font-size: 17px;
+}
+
+.payment__options {
+	border-radius: 5px;
+	background-color: $white;
+}
+
+.payment__option {
+	position: relative;
+	border-bottom: solid $borderC 1px;
+	padding: 15px 10px;
+	list-style: none;
+
+	&::before {
+		content: "";
+		position: absolute;
+		top: calc(50% - 8px);
+		right: 25px;
+		width: 16px;
+		height: 16px;
+		border: solid $red 2px;
+		border-radius: 50%;
+	}
+
+	&_active::after {
+		content: "";
+		position: absolute;
+		top: calc(50% - 4px);
+		right: 29px;
+		width: 8px;
+		height: 8px;
+		border: solid $red 2px;
+		border-radius: 50%;
+		background-color: $red;
+	}
+}
+
+.payment__optionText {
+	color: $fontC;
+	font-size: 17px;
+}
+
+.checkout__basement {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.checkout__submitBtn {
+	border-radius: 10px !important;
+	padding: 10px 16px;
+}
+
+.emptyCart {
+	margin: 20px 0px;
+	text-align: center;
+	font-size: $titleFzSmaller;
+	color: $fontC;
+}
