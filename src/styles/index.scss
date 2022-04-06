@@ -30,7 +30,19 @@ body {
 .btn {
 	border: none;
 	border-radius: 15px;
+	box-shadow: 1px 1.5px 0px 0px rgb(206, 206, 206);
 	background-color: $faintRed;
 	color: $fontCLight;
 	font-weight: bold;
+
+	&:hover {
+		transition-duration: 0.2s;
+		background-color: #f7213d;
+	}
+
+	&:active {
+		position: relative;
+		top: 1px;
+		box-shadow: none;
+	}
 }

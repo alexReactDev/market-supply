@@ -1,10 +1,19 @@
+import { cartProductsSelector } from "../../redux/selectors";
+import { useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { FC } from "react";
 import style from "./checkout.module.scss";
 
 import mapPlaceholder from "../../images/map/map.jpg";
-import { useSelector } from "react-redux";
-import { cartProductsSelector } from "../../redux/selectors";
+import bankCard0 from "../../images/payment-methods/0.png";
+import bankCard1 from "../../images/payment-methods/1.png";
+import bankCard2 from "../../images/payment-methods/2.png";
+import bankCard3 from "../../images/payment-methods/3.png";
+import bankCard4 from "../../images/payment-methods/4.png";
+import bankCard5 from "../../images/payment-methods/5.png";
+import bankCard6 from "../../images/payment-methods/6.png";
+import paypalIcon from "../../images/icons/paypal.png";
+import bitcoinIcon from "../../images/icons/bitcoin.png";
 
 const Checkout: FC<{}> = () => {
 
@@ -28,7 +37,24 @@ const Checkout: FC<{}> = () => {
 			onlinePaymentOption: "card"
 		},
 		onSubmit(values) {
+			console.log(values);
+		},
+		validate(values) {
+			const errors: any = {};
 
+			if(!values.name) errors.name = "name required";
+			if(!values.surname) errors.surname = "surname required";
+			if(!values.phone) errors.phone = "phone required";
+			if(!values.email) errors.email = "email required";
+
+			if(values.deliveryMethod === "delivery") {
+				if(!values.houseNumber) errors.houseNumber = "house number required";
+				if(!values.street) errors.street = "street required";
+				if(!values.town) errors.town = "town required";
+				if(!values.zipCode) errors.zipCode = "zip code required";
+			}
+
+			return errors;
 		}
 	});
 
@@ -41,6 +67,18 @@ const Checkout: FC<{}> = () => {
 
 	return (
 		<form className={style.checkout} onSubmit={formik.handleSubmit}>
+			{
+				Object.values(formik.errors).filter((val) => val !== "").length > 0
+				&& Object.values(formik.touched).find((val) => val)
+				?
+				<div className={style.checkout__errors}>
+					<p className={style.checkout__errorMessage}>
+						Some invalid values
+					</p>
+				</div>
+				:
+				null
+			}
 			<fieldset className={style.checkout__fieldset}>
 				<h3 className={style.checkout__title}>
 					User data
@@ -49,7 +87,7 @@ const Checkout: FC<{}> = () => {
 					<span className={style.checkout__field}>
 						<input 
 							type="text"
-							className={style.checkout__input}
+							className={`${style.checkout__input} ${formik.errors.name && formik.touched.name ? style.checkout__input_invalid : ""}`}
 							id="name"
 							name="name"
 							placeholder="Name"
@@ -60,7 +98,7 @@ const Checkout: FC<{}> = () => {
 					<span className={style.checkout__field}>
 						<input 
 							type="text"
-							className={style.checkout__input}
+							className={`${style.checkout__input} ${formik.errors.surname && formik.touched.surname ? style.checkout__input_invalid : ""}`}
 							id="surname"
 							name="surname"
 							placeholder="Surname"
@@ -71,7 +109,7 @@ const Checkout: FC<{}> = () => {
 					<span className={style.checkout__field}>
 						<input 
 							type="phone"
-							className={style.checkout__input}
+							className={`${style.checkout__input} ${formik.errors.phone && formik.touched.phone ? style.checkout__input_invalid : ""}`}
 							id="phone"
 							name="phone"
 							placeholder="Phone number"
@@ -82,7 +120,7 @@ const Checkout: FC<{}> = () => {
 					<span className={style.checkout__field}>
 						<input 
 							type="email"
-							className={style.checkout__input}
+							className={`${style.checkout__input} ${formik.errors.email && formik.touched.email ? style.checkout__input_invalid : ""}`}
 							id="email"
 							name="email"
 							placeholder="Email"
@@ -171,7 +209,7 @@ const Checkout: FC<{}> = () => {
 						<span className={style.checkout__field}>
 							<input 
 								type="text"
-								className={style.checkout__input}
+								className={`${style.checkout__input} ${formik.errors.houseNumber && formik.touched.houseNumber ? style.checkout__input_invalid : ""}`}
 								id="houseNumber"
 								name="houseNumber"
 								placeholder="House/Building number"
@@ -182,7 +220,7 @@ const Checkout: FC<{}> = () => {
 						<span className={style.checkout__field}>
 							<input 
 								type="text"
-								className={style.checkout__input}
+								className={`${style.checkout__input} ${formik.errors.street && formik.touched.street ? style.checkout__input_invalid : ""}`}
 								id="street"
 								name="street"
 								placeholder="Street"
@@ -193,7 +231,7 @@ const Checkout: FC<{}> = () => {
 						<span className={style.checkout__field}>
 							<input 
 								type="text"
-								className={style.checkout__input}
+								className={`${style.checkout__input} ${formik.errors.town && formik.touched.town ? style.checkout__input_invalid : ""}`}
 								id="town"
 								name="town"
 								placeholder="Town"
@@ -204,7 +242,7 @@ const Checkout: FC<{}> = () => {
 						<span className={style.checkout__field}>
 							<input 
 								type="text"
-								className={style.checkout__input}
+								className={`${style.checkout__input} ${formik.errors.zipCode && formik.touched.zipCode ? style.checkout__input_invalid : ""}`}
 								id="zipCode"
 								name="zipCode"
 								placeholder="Zip code"
@@ -259,6 +297,27 @@ const Checkout: FC<{}> = () => {
 							>
 								<p className={style.payment__optionText}>
 									Bank card
+									<span className={style.payment__optionIcon}>
+										<img src={bankCard0} alt="stripe" />
+									</span>
+									<span className={style.payment__optionIcon}>
+										<img src={bankCard1} alt="card" />
+									</span>
+									<span className={style.payment__optionIcon}>
+										<img src={bankCard2} alt="JCB" />
+									</span>
+									<span className={style.payment__optionIcon}>
+										<img src={bankCard3} alt="mastercard" />
+									</span>
+									<span className={style.payment__optionIcon}>
+										<img src={bankCard4} alt="DISCOVER" />
+									</span>
+									<span className={style.payment__optionIcon}>
+										<img src={bankCard5} alt="American Express" />
+									</span>
+									<span className={style.payment__optionIcon}>
+										<img src={bankCard6} alt="VISA" />
+									</span>
 								</p>
 							</li>
 							<li 
@@ -267,6 +326,9 @@ const Checkout: FC<{}> = () => {
 							>
 								<p className={style.payment__optionText}>
 									Paypal
+									<span className={style.payment__optionIcon}>
+										<img src={paypalIcon} alt="paypal" />
+									</span>
 								</p>
 							</li>
 							<li 
@@ -275,6 +337,9 @@ const Checkout: FC<{}> = () => {
 							>
 								<p className={style.payment__optionText}>
 									Bitcoin
+									<span className={style.payment__optionIcon}>
+										<img src={bitcoinIcon} alt="bitcoin" />
+									</span>
 								</p>
 							</li>
 						</ul>

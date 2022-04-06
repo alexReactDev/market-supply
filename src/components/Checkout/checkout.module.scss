@@ -4,6 +4,17 @@
 	margin: 30px 0px;
 }
 
+.checkout__errors {
+	margin-bottom: 10px;
+	border: solid $red 2px;
+	background-color: rgb(255, 206, 206);
+	text-align: center;
+}
+
+.checkout__errorMessage {
+	padding: 7.5px 10px;
+}
+
 .checkout__title {
 	margin-bottom: 10px;
 	font-size: $titleFz;
@@ -31,6 +42,10 @@
 	width: 100%;
 	box-sizing: border-box;
 	padding: 7.5px 5px;
+}
+
+.checkout__input_invalid {
+	outline: solid $red 2px;
 }
 
 .checkout__deliveryMethod {
@@ -227,8 +242,25 @@
 }
 
 .payment__optionText {
+	padding-right: 46px;
+	display: flex;
+	align-items: center;
 	color: $fontC;
 	font-size: 17px;
+}
+
+.payment__optionIcon {
+	height: 24px;
+	margin-right: 12px;
+
+	&:first-child {
+		margin-left: 12px;
+	}
+
+	img {
+		max-height: 100%;
+		object-fit: contain;
+	}
 }
 
 .checkout__basement {
@@ -246,4 +278,73 @@
 	text-align: center;
 	font-size: $titleFzSmaller;
 	color: $fontC;
+}
+
+@media (max-width: $md1) {
+	.pickup__shopDetails {
+		flex-direction: column;
+	}
+
+	.pickup__shopInfo, .pickup__map {
+		width: auto;
+	}
+
+	.pickup__shopInfo {
+		margin: 10px 0px;
+		text-align: center;
+	}
+	
+	.pickup__select {
+		width: 100%;
+	}
+}
+
+@media (max-width: $md3) {
+	.checkout {
+		margin: 15px 0px;
+	}
+
+	.checkout__userData {
+		flex-direction: column;
+		flex-wrap: nowrap;
+	}
+
+	.checkout__field {
+		width: 100%;
+	}
+
+	.payment__optionText {
+		flex-wrap: wrap;
+		row-gap: 7.5px;
+	}
+}
+
+@media (max-width: $md4) {
+	.checkout__deliveryMethod, .payment__methods {
+		flex-direction: column;
+	}
+
+	.checkout__deliveryMethodOption, .payment__method {
+		width: auto;
+	}
+
+	.checkout__title {
+		font-size: $titleFzSmaller;
+	}
+
+	.checkout__fieldset {
+		margin-bottom: 10px;
+	}
+
+	.pickup__shopName {
+		font-size: $titleFzSmall;
+	}
+
+	.pickup__shopSchedule, .pickup__shopPhone, .pickup__deliveryDate  {
+		font-size: $defaultFzSmaller;
+	}
+
+	.deliveryMethodOption__text, .payment__methodText, .payment__optionText {
+		font-size: $defaultFz;
+	}
 }
