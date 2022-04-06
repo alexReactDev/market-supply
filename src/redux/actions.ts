@@ -7,7 +7,7 @@ import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart 
 import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
 import Axios from "axios";
 import { productsSelector } from "./selectors";
-import { productDecrement, productIncrement, removeProduct } from "./reducer/cart";
+import { emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
 
 const axios = Axios.create({
 	baseURL: "http://localhost:3000/"
@@ -227,5 +227,19 @@ export const publishReviewAction = (productId: string, review: IReviewToPublish)
 		if(!e.response) throw e;
 
 		alert("Failed to publish review. Try again later.");
+	}
+}
+
+export const checkoutAction = (checkoutData: {[key: string]: string}) => async (dispatch: AppDispatch) => {
+	
+	try {
+		await axios.post("api/checkout", {checkout: checkoutData});
+		alert("Thanks for order!");
+		dispatch(emptyCart());
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		alert("Something went wrong. Try again later.")
 	}
 }

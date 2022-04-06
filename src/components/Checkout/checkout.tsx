@@ -1,5 +1,5 @@
 import { cartProductsSelector } from "../../redux/selectors";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { FC } from "react";
 import style from "./checkout.module.scss";
@@ -14,10 +14,12 @@ import bankCard5 from "../../images/payment-methods/5.png";
 import bankCard6 from "../../images/payment-methods/6.png";
 import paypalIcon from "../../images/icons/paypal.png";
 import bitcoinIcon from "../../images/icons/bitcoin.png";
+import { checkoutAction } from "../../redux/actions";
 
 const Checkout: FC<{}> = () => {
 
 	const cartProducts = useSelector(cartProductsSelector);
+	const dispatch = useDispatch();
 
 	const formik = useFormik({
 		initialValues: {
@@ -37,7 +39,7 @@ const Checkout: FC<{}> = () => {
 			onlinePaymentOption: "card"
 		},
 		onSubmit(values) {
-			console.log(values);
+			dispatch(checkoutAction(values));
 		},
 		validate(values) {
 			const errors: any = {};

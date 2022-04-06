@@ -112,4 +112,9 @@ router.post("/newsletter", (req, res) => {
 	res.status(202).send();
 })
 
+router.post("/checkout", (req, res) => {
+	if(!req.body.checkout) res.status(400).send();
+	res.status(200).send();
+})
+
 module.exports = router;
