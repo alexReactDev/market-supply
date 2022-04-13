@@ -6,6 +6,7 @@ import Categories from "../Categories";
 import Checkout from "../Checkout";
 import HomePage from "../HomePage";
 import ProductDetails from "../ProductDetails";
+import Whitelist from "../Whitelist";
 import style from './main.module.scss';
 
 const Main: FC<{}> = () => {
@@ -21,6 +22,7 @@ const Main: FC<{}> = () => {
 							<Route path="/product" component={ProductDetails} />
 							<Route path="/cart" component={Cart} />
 							<Route path="/checkout" component={Checkout} />
+							<Route path="/whitelist" component={Whitelist} />
 							<Redirect from="*" to="/404" />
 						</Switch>
 					</div>	
