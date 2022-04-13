@@ -8,6 +8,7 @@ import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsL
 import Axios from "axios";
 import { productsSelector } from "./selectors";
 import { emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
+import { addToWhitelist, removeFromWhitelist } from "./reducer/whitelist";
 
 const axios = Axios.create({
 	baseURL: "http://localhost:3000/"
@@ -242,4 +243,16 @@ export const checkoutAction = (checkoutData: {[key: string]: string}) => async (
 
 		alert("Something went wrong. Try again later.")
 	}
+}
+
+export const addToWhitelistAction = (productId: string) => {
+	return addToWhitelist({
+		id: productId
+	})
+}
+
+export const removeFromWhitelistAction = (productId: string) => {
+	return removeFromWhitelist({
+		id: productId
+	})
 }

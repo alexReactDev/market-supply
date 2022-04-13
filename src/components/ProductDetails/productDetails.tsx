@@ -17,6 +17,7 @@ import { IProductDetails } from "../../redux/reducer/productsDetails";
 import PublishReview from "../PublishReview";
 import { IProductReviews } from "../../redux/reducer/productsReviews";
 import Review from "../Review";
+import AddToWhitelist from "../AddToWhitelist";
 
 const ProductDetails: FC<{}> = () => {
 
@@ -93,6 +94,7 @@ const ProductDetails: FC<{}> = () => {
 					</div>
 				</div>
 				<div className={style.product__info}>
+					<AddToWhitelist className={style.product__addToWhitelist} id={productId} />
 					<h3 className={style.product__name}>
 						{name}
 					</h3>

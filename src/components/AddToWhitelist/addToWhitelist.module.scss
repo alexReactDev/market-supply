@@ -1,0 +1,19 @@
+.addToWhitelist {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.addToWhitelist__star {
+	width: 20px;
+	height: 20px;
+	background: url("../../images/icons/star-empty.png") center / contain no-repeat;
+
+	&:hover {
+		background-image: url("../../images/icons/star-half-filled.png");
+	}
+}
+
+.addToWhitelist__star_active {
+	background-image: url("../../images/icons/star.png");
+}

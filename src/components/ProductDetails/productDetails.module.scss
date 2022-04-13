@@ -66,12 +66,19 @@
 }
 
 .product__info {
+	position: relative;
 	width: 60%;
 	margin-left: 10px;
 	box-sizing: border-box;
 	border: solid 1px $borderC;
 	padding: 10px;
 	background-color: $white;
+}
+
+.product__addToWhitelist {
+	position: absolute;
+	top: 10px;
+	right: 15px;
 }
 
 .product__name {

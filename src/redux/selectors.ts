@@ -5,6 +5,8 @@ export const cart = (state: AppState) => state.cart;
 export const cartTotal = (state: AppState) => cart(state).total;
 export const cartProductsSelector = (state: AppState) => cart(state).products;
 
+export const whitelistProductsSelector = (state: AppState) => state.whitelist.products;
+
 export const categoriesSelector = (state: AppState) => state.categories;
 
 export const initialized = (state: AppState) => state.initialized;

@@ -24,7 +24,7 @@ const whitelistSlice = createSlice({
 		removeFromWhitelist(state, action: PayloadAction<IAction>) {
 			const { id } = action.payload;
 
-			state.products.filter((productId) => productId !== id);
+			state.products = state.products.filter((productId) => productId !== id);
 		},
 		clearWhitelist(state) {
 			state.products = [];
