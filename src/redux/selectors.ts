@@ -57,3 +57,11 @@ export const cartProductsWithPropsSelector = (state: AppState) => {
 
 	return cartProductsWithProps;
 }
+
+export const whitelistProductsWithPropsSelector = (state: AppState) => {
+
+	const whitelistProducts = whitelistProductsSelector(state);
+	const whitelistProductsWithProps = whitelistProducts.map((productId) => productsSelector(state)[productId]);
+
+	return whitelistProductsWithProps;
+}

@@ -1,10 +1,10 @@
-@import "../../styles//variables.scss";
+@import "../../styles/variables.scss";
 
-.cart {
+.whitelist {
 	margin: 25px 0px;
 }
 
-.cart__title {
+.whitelist__title {
 	margin-bottom: 15px;
 	font-size: $titleFz;
 	color: $titleC;
@@ -12,48 +12,32 @@
 	font-weight: bolder;
 }
 
-.cart__table {
+.whitelist__table {
 	border: solid 1px $borderC;
 }
 
-.cart__tableHeader {
+.whitelist__tableHeader {
 	display: flex;
 	padding: 15px 30px;
 	background-color: $red;
 	color: $white;
 }
 
-.cart__tableItem {
+.whitelist__tableItem {
 	width: 40%;
 }
 
-.cart__tablePrice {
+.whitelist__tablePrice {
 	width: 17.5%;
 	text-align: center;
 }
 
-.cart__tableAmount {
-	width: 19%;
+.whitelist__tableAmount {
+	width: 40%;
 	text-align: center;
 }
 
-.cart__tableTotal {
-	width: 21%;
-	text-align: center;
-}
-
-.cart__entries {
-	padding: 15px 0px;
-}
-
-.cart__buttonsField {
-	display: flex;
-	justify-content: flex-end;
-}
-
-.cart__checkoutButtonsShell {}
-
-.cart__productEntry {
+.whitelist__productEntry {
 	width: 100%;
 	box-sizing: border-box;
 	margin-bottom: 15px;
@@ -62,6 +46,10 @@
 	&:last-child {
 		margin-bottom: 0px;
 	}
+}
+
+.whitelist__entries {
+	padding: 15px 0px;
 }
 
 .productEntry {
@@ -104,40 +92,15 @@
 	width: 17.5%;
 }
 
-.productEntry__amountShell {
-	width: 17.5%;
-}
-
-.productEntry__amountIncrement, .productEntry__amountDecrement {
-	width: 20px;
-	border: none;
-	border-radius: 5px;
-	box-shadow: 1px 1px 0px 0px rgb(190, 190, 190);
-	background: center / 75% no-repeat $red;
-	
-	&:active {
-		box-shadow: none;
-	}
-}
-
-.productEntry__amountIncrement {
-	background-image: url("../../images/icons/plus.png");
-}
-
-.productEntry__amount {
-	padding: 0px 7px;
-}
-
-.productEntry__amountDecrement {
-	background-image: url("../../images/icons/minus.png");
-}
-
-.productEntry__totalShell {
-	width: 20%;
-}
-
 .productEntry__deleteButtonShell {
 	width: 5%;
+}
+
+.productEntry__addToCartShell {
+	width: 37.5%;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
 }
 
 .productEntry__deleteButton {
@@ -154,23 +117,8 @@
 	}
 }
 
-.cart__checkoutButton {
-	margin-top: 12px;
-	padding: 10px 12px;
-}
-
-.cart__totalField {
-	background-color: $red;
-}
-
-.cart__total {
-	padding: 10px;
-	text-align: end;
-	color: $white;
-}
-
 @media (max-width: $md2) {
-	.cart__tableHeader {
+	.whitelist__tableHeader {
 		display: none;
 	}
 
@@ -205,11 +153,7 @@
 	}
 
 	.productEntry__amountShell {
-		width: 25%;
-	}
-
-	.productEntry__totalShell {
-		width: 25%;
+		width: 50%;
 	}
 
 	.productEntry__deleteButtonShell {
@@ -219,7 +163,7 @@
 
 @media (max-width: $md3) {
 
-	.cart {
+	.whitelist {
 		margin: 15px 0px;
 	}
 

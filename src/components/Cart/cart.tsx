@@ -17,6 +17,9 @@ const Cart: FC<{}> = () => {
 
 	return(
 		<div className={style.cart}>
+			<h2 className={style.cart__title}>
+				Cart
+			</h2>
 			<div className={style.cart__table}>
 				<div className={style.cart__tableHeader}>
 					<span className={style.cart__tableItem}>
