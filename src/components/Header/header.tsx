@@ -1,4 +1,7 @@
 import { FC, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAppSelector } from "../../hooks";
+import { cartAmountSelector, whitelistAmountSelector } from "../../redux/selectors";
 import Burger from "../Burger";
 import Links from "../Links";
 import Logo from "../Logo";
@@ -13,6 +16,9 @@ const Header: FC<{}> = () => {
 
 	const [adaptive, setAdaptive] = useState(document.documentElement.clientWidth > 1024 ? false : true);
 
+	const cartAmount = useAppSelector(cartAmountSelector);
+	const whitelistAmount = useAppSelector(whitelistAmountSelector);
+
 	useEffect(() => {
 		const resizeHandler = () => setAdaptive(document.documentElement.clientWidth > 1024 ? false : true);
 
@@ -26,29 +32,6 @@ const Header: FC<{}> = () => {
 		else document.body.style.overflowY = "auto";
 	})
 
-	const headerLinks = [
-		{
-			link: '/account',
-			text: 'My Account'
-		},
-		{
-			link: '/whitelist',
-			text: 'Whitelist'
-		},
-		{
-			link: '/cart',
-			text: 'My cart'
-		},
-		{
-			link: '/checkout',
-			text: 'Checkout'
-		},
-		{
-			link: '/login',
-			text: 'Login'
-		}
-	]
-
 	return(
 		<div className={style.header}>
 			<div className="content">
@@ -56,7 +39,51 @@ const Header: FC<{}> = () => {
 					<Logo className={style.header__logo} />
 					<Burger className={style.header__burger} active={menuOpen} onClick={() => setState(!menuOpen)} />
 					<div className={`${style.header__content} ${menuOpen ? style.header__content_active : ""}`}>
-						<Links className={style.header__links} links={headerLinks} />
+						<ul className={`${style.header__links} ${style.links}`}>
+							<li className={style.links__link}>
+								<Link to={"/account"} className={`${style.links__text} nav-link`}>
+									My account
+								</Link>
+							</li>
+							<li className={style.links__link}>
+								<Link to={"/whitelist"} className={`${style.links__text} nav-link`}>
+									{
+										whitelistAmount > 0
+										?
+										<div className={style.links__amount}>
+											{whitelistAmount}
+										</div>	
+										:
+										null
+									}
+									Wishlist
+								</Link>
+							</li>
+							<li className={style.links__link}>
+								<Link to={"/cart"} className={`${style.links__text} nav-link`}>
+									{
+										cartAmount > 0
+										?
+										<div className={style.links__amount}>
+											{cartAmount}
+										</div>	
+										:
+										null
+									}
+									Cart
+								</Link>
+							</li>
+							<li className={style.links__link}>
+								<Link to={"/checkout"} className={`${style.links__text} nav-link`}>
+									Checkout
+								</Link>
+							</li>
+							<li className={style.links__link}>
+								<Link to={"/login"} className={`${style.links__text} nav-link`}>
+									Login
+								</Link>
+							</li>
+						</ul>
 						<div className={style.header__items}>
 							<Search className={style.header__search} />
 							<MiniCart className={style.header__cart} />

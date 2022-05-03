@@ -17,6 +17,8 @@ export const productsReviewsSelector = (state: AppState) => state.productsReview
 
 export const cartAmountSelector = (state: AppState) => Array.from(Object.keys(cartProductsSelector(state))).length;
 
+export const whitelistAmountSelector = (state: AppState) => Array.from(Object.keys(whitelistProductsSelector(state))).length;
+
 export const URLPathSelector = (state: AppState) => state.router.location.pathname;
 
 export const URLPathEndSelector = (state: AppState) => {
