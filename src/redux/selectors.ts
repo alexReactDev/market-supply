@@ -11,6 +11,8 @@ export const categoriesSelector = (state: AppState) => state.categories;
 
 export const initialized = (state: AppState) => state.initialized;
 
+export const loggedInSelector = (state: AppState) => state.login.loggedIn;
+
 export const productsSelector = (state: AppState) => state.products;
 export const productsDetailsSelector = (state: AppState) => state.productsDetails;
 export const productsReviewsSelector = (state: AppState) => state.productsReviews;

@@ -10,6 +10,7 @@ import products from "./products";
 import productsDetails from "./productsDetails";
 import productsReviews from "./productsReviews";
 import whitelist from "./whitelist";
+import login from "./login";
 
 const rootReducer = combineReducers({
 	router: connectRouter(history),
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
 	productsDetails,
 	productsReviews,
 	whitelist,
+	login
 })
 
 export default rootReducer;
