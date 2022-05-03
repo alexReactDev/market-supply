@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
-import { cartAmountSelector, whitelistAmountSelector } from "../../redux/selectors";
+import { cartAmountSelector, loggedInSelector, whitelistAmountSelector } from "../../redux/selectors";
 import Burger from "../Burger";
 import Links from "../Links";
 import Logo from "../Logo";
@@ -18,6 +18,7 @@ const Header: FC<{}> = () => {
 
 	const cartAmount = useAppSelector(cartAmountSelector);
 	const whitelistAmount = useAppSelector(whitelistAmountSelector);
+	const loggedIn = useAppSelector(loggedInSelector);
 
 	useEffect(() => {
 		const resizeHandler = () => setAdaptive(document.documentElement.clientWidth > 1024 ? false : true);
@@ -79,9 +80,19 @@ const Header: FC<{}> = () => {
 								</Link>
 							</li>
 							<li className={style.links__link}>
-								<Link to={"/login"} className={`${style.links__text} nav-link`}>
-									Login
-								</Link>
+								{
+									loggedIn
+									?
+									<input 
+										type="button"
+										className={style.links__logoutBtn}
+										value="Log out"
+									/>
+									:
+									<Link to={"/login"} className={`${style.links__text} nav-link`}>
+										Login
+									</Link>
+								}
 							</li>
 						</ul>
 						<div className={style.header__items}>

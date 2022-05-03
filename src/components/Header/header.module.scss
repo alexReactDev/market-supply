@@ -72,6 +72,15 @@
 	background-color: rgb(134, 44, 44);
 }
 
+.links__logoutBtn {
+	border: none;
+	border-radius: 5px;
+	padding: 5px 7.5px;
+	font-weight: bolder;
+	color: $fontCLight;
+	background-color: $faintRed;
+}
+
 .header__items {
 	display: flex;
 	margin-bottom: 20px;
