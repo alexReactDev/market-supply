@@ -5,6 +5,7 @@
 }
 
 .cart__picture {
+	position: relative;
 	width: 40px;	
 	height: 40px;
 	border-radius: 50%;
@@ -16,6 +17,21 @@
 	img {
 		margin-left: -3px;
 	}
+}
+
+.cart__amount {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	top: -4px;
+	right: -4px;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: $white;
+	font-size: 10px;
+	background-color: rgb(134, 44, 44);
 }
 
 .cart__body {

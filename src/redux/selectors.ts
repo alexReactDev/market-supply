@@ -15,6 +15,8 @@ export const productsSelector = (state: AppState) => state.products;
 export const productsDetailsSelector = (state: AppState) => state.productsDetails;
 export const productsReviewsSelector = (state: AppState) => state.productsReviews;
 
+export const cartAmountSelector = (state: AppState) => Array.from(Object.keys(cartProductsSelector(state))).length;
+
 export const URLPathSelector = (state: AppState) => state.router.location.pathname;
 
 export const URLPathEndSelector = (state: AppState) => {
