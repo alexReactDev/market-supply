@@ -1,4 +1,4 @@
-import { useFormik } from "formik";
+import { FormikValues, useFormik } from "formik";
 import { FC } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { loggedInSelector, loginErrorSelector, loginLoadingSelector } from "../../redux/selectors";
@@ -22,6 +22,15 @@ const Login: FC<{}> = () => {
 		},
 		onSubmit(values) {
 			dispatch(loginAction(values));
+		},
+		validate(values) {
+			const errors = {} as FormikValues;
+
+			if(!values.email) errors.email = "Email is empty"
+
+			if(!values.password) errors.password = "Password is empty"
+
+			return errors;
 		}
 	})
 
