@@ -1,0 +1,97 @@
+@import "../../styles/variables.scss";
+
+.signUp {
+	padding-top: 10px;
+	text-align: center;
+}
+
+.signUp__errorShell {
+	margin-top: 10px;
+}
+
+.signUp__error {
+	display: inline-block;
+	border: solid $red 2px;
+	padding: 12px;
+	font-size: $defaultFz;
+	background-color: rgb(255, 242, 242);
+}
+
+.signUp__body {
+	display: inline-block;
+	margin-top: 40px;
+	border: solid $borderC 1px;
+	padding: 20px 25px;
+	box-shadow: 0px 0px 5px 0px rgb(219, 219, 219);
+	background-color: $white;
+}
+
+.signUp__title {
+	margin-bottom: 20px;
+	font-size: $titleFz;
+	color: $titleC;
+	font-weight: bolder;
+	text-transform: uppercase;
+}
+
+.signUp__inputs {}
+
+.inputs {}
+
+.inputs__row {
+	margin-bottom: 15px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.inputs__input {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 8px 12px;
+	font-size: $defaultFz;
+
+	&:disabled {
+		border: solid rgb(143, 143, 143) 1px;
+		background-color: rgb(243, 243, 243);
+	}
+}
+
+.inputs__column {
+	display: inline-block;
+	width: 48%;
+}
+
+.inputs__btn {
+	width: 80%;
+	border: none;
+	border-radius: 4px;
+	padding: 10px;
+	box-shadow: 0.8px 1px 0px 0px rgb(206, 206, 206);
+	color: $fontCLight;
+	font-size: $defaultFz;
+	font-weight: bolder;
+	background-color: $faintRed;
+
+	&:hover {
+		transition-duration: 0.2s;
+		background-color: #e94b60;
+	}
+
+	&:active {
+		position: relative;
+		top: 1px;
+		box-shadow: none;
+	}
+
+	&:disabled {
+		box-shadow: none;
+	}
+
+	&:disabled:active {
+		position: static;
+	}
+
+	&:disabled:hover {
+		background-color: $faintRed;
+	}
+}

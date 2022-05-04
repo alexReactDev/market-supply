@@ -13,7 +13,7 @@ class UserController {
 	}
 
 	createUser(req, res) {
-		res.sendStatus(200);
+		res.status(201).json(req.body);
 	}
 
 	changeUserProfile(req, res) {

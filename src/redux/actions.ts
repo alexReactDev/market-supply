@@ -11,6 +11,7 @@ import { emptyCart, productDecrement, productIncrement, removeProduct } from "./
 import { addToWhitelist, removeFromWhitelist } from "./reducer/whitelist";
 import { loginStart, loginSuccess, loginError, logout } from "./reducer/login";
 import { push } from "connected-react-router";
+import { signUpError, signUpStart, signUpSuccess } from "./reducer/signUp";
 
 const axios = Axios.create({
 	baseURL: "http://localhost:3000/"
@@ -292,4 +293,48 @@ export const logoutAction = () => async (dispatch: AppDispatch) => {
 
 		return dispatch(push("/error"));
 	}
+}
+
+interface signUpData {
+	name: string,
+	surname?: string,
+	email: string,
+	password: string
+}
+
+export const signUpAction = (signUpData: signUpData) => async (dispatch: AppDispatch) => {
+	dispatch(signUpStart());
+
+	let savedUser;
+
+	try {
+		savedUser = await (await axios.post("/api/user", signUpData)).data;
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(signUpError({error: e.response.data}));
+
+		if(e.response.status !== 400) dispatch(push("/error"));
+
+		return;
+	}
+
+	dispatch(loginStart());
+
+	try {
+		await axios.post("/api/login", {email: savedUser.email, password: signUpData.password});
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(loginError({error: e.response.data}));
+		dispatch(signUpError(e.response.data));
+		dispatch(push("/error"));
+
+		return;
+	}
+
+	dispatch(loginSuccess());
+	dispatch(signUpSuccess());
 }

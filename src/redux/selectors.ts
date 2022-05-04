@@ -15,6 +15,9 @@ export const loggedInSelector = (state: AppState) => state.login.loggedIn;
 export const loginErrorSelector = (state: AppState) => state.login.error;
 export const loginLoadingSelector = (state: AppState) => state.login.loading;
 
+export const signUpLoadingSelector = (state: AppState) => state.signUp.loading;
+export const signUpErrorSelector = (state: AppState) => state.signUp.error;
+
 export const productsSelector = (state: AppState) => state.products;
 export const productsDetailsSelector = (state: AppState) => state.productsDetails;
 export const productsReviewsSelector = (state: AppState) => state.productsReviews;
