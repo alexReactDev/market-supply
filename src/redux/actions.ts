@@ -142,7 +142,7 @@ export const loadProductDetailsAction = (id: string) => async (dispatch: AppDisp
 	dispatch(productDetailsLoadStart({id}));
 
 	try {
-		const productDetails = (await axios.get(`/api/product-details/${id}`)).data;
+		const productDetails = (await axios.get(`/api/product/${id}/details`)).data;
 		dispatch(productDetailsLoaded({
 			id,
 			details: productDetails
@@ -162,7 +162,7 @@ export const loadProductReviewsAction = (id: string) => async (dispatch: AppDisp
 	dispatch(productReviewsLoadStart({id}));
 
 	try {
-		const productReviews = (await axios.get(`/api/product-reviews/${id}`)).data;
+		const productReviews = (await axios.get(`/api/product/${id}/reviews`)).data;
 		dispatch(productReviewsLoaded({
 			id,
 			reviews: productReviews
@@ -217,7 +217,7 @@ interface IReviewToPublish extends IReview {
 export const publishReviewAction = (productId: string, review: IReviewToPublish) => async (dispatch: AppDispatch) => {
 	
 	try {
-		const savedReview = (await axios.post(`api/product-reviews/${productId}`, {review})).data;
+		const savedReview = (await axios.post(`api/product/${productId}/reviews`, {review})).data;
 
 		dispatch(productReviewsLoaded({
 			id: productId,
