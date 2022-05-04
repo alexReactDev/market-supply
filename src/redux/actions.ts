@@ -9,6 +9,8 @@ import Axios from "axios";
 import { productsSelector } from "./selectors";
 import { emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
 import { addToWhitelist, removeFromWhitelist } from "./reducer/whitelist";
+import { loginStart, loginSuccess, loginError, logout } from "./reducer/login";
+import { push } from "connected-react-router";
 
 const axios = Axios.create({
 	baseURL: "http://localhost:3000/"
@@ -255,4 +257,39 @@ export const removeFromWhitelistAction = (productId: string) => {
 	return removeFromWhitelist({
 		id: productId
 	})
+}
+
+interface loginData {
+	email: string,
+	password: string
+}
+
+export const loginAction = (loginData: loginData) => async (dispatch: AppDispatch) => {
+	dispatch(loginStart());
+
+	try {
+		await axios.post("/api/login", loginData);
+		return dispatch(loginSuccess());
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(loginError({error: e.response.data}));
+
+		if(e.response.status !== 400) dispatch(push("/error"));
+
+		return;
+	}
+}
+
+export const logoutAction = () => async (dispatch: AppDispatch) => {
+	try {
+		await axios.post("/api/logout");
+		return dispatch(logout());
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		return dispatch(push("/error"));
+	}
 }

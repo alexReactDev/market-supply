@@ -20,7 +20,7 @@ const loginSlice = createSlice({
 	name: "login",
 	initialState,
 	reducers: {
-		loginStart(state, action: PayloadAction<{}>) {
+		loginStart(state) {
 			state.loading = true;
 			state.error = null
 		},
@@ -30,11 +30,11 @@ const loginSlice = createSlice({
 			state.loading = false;
 			state.error = error;
 		},
-		loginSuccess(state, action: PayloadAction<{}>) {
+		loginSuccess(state) {
 			state.loading = false;
 			state.loggedIn = true;
 		},
-		logout(state, action: PayloadAction<{}>) {
+		logout(state) {
 			state.loggedIn = false;
 		}
 	}
