@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { logoutAction } from "../../redux/actions";
 import { cartAmountSelector, loggedInSelector, whitelistAmountSelector } from "../../redux/selectors";
 import Burger from "../Burger";
 import Links from "../Links";
@@ -19,6 +20,8 @@ const Header: FC<{}> = () => {
 	const cartAmount = useAppSelector(cartAmountSelector);
 	const whitelistAmount = useAppSelector(whitelistAmountSelector);
 	const loggedIn = useAppSelector(loggedInSelector);
+
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		const resizeHandler = () => setAdaptive(document.documentElement.clientWidth > 1024 ? false : true);
@@ -87,6 +90,7 @@ const Header: FC<{}> = () => {
 										type="button"
 										className={style.links__logoutBtn}
 										value="Log out"
+										onClick={() => dispatch(logoutAction())}
 									/>
 									:
 									<Link to={"/login"} className={`${style.links__text} nav-link`}>
