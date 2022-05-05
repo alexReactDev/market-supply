@@ -1,15 +1,12 @@
+const fixtures = require("../fixtures4.json");
+
 class UserController {
 	getUser(req, res) {
-		res.status(200).json({
-			name: "John",
-			surname: "Doe",
-			phone: "+ 1 234 567 8910",
-			town: "New York",
-			street: "Main Road",
-			house: "1",
-			apartment: "12",
-			zip: "12345"
-		});
+		res.status(200).json(fixtures.userdata.userdata);
+	}
+
+	getUserOrders(req, res) {
+		res.json(fixtures.userdata.orders);
 	}
 
 	createUser(req, res) {

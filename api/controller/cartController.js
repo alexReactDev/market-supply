@@ -1,20 +1,36 @@
-const fixtures = require("../fixtures3.1.json");
+const fixtures = require("../fixtures4.json");
 
 class CartController {
 	getCartItems(req, res) {
 		res.send(fixtures.cart);
 	}
 
-	addCartItem(req, res) {
-		const {productId} = req.body;
+	cartItemIncrement(req, res) {
+		const {id, amount} = req.body;
 
-		res.json(productId);
+		res.json({
+			id,
+			amount
+		});
+	}
+
+	cartItemDecrement(req, res) {
+		const {id, amount} = req.body;
+
+		res.json({
+			id,
+			amount
+		});
 	}
 
 	removeCartItem(req, res) {
-		const {productId} = req.params.productId;
+		const id = req.params.productId;
 
-		res.json(productId);
+		res.json(id);
+	}
+
+	emptyCart(req, res) {
+		res.sendStatus(200);
 	}
 }
 

@@ -5,17 +5,13 @@ import { categoryLoaded, categoryLoadError, categoryLoadStart } from "./reducer/
 import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
 import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
-import Axios from "axios";
 import { productsSelector } from "./selectors";
 import { emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
-import { addToWhitelist, removeFromWhitelist } from "./reducer/whitelist";
+import { addToWhitelist, clearWhitelist, removeFromWhitelist } from "./reducer/whitelist";
 import { loginStart, loginSuccess, loginError, logout } from "./reducer/login";
 import { push } from "connected-react-router";
 import { signUpError, signUpStart, signUpSuccess } from "./reducer/signUp";
-
-const axios = Axios.create({
-	baseURL: "http://localhost:3000/"
-});
+import axios from "../httpConfig";
 export interface IInitData {
 	categories: [{
 		URLName: string,
@@ -28,7 +24,7 @@ export type TInitAction = PayloadAction<IInitData>;
 export const init = createAction<IInitData>(INIT);
 
 export const initialize = () => async (dispatch: AppDispatch, getState: () => AppState) => {
-	
+
 	const initData: Partial<IInitData> = {};
 
 	try {
@@ -181,36 +177,84 @@ export const loadProductReviewsAction = (id: string) => async (dispatch: AppDisp
 	}
 }
 
-export const productIncrementAction = (productId: string, amount: number = 1) => (dispatch: AppDispatch, getState: () => AppState) => {
+export const productIncrementAction = (productId: string, amount: number = 1) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
 	const productPrice = (productsSelector(state)[productId] as IProduct).price;
 
-	dispatch(productIncrement({
-		productId,
-		productPrice,
-		amount
-	}))
+	try {
+		const incrementedProduct = (await axios.patch("/api/cart", {
+			action: "increment",
+			id: productId,
+			amount
+		})).data;
+
+		dispatch(productIncrement({
+			productId: incrementedProduct.id,
+			amount: incrementedProduct.amount,
+			productPrice
+		}))
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(push("/error"));
+	}
 }
 
-export const productDecrementAction = (productId: string, amount: number = 1) => (dispatch: AppDispatch, getState: () => AppState) => {
+export const productDecrementAction = (productId: string, amount: number = 1) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
 	const productPrice = (productsSelector(state)[productId] as IProduct).price;
 
-	dispatch(productDecrement({
-		productId,
-		productPrice,
-		amount
-	}))
+	try {
+		const incrementedProduct = (await axios.patch("/api/cart", {
+			action: "decrement",
+			id: productId,
+			amount
+		})).data;
+
+		dispatch(productIncrement({
+			productId: incrementedProduct.id,
+			amount: incrementedProduct.amount,
+			productPrice
+		}))
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(push("/error"));
+	}
 }
 
-export const removeProductAction = (productId: string) => (dispatch: AppDispatch, getState: () => AppState) => {
+export const removeProductAction = (productId: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
 	const productPrice = (productsSelector(state)[productId] as IProduct).price;
 
-	dispatch(removeProduct({
-		productId,
-		productPrice
-	}))
+	try {
+		const removedItem = await (await axios.delete(`/api/cart/${productId}`)).data;
+
+		dispatch(removeProduct({
+			productId: removedItem,
+			productPrice
+		}))
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(push("/error"));
+	}
+}
+
+export const emptyCartAction = () => async (dispatch: AppDispatch) => {
+	try {
+		await axios.delete("/api/cart");
+
+		dispatch(emptyCart());
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(push("/error"));
+	}
 }
 
 interface IReviewToPublish extends IReview {
@@ -248,16 +292,43 @@ export const checkoutAction = (checkoutData: {[key: string]: string}) => async (
 	}
 }
 
-export const addToWhitelistAction = (productId: string) => {
-	return addToWhitelist({
-		id: productId
-	})
+export const addToWhitelistAction = (id: string) => async (dispatch: AppDispatch) => {
+	try {
+		const savedItem = await (await axios.post("/api/wishlist", {id})).data;
+		
+		dispatch(addToWhitelist({id: savedItem}));
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(push("/error"));
+	}
 }
 
-export const removeFromWhitelistAction = (productId: string) => {
-	return removeFromWhitelist({
-		id: productId
-	})
+export const removeFromWhitelistAction = (id: string) => async (dispatch: AppDispatch) => {
+	try {
+		const removedItem = await (await axios.delete(`/api/wishlist/${id}`)).data;
+
+		dispatch(removeFromWhitelist({id: removedItem}));
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(push("/error"));
+	}
+}
+
+export const clearWishlistAction = () => async (dispatch: AppDispatch) => {
+	try {
+		await axios.delete("/api/wishlist");
+
+		dispatch(clearWhitelist());
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(push("/error"));
+	}
 }
 
 interface loginData {

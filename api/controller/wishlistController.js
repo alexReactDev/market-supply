@@ -4,15 +4,19 @@ class WishlistController {
 	}
 
 	addWishlistItem(req, res) {
-		const {productId} = req.body;
+		const {id} = req.body;
 
-		res.json(productId);
+		res.status(202).json(id);
 	}
 
 	removeWishlistItem(req, res) {
-		const {productId} = req.params.productId;
+		const id = req.params.productId;
 
-		res.json(productId);
+		res.json(id);
+	}
+
+	clearWishlist(req, res) {
+		res.sendStatus(200);
 	}
 }
 
