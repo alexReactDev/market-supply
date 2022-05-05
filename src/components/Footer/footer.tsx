@@ -33,7 +33,7 @@ const Footer: FC<{}> = () => {
 		},
 		{
 			link: '/whitelist',
-			text: 'Whitelist'
+			text: 'Wishlist'
 		},
 		{
 			link: '/cart',

@@ -14,7 +14,7 @@ const Whitelist: FC<{}> = () => {
 	return(
 	<div className={style.whitelist}>
 		<h2 className={style.whitelist__title}>
-			Whitelist
+			Wishlist
 		</h2>
 		<div className={style.whitelist__table}>
 			<div className={style.whitelist__tableHeader}>
@@ -64,7 +64,7 @@ const Whitelist: FC<{}> = () => {
 						})
 					:
 						<p className="text-center">
-							Your whitelist is empty
+							Your wishlist is empty
 						</p>
 				}
 			</div>
