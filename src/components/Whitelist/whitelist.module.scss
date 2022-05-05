@@ -117,6 +117,19 @@
 	}
 }
 
+.wishlist__controls {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.wishlist__btnShell {
+	padding: 12px 0px;
+}
+
+.wishlist__btn {
+	padding: 10px 12px;
+}
+
 @media (max-width: $md2) {
 	.whitelist__tableHeader {
 		display: none;

@@ -1,6 +1,6 @@
 import { FC } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromWhitelistAction } from "../../redux/actions";
+import { clearWishlistAction, removeFromWhitelistAction } from "../../redux/actions";
 import { IProductWithProps, whitelistProductsWithPropsSelector } from "../../redux/selectors";
 import AddToCart from "../AddToCart";
 import Price from "../Price";
@@ -68,6 +68,23 @@ const Whitelist: FC<{}> = () => {
 						</p>
 				}
 			</div>
+		</div>
+		<div className={style.wishlist__controls}>
+			{
+				products.length > 0
+				?
+				<span className={style.wishlist__btnShell}>
+					<input
+						type="button"
+						className={`${style.wishlist__btn} btn`}
+						value="Clear"
+						onClick={() => dispatch(clearWishlistAction())}
+					/>
+				</span>
+				:
+				null
+			}
+			
 		</div>
 	</div>
 	)
