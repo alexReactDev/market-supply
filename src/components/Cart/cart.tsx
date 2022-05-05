@@ -2,7 +2,7 @@ import { FC } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../hooks";
-import { productDecrementAction, productIncrementAction, removeProductAction } from "../../redux/actions";
+import { emptyCartAction, productDecrementAction, productIncrementAction, removeProductAction } from "../../redux/actions";
 import { cartTotal, IProductWithProps } from "../../redux/selectors";
 import { cartProductsWithPropsSelector } from "../../redux/selectors";
 import CurrencyConverter from "../CurrencyConverter";
@@ -102,10 +102,18 @@ const Cart: FC<{}> = () => {
 				products.length > 0
 				?
 				<div className={style.cart__buttonsField}>
-					<Link to="/checkout" className={`${style.cart__checkoutButtonShell} nav-link`}>
+					<span className={style.cart__btnShell}>
+						<input	
+							type="button"
+							className={`${style.cart__btn} btn`}
+							value="Clear"
+							onClick={() => dispatch(emptyCartAction())}
+						/>
+					</span>
+					<Link to="/checkout" className={`${style.cart__btnShell} nav-link`}>
 						<input
 							type="button"
-							className={`${style.cart__checkoutButton} btn`}
+							className={`${style.cart__btn} btn`}
 							value="Go to checkout"
 						/>
 					</Link>

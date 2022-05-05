@@ -51,7 +51,18 @@
 	justify-content: flex-end;
 }
 
-.cart__checkoutButtonsShell {}
+.cart__btnShell {
+	margin-left: 12px;
+
+	&:first-child {
+		margin-left: 0px;
+	}
+}
+
+.cart__btn {
+	margin-top: 12px;
+	padding: 10px 12px;
+}
 
 .cart__productEntry {
 	width: 100%;
@@ -152,11 +163,6 @@
 	&:active {
 		background-color: rgb(172, 172, 172);
 	}
-}
-
-.cart__checkoutButton {
-	margin-top: 12px;
-	padding: 10px 12px;
 }
 
 .cart__totalField {
