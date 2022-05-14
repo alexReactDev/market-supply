@@ -14,6 +14,7 @@ import login from "./login";
 import signUp from "./signUp";
 import userdata from "./userdata";
 import preferences from "./preferences";
+import userOrders from "./userOrders";
 
 const rootReducer = combineReducers({
 	router: connectRouter(history),
@@ -28,7 +29,8 @@ const rootReducer = combineReducers({
 	login,
 	signUp,
 	userdata,
-	preferences
+	preferences,
+	userOrders
 })
 
 export default rootReducer;
