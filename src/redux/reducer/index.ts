@@ -13,6 +13,7 @@ import whitelist from "./whitelist";
 import login from "./login";
 import signUp from "./signUp";
 import userdata from "./userdata";
+import preferences from "./preferences";
 
 const rootReducer = combineReducers({
 	router: connectRouter(history),
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
 	whitelist,
 	login,
 	signUp,
-	userdata
+	userdata,
+	preferences
 })
 
 export default rootReducer;
