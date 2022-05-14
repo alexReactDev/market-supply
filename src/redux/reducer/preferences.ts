@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { LOGOUT } from "../../constants";
 
 interface IState {
 	autoFill: boolean
@@ -15,6 +16,9 @@ const preferencesSlice = createSlice({
 		preferencesLoaded(state, action: PayloadAction<IState>) {
 			return action.payload;
 		}
+	},
+	extraReducers: {
+		[LOGOUT]: () => initialState
 	}
 })
 

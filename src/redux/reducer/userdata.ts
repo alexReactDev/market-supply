@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { LOGOUT } from "../../constants";
 
 interface IUserData {
 	[key: string]: string,
@@ -41,6 +42,9 @@ const userDataSlice = createSlice({
 			state.loaded = true;
 			state.userData = action.payload;
 		}
+	},
+	extraReducers: {
+		[LOGOUT]: () => initialState
 	}
 })
 

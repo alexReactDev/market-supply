@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { LOGOUT } from "../../constants"
 
 interface IOrder {
 	productId: string,
@@ -56,6 +57,9 @@ const userOrdersSlice = createSlice({
 		newOrder(state, action: PayloadAction<IOrder>) {
 			state.orders.unshift(action.payload);
 		}
+	},
+	extraReducers: {
+		[LOGOUT]: () => initialState
 	}
 })
 
