@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { LOGOUT } from "../../constants"
 
-interface IOrder {
+export interface IOrder {
 	productId: string,
 	amount: number,
 	total: number,

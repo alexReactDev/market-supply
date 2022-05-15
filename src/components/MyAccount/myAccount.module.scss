@@ -1,0 +1,205 @@
+@import "../../styles/variables.scss";
+
+.myAccount {
+	margin: 30px 0px;
+	box-shadow: 0px 0px 5px 0px rgb(219, 219, 219);
+	background-color: $white;
+}
+
+.myAccount__title {
+	padding: 15px;
+	font-size: $titleFz;
+	font-weight: bolder;
+	text-transform: uppercase;
+	color: $titleC;
+}
+
+.myAccount__entry {
+	margin-bottom: 30px;
+
+	&:last-child {
+		padding-bottom: 20px;
+	}
+}
+
+.userData {
+	padding: 0px 20px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.userData__item {
+	width: 50%;
+	box-sizing: border-box;
+	margin-bottom: 10px;
+	font-size: $defaultFz;
+	color: $fontC;
+}
+
+.userData__title {
+	padding-right: 4px;
+	color: $titleC;
+	font-weight: bolder;
+}
+
+.userDataOptions {
+	padding: 0px 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.userDataOptions__option {
+	display: flex;
+	align-items: center;
+}
+
+.hint {
+	display: inline-block;
+	width: 21px;
+	height: 21px;
+	background: url("../../images/icons/question-round.png") center / contain no-repeat;
+
+	&:hover .hint__text {
+		display: block;
+	}
+}
+
+.hint__text {
+	display: none;
+	width: 400px;
+	position: relative;
+	top: -4px;
+	transform: translateY(-100%);
+	border: solid $borderC 1px;
+	padding: 5px;
+	background-color: white;
+	color: $fontC;
+}
+
+.myAccount__btn {
+	border: none;
+	border-radius: 7px;
+	padding: 7.5px 12px;
+	box-shadow: 1px 1.5px 0px 0px rgb(206, 206, 206);
+	background-color: $faintRed;
+	color: $fontCLight;
+	font-weight: bold;
+
+	&:hover {
+		transition-duration: 0.2s;
+		background-color: #f7213d;
+	}
+
+	&:active {
+		position: relative;
+		top: 1px;
+		box-shadow: none;
+	}
+}
+
+.email {
+	padding: 0px 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.email__title {
+	color: $titleC;
+	font-weight: bolder;
+}
+
+.email__value {
+	color: $fontC;
+}
+
+.controls {
+	padding: 0px 20px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.controls__option {
+	margin-left: 12px;
+
+	&:first-child {
+		margin-left: 0px;
+	}
+}
+
+.orders {
+	margin: 0px 20px 30px 20px;
+	border: solid $borderC 1px;
+}
+
+.orders__header {
+	margin-bottom: 15px;
+	padding: 10px 0px;
+	display: flex;
+	background-color: $red;
+	color: $white;
+}
+
+.orders__item {
+	margin-bottom: 15px;
+	padding: 0px 10px;
+	display: flex;
+}
+
+.orders__order {
+	width: 40%;
+	display: flex;
+	justify-content: center;
+}
+
+.order {
+	display: flex;
+}
+
+.order__picture {
+	width: 40%;
+}
+
+.order__img {
+	width: 100%;
+	height: 135px;
+	object-fit: cover;
+	object-position: center;
+}
+
+.order__info {
+	width: 60%;
+	box-sizing: border-box;
+	padding: 0px 10px;
+}
+
+.order__name {
+	margin-bottom: 7.5px;
+	color: $titleC;
+	font-size: $titleFzSmaller;
+}
+
+.order__webId {
+	color: $fontC;
+	font-size: $defaultFzSmaller;
+}
+
+.orders__amount {
+	width: 13.5%;
+	text-align: center;
+}
+
+.orders__total {
+	width: 13.5%;
+	text-align: center;
+}
+
+.orders__deliveryMethod {
+	width: 16.5%;
+	text-align: center;
+}
+
+.orders__paymentMethod {
+	width: 16.5%;
+	text-align: center;
+}
+

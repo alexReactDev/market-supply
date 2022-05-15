@@ -5,13 +5,16 @@ import { categoryLoaded, categoryLoadError, categoryLoadStart } from "./reducer/
 import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
 import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
-import { productsSelector } from "./selectors";
+import { productsSelector, userIdSelector, userOrdersSelector } from "./selectors";
 import { emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
 import { addToWhitelist, clearWhitelist, removeFromWhitelist } from "./reducer/whitelist";
 import { loginStart, loginSuccess, loginError, logout } from "./reducer/login";
 import { push } from "connected-react-router";
 import { signUpError, signUpStart, signUpSuccess } from "./reducer/signUp";
 import axios from "../httpConfig";
+import { userDataLoaded, userDataLoadError, userDataLoadStart } from "./reducer/userdata";
+import { IOrder, userOrdersLoaded, userOrdersLoadError, userOrdersLoadStart } from "./reducer/userOrders";
+import { preferencesLoaded } from "./reducer/preferences";
 export interface IInitData {
 	categories: [{
 		URLName: string,
@@ -281,7 +284,7 @@ export const publishReviewAction = (productId: string, review: IReviewToPublish)
 export const checkoutAction = (checkoutData: {[key: string]: string}) => async (dispatch: AppDispatch) => {
 	
 	try {
-		await axios.post("api/checkout", {checkout: checkoutData});
+		await axios.post("api/orders", {checkout: checkoutData});
 		alert("Thanks for order!");
 		dispatch(emptyCart());
 	}
@@ -408,4 +411,91 @@ export const signUpAction = (signUpData: signUpData) => async (dispatch: AppDisp
 
 	dispatch(loginSuccess());
 	dispatch(signUpSuccess());
+}
+
+export const loadUserDataAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const userId = userIdSelector(state);
+
+	dispatch(userDataLoadStart);
+
+	try {
+		const userdata = (await axios.get(`/api/user/${userId}`)).data;
+
+		dispatch(userDataLoaded(userdata));
+	}
+	catch(e: any) {
+		if (!e.response) throw e;
+
+		dispatch(userDataLoadError(e));
+	}
+}
+
+export const loadUserOrdersAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const page = userOrdersSelector(state).page;
+	const userId = userIdSelector(state);
+	const products = productsSelector(state);
+
+	dispatch(userOrdersLoadStart);
+
+	let res;
+
+	try {
+		res = (await axios.get(`api/orders/${userId}?page=${page + 1}`)).data;
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(userOrdersLoadError(e));
+	}
+
+	try {
+		const orders = await Promise.all(res.orders.map(async (order: IOrder) => {
+			const {productId} = order;
+	
+			if(products[productId]) return order;
+	
+			dispatch(productsLoadStart([productId]));
+	
+			try {
+				const product = (await axios.get(`/api/product/${productId}`)).data as IProduct;
+	
+				dispatch(productsLoaded([product]));
+	
+				return order;
+			}
+			catch(e: any) {
+				dispatch(productsLoadError([{
+					id: productId,
+					error: e
+				}]));
+	
+				throw(e);
+			}
+		}))
+
+		dispatch(userOrdersLoaded({
+			...res,
+			orders,
+		}))
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		dispatch(userOrdersLoadError(e));
+	}
+}
+
+export const changePreferencesAction = (pref: {[key: string]: string | boolean}) => async (dispatch: AppDispatch) => {
+	try {
+		const newPreferences = (await axios.patch("/api/preferences", pref)).data;
+		console.log(newPreferences);
+
+		dispatch(preferencesLoaded(newPreferences));
+	}
+	catch(e: any) {
+		dispatch(push("/error"));
+		throw e;
+	}
 }

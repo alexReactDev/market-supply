@@ -4,8 +4,13 @@ import Aside from "../Aside";
 import Cart from "../Cart";
 import Categories from "../Categories";
 import Checkout from "../Checkout";
+import DeleteAccount from "../DeleteAccount";
+import EditEmail from "../EditEmail";
+import EditPassword from "../EditPassword";
+import EditProfile from "../EditProfile";
 import HomePage from "../HomePage";
 import Login from "../Login";
+import MyAccount from "../MyAccount";
 import ProductDetails from "../ProductDetails";
 import SignUp from "../SignUp";
 import Whitelist from "../Whitelist";
@@ -27,6 +32,11 @@ const Main: FC<{}> = () => {
 							<Route path="/whitelist" component={Whitelist} />
 							<Route path="/login" component={Login} />
 							<Route path="/sign-up" component={SignUp} />
+							<Route path="/account" exact component={MyAccount} />
+							<Route path="/account/edit-profile" component={EditProfile} />
+							<Route path="/account/edit-email" component={EditEmail} />
+							<Route path="/account/edit-password" component={EditPassword} />
+							<Route path="/account/delete" component={DeleteAccount} />
 							<Redirect from="*" to="/404" />
 						</Switch>
 					</div>	

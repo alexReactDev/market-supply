@@ -22,11 +22,18 @@ export const productsSelector = (state: AppState) => state.products;
 export const productsDetailsSelector = (state: AppState) => state.productsDetails;
 export const productsReviewsSelector = (state: AppState) => state.productsReviews;
 
+export const userDataSelector = (state: AppState) => state.userdata;
+export const userIdSelector = (state: AppState) => userDataSelector(state).userId;
+
+export const userOrdersSelector = (state: AppState) => state.userOrders;
+
+export const preferencesSelector = (state: AppState) => state.preferences;
+
+export const URLPathSelector = (state: AppState) => state.router.location.pathname;
+
 export const cartAmountSelector = (state: AppState) => Array.from(Object.keys(cartProductsSelector(state))).length;
 
 export const whitelistAmountSelector = (state: AppState) => Array.from(Object.keys(whitelistProductsSelector(state))).length;
-
-export const URLPathSelector = (state: AppState) => state.router.location.pathname;
 
 export const URLPathEndSelector = (state: AppState) => {
 	const url = URLPathSelector(state);
@@ -75,4 +82,25 @@ export const whitelistProductsWithPropsSelector = (state: AppState) => {
 	const whitelistProductsWithProps = whitelistProducts.map((productId) => productsSelector(state)[productId]);
 
 	return whitelistProductsWithProps;
+}
+
+export const userOrdersWithProductDataSelector = (state: AppState) => {
+	const orders = userOrdersSelector(state);
+	const products = productsSelector(state) as {[key: string]: IProduct}; 
+
+	const ordersWithProductData = {
+		...orders,
+		orders: orders.orders.map((order) => {
+			const {productId, ...orderData} = order;
+
+			return {
+				...orderData,
+				picture: products[productId].pictures[0],
+				name: products[productId].name,
+				webId: products[productId].webId
+			}
+		})
+	}
+
+	return ordersWithProductData;
 }
