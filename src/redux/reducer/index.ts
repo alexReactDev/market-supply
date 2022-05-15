@@ -15,6 +15,10 @@ import signUp from "./signUp";
 import userdata from "./userdata";
 import preferences from "./preferences";
 import userOrders from "./userOrders";
+import editProfileData from "./editProfileData";
+import editEmailData from "./editEmailData";
+import editPasswordData from "./editPasswordData";
+import deleteAccountData from "./deleteAccountData";
 
 const rootReducer = combineReducers({
 	router: connectRouter(history),
@@ -30,7 +34,11 @@ const rootReducer = combineReducers({
 	signUp,
 	userdata,
 	preferences,
-	userOrders
+	userOrders,
+	editProfileData,
+	editEmailData,
+	editPasswordData,
+	deleteAccountData
 })
 
 export default rootReducer;
