@@ -15,6 +15,7 @@ import axios from "../httpConfig";
 import { userDataLoaded, userDataLoadError, userDataLoadStart } from "./reducer/userdata";
 import { IOrder, userOrdersLoaded, userOrdersLoadError, userOrdersLoadStart } from "./reducer/userOrders";
 import { preferencesLoaded } from "./reducer/preferences";
+import { editProfileFail, editProfileRequest, editProfileSuccess } from "./reducer/editProfileData";
 export interface IInitData {
 	categories: [{
 		URLName: string,
@@ -497,5 +498,26 @@ export const changePreferencesAction = (pref: {[key: string]: string | boolean})
 	catch(e: any) {
 		dispatch(push("/error"));
 		throw e;
+	}
+}
+
+export const editProfileAction = (profileData: {[key: string]: string | null}) => async (dispatch: AppDispatch) => {
+	dispatch(editProfileRequest());
+
+	try {
+		const newUserData = (await axios.patch("/api/user/profile", profileData)).data;
+
+		dispatch(userDataLoaded(newUserData));
+		dispatch(editProfileSuccess());
+		dispatch(push("/account"));
+		alert("Profile data successfully changed");
+	}
+	catch(e: any) {
+		if(!e.response) {
+			push("/error");
+			throw e;
+		}
+
+		dispatch(editProfileFail(e.response.data));
 	}
 }

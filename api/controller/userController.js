@@ -10,7 +10,10 @@ class UserController {
 	}
 
 	changeUserProfile(req, res) {
-		res.status(200).json(req.body);
+		res.status(200).json({
+			...req.body,
+			email: fixtures.userdata.email
+		});
 	}
 
 	changeUserEmail(req, res) {

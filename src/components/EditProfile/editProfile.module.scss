@@ -1,0 +1,98 @@
+@import "../../styles/variables.scss";
+
+.editProfile {
+	margin: 30px 0px;
+	box-shadow: 0px 0px 5px 0px rgb(219, 219, 219);
+	background-color: $white;
+}
+
+.editProfile__title {
+	padding: 15px;
+	font-size: $titleFz;
+	font-weight: bolder;
+	text-transform: uppercase;
+	color: $titleC;
+}
+
+.editProfile__errorMessage {
+	width: 50%;
+	margin: 0px auto 15px auto;
+	border: solid $red 2px;
+	padding: 12px;
+	font-size: $defaultFz;
+	background-color: rgb(255, 242, 242);
+	text-align: center;
+}
+
+.editProfile__item {
+	margin-bottom: 30px;
+	padding: 0px 20px;
+}
+
+.userData {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.userData__option {
+	width: 50%;
+	box-sizing: border-box;
+	margin-bottom: 15px;
+}
+
+.userData__option_big {
+	width: 98%;
+}
+
+.userData__input {
+	width: 90%;
+	padding: 7.5px 10px;
+	color: $fontC;
+	font-size: $defaultFz;
+
+	&:disabled {
+		border: solid rgb(143, 143, 143) 1px;
+		background-color: rgb(243, 243, 243);
+	}
+}
+
+.controls {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.controls__option {}
+
+.editProfile__btn {
+	border: none;
+	border-radius: 7px;
+	padding: 7.5px 12px;
+	box-shadow: 1px 1.5px 0px 0px rgb(206, 206, 206);
+	background-color: $faintRed;
+	color: $fontCLight;
+	font-weight: bold;
+
+	&:hover {
+		transition-duration: 0.2s;
+		background-color: #f7213d;
+	}
+
+	&:active {
+		position: relative;
+		top: 1px;
+		box-shadow: none;
+	}
+
+	&:disabled {
+		box-shadow: none;
+	}
+
+	&:disabled:active {
+		position: static;
+	}
+
+	&:disabled:hover {
+		background-color: $faintRed;
+	}
+}
+
