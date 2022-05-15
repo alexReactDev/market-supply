@@ -5,8 +5,6 @@ const { getUser, createUser, changeUserProfile, changeUserEmail, changeUserPassw
 const router = new Router();
 
 router.get("/:userId", getUser);
-router.get("/:userId/orders", getUserOrders);
-router.get("/:userId/preferences", getUserPreferences);
 router.post("/", createUser);
 router.patch("/profile", changeUserProfile);
 router.patch("/email", changeUserEmail);

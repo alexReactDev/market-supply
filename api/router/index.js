@@ -7,7 +7,8 @@ const userRouter = require("./userRouter");
 const categoriesRouter = require("./categoriesRouter");
 const productsRouter = require("./productsRouter");
 const newsletterRouter = require("./newsletterRouter");
-const checkoutRouter = require("./checkoutRouter");
+const ordersRouter = require("./ordersRouter");
+const preferencesRouter = require("./preferencesRouter");
 
 const router = new express.Router();
 
@@ -18,6 +19,7 @@ router.use("/user", userRouter);
 router.use("/categories", categoriesRouter);
 router.use("/product", productsRouter);
 router.use("/newsletter", newsletterRouter);
-router.use("/checkout", checkoutRouter);
+router.use("/orders", ordersRouter);
+router.use("/preferences", preferencesRouter);
 
 module.exports = router;

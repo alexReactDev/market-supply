@@ -1,4 +1,4 @@
-const fixtures = require("../fixtures3.1.json");
+const fixtures = require("../fixtures4.1.json");
 
 class CategoriesController {
 	getCategoryData(req, res, next) {

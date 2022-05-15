@@ -1,4 +1,4 @@
-const fixtures = require("../fixtures4.json");
+const fixtures = require("../fixtures4.1.json");
 
 class CartController {
 	getCartItems(req, res) {

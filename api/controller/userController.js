@@ -1,37 +1,8 @@
-const fixtures = require("../fixtures4.json");
+const fixtures = require("../fixtures4.1.json");
 
 class UserController {
 	getUser(req, res) {
-		res.status(200).json(fixtures.userdata.userdata);
-	}
-
-	getUserOrders(req, res) {
-		let page = +req.query.page;
-		if(!page) page = 1;
-
-		if(page > 3) return res.json({
-			page,
-			done: true,
-			orders: []
-		})
-
-		if(page === 3) return res.json({
-			page,
-			done: true,
-			orders: fixtures.userdata.orders
-		})
-
-		if(page < 3) return res.json({
-			page,
-			done: false,
-			orders: fixtures.userdata.orders
-		})
-	}
-
-	getUserPreferences(req, res) {
-		res.json({
-			autoFill: true
-		})
+		res.status(200).json(fixtures.userdata);
 	}
 
 	createUser(req, res) {
