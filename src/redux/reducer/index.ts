@@ -6,6 +6,7 @@ import cart from "./cart";
 import currency from "./currency";
 import categories from "./categories";
 import initialized from "./initialized";
+import generalError from "./generalError";
 import products from "./products";
 import productsDetails from "./productsDetails";
 import productsReviews from "./productsReviews";
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
 	currency,
 	categories,
 	initialized,
+	generalError,
 	products,
 	productsDetails,
 	productsReviews,

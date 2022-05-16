@@ -11,6 +11,8 @@ export const categoriesSelector = (state: AppState) => state.categories;
 
 export const initialized = (state: AppState) => state.initialized;
 
+export const generalErrorSelector = (state: AppState) => state.generalError;
+
 export const loggedInSelector = (state: AppState) => state.login.loggedIn;
 export const loginErrorSelector = (state: AppState) => state.login.error;
 export const loginLoadingSelector = (state: AppState) => state.login.loading;
