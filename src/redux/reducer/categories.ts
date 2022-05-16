@@ -1,7 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { INIT } from "../../constants";
-import { TInitAction } from "../actions";
-
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface ICategory {
 	page: number,
 	sort: string,
@@ -22,6 +19,12 @@ interface ICategoryAction extends Partial<ICategory> {
 	category: string
 }
 
+interface IInitialCategoryData {
+	URLName: string,
+	name: string,
+	isPublic: boolean
+}
+
 interface ICategoryLoadAction extends ICategoryAction {
 	sortChanging: boolean
 }
@@ -38,6 +41,22 @@ const categoriesSlice = createSlice({
 	name: "categories",
 	initialState,
 	reducers: {
+		categoriesListLoaded(state, action: PayloadAction<IInitialCategoryData[]>) {
+			const categories = action.payload;
+
+			categories.forEach((cat) => {
+				state[cat.URLName] = {
+					page: 0,
+					sort: "default",
+					done: false,
+					loading: false,
+					products: [],
+					error: null,
+					name: cat.name,
+					isPublic: cat.isPublic
+				}
+			})
+		},
 		categoryLoadStart(state, action: PayloadAction<ICategoryLoadAction>) {
 			const { category, sortChanging } = action.payload;
 
@@ -64,27 +83,9 @@ const categoriesSlice = createSlice({
 				]
 			}
 		},
-	},
-	extraReducers: {
-		[INIT](state, action: TInitAction) {
-			const categories = action.payload.categories;
-
-			categories.forEach((cat) => {
-				state[cat.URLName] = {
-					page: 0,
-					sort: "default",
-					done: false,
-					loading: false,
-					products: [],
-					error: null,
-					name: cat.name,
-					isPublic: cat.isPublic
-				}
-			})
-		}
 	}
 })
 
 export default categoriesSlice.reducer;
 
-export const { categoryLoadStart, categoryLoadError, categoryLoaded } = categoriesSlice.actions;
+export const { categoriesListLoaded, categoryLoadStart, categoryLoadError, categoryLoaded } = categoriesSlice.actions;

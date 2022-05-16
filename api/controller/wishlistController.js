@@ -1,6 +1,8 @@
+const fixtures = require("../fixtures4.2.json");
+
 class WishlistController {
 	getWishlistItems(req, res) {
-		res.json([]);
+		res.json(fixtures.wishlist);
 	}
 
 	addWishlistItem(req, res) {

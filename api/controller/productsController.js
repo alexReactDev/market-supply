@@ -1,4 +1,4 @@
-const fixtures = require("../fixtures4.1.json");
+const fixtures = require("../fixtures4.2.json");
 
 class ProductsController {
 	getProduct(req, res, next) {

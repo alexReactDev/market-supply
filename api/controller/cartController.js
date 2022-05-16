@@ -1,8 +1,17 @@
-const fixtures = require("../fixtures4.1.json");
+const fixtures = require("../fixtures4.2.json");
 
 class CartController {
 	getCartItems(req, res) {
-		res.send(fixtures.cart);
+		let total = 0;
+
+		Array.from(Object.keys(fixtures.cart)).forEach((productId) => {
+			total += fixtures.products[productId].price;
+		})
+
+		res.json({
+			total,
+			products: fixtures.cart
+		});
 	}
 
 	cartItemIncrement(req, res) {

@@ -1,13 +1,11 @@
-import { createAction, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, AppState } from ".";
-import { INIT } from "../constants";
-import { categoryLoaded, categoryLoadError, categoryLoadStart } from "./reducer/categories";
+import { categoriesListLoaded, categoryLoaded, categoryLoadError, categoryLoadStart } from "./reducer/categories";
 import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
 import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
 import { productsSelector, userIdSelector, userOrdersSelector } from "./selectors";
-import { emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
-import { addToWhitelist, clearWhitelist, removeFromWhitelist } from "./reducer/whitelist";
+import { cartItemsLoaded, cartProductsLoadError, emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
+import { addToWhitelist, clearWhitelist, removeFromWhitelist, wishlistItemsLoaded, wishlistProductsLoadError } from "./reducer/whitelist";
 import { loginStart, loginSuccess, loginError, logout } from "./reducer/login";
 import { push } from "connected-react-router";
 import { signUpError, signUpStart, signUpSuccess } from "./reducer/signUp";
@@ -16,33 +14,49 @@ import { userDataLoaded, userDataLoadError, userDataLoadStart } from "./reducer/
 import { IOrder, userOrdersLoaded, userOrdersLoadError, userOrdersLoadStart } from "./reducer/userOrders";
 import { preferencesLoaded } from "./reducer/preferences";
 import { editProfileFail, editProfileRequest, editProfileSuccess } from "./reducer/editProfileData";
-export interface IInitData {
-	categories: [{
-		URLName: string,
-		name: string, 
-		isPublic: boolean
-	}]
-};
-export type TInitAction = PayloadAction<IInitData>;
+import { init } from "./reducer/initialized";
+import { generalError } from "./reducer/generalError";
 
-export const init = createAction<IInitData>(INIT);
+export const initialize = () => async (dispatch: AppDispatch) => {
 
-export const initialize = () => async (dispatch: AppDispatch, getState: () => AppState) => {
-
-	const initData: Partial<IInitData> = {};
+	//get userId
 
 	try {
 		const categories = (await axios.get("/api/categories")).data;
-		initData.categories = categories;
+		dispatch(categoriesListLoaded(categories));
 	}
-	catch(e) {
-		//Here can be retries
-		console.log("Initialization error")
-		console.log(e);
+	catch(e: any) {
+		dispatch(generalError(e));
 		throw e;
 	}
 
-	dispatch(init(initData as IInitData));
+	try {
+		const cartItems = (await axios.get("/api/cart")).data;
+		dispatch(cartItemsLoaded(cartItems));
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(cartProductsLoadError(e));
+	}
+
+	try {
+		const wishlistItems = (await axios.get("/api/wishlist")).data;
+		dispatch(wishlistItemsLoaded(wishlistItems));
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(wishlistProductsLoadError(e));
+	}
+
+	dispatch(init());
 }
 
 interface ICategoryData {
