@@ -38,9 +38,7 @@ const ProductDetails: FC<{}> = () => {
 	const [currentPicture, setPicture] = useState<string>("");
 
 	useEffect(() => {
-		//@ts-ignore
 		if(product && product.pictures && product.pictures.length > 0 && !currentPicture) setPicture(product.pictures[0]);
-		//@ts-ignore
 		if(product && product.pictures && product.pictures.length > 0 && currentPicture !== product.pictures[0]) setPicture(product.pictures[0]);
 	})
 
