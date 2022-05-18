@@ -57,7 +57,9 @@ const Cart: FC<{}> = () => {
 										</div>
 										<div className={style.productEntry__nameAndIdShell}>
 											<h3 className={style.productEntry__name}>
-												{product.name}
+												<Link to={`/product/${product.id}`} className="nav-link" >
+													{product.name}	
+												</Link>
 											</h3>
 											<h4 className={style.productEntry__id}>
 												Web ID: {product.webId}

@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
 import { clearWishlistAction, loadWishlistProductsAction, removeFromWhitelistAction } from "../../redux/actions";
 import { whitelistProductsWithPropsSelector, wishlistSelector } from "../../redux/selectors";
@@ -52,7 +52,9 @@ const Whitelist: FC<{}> = () => {
 									</div>
 									<div className={style.productEntry__nameAndIdShell}>
 										<h3 className={style.productEntry__name}>
-											{product.name}
+											<Link to={`/product/${product.id}`} className="nav-link">
+												{product.name}	
+											</Link>
 										</h3>
 										<h4 className={style.productEntry__id}>
 											Web ID: {product.webId}
