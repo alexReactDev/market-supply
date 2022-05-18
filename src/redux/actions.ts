@@ -465,7 +465,7 @@ export const loadUserDataAction = () => async (dispatch: AppDispatch, getState: 
 	const state = getState();
 	const userId = userIdSelector(state);
 
-	dispatch(userDataLoadStart);
+	dispatch(userDataLoadStart());
 
 	try {
 		const userdata = (await axios.get(`/api/user/${userId}`)).data;
@@ -485,7 +485,7 @@ export const loadUserOrdersAction = () => async (dispatch: AppDispatch, getState
 	const userId = userIdSelector(state);
 	const products = productsSelector(state);
 
-	dispatch(userOrdersLoadStart);
+	dispatch(userOrdersLoadStart());
 
 	let res;
 
@@ -512,7 +512,7 @@ export const loadUserOrdersAction = () => async (dispatch: AppDispatch, getState
 				return order;
 			}
 	
-			await loadProductByIdActionAsync(productId);
+			await dispatch(loadProductByIdActionAsync(productId));
 
 			return order;
 		}))
@@ -567,6 +567,8 @@ export const loadCartProductsAction = () => async (dispatch: AppDispatch, getSta
 	const state = getState();
 	const cartProducts = cartProductsSelector(state);
 	const products = productsSelector(state);
+
+	console.log("Where is the error?")
 
 	dispatch(cartProductsLoadStart());
 

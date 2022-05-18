@@ -94,12 +94,12 @@ export const whitelistProductsWithPropsSelector = (state: AppState) => {
 }
 
 export const userOrdersWithProductDataSelector = (state: AppState) => {
-	const orders = userOrdersSelector(state);
-	const products = productsSelector(state) as {[key: string]: IProduct}; 
+	const userOrders = userOrdersSelector(state);
+	const products = productsSelector(state); 
 
 	const ordersWithProductData = {
-		...orders,
-		orders: orders.orders.map((order) => {
+		...userOrders,
+		orders: userOrders.orders.map((order) => {
 			const {productId, ...orderData} = order;
 
 			return {

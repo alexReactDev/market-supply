@@ -17,11 +17,11 @@ const MyAccount: FC<{}> = () => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		if(!userData.loading && !userData.loaded && !userData.error) dispatch(loadUserDataAction());
+		if(loggedIn && !userData.loading && !userData.loaded && !userData.error) dispatch(loadUserDataAction());
 	}, []);
 
 	useEffect(() => {
-		if(orders.orders.length === 0 && !orders.done && !orders.loading && !orders.error) dispatch(loadUserOrdersAction());
+		if(loggedIn && orders.orders.length === 0 && !orders.done && !orders.loading && !orders.error) dispatch(loadUserOrdersAction());
 	}, [])
 
 	const profileData = userData.userData;
