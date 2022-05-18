@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useSelector } from "react-redux";
 import { productsSelector } from "../../redux/selectors";
-import { IProduct, IProductError } from "../../redux/reducer/products";
+import { IProduct } from "../../redux/reducer/products";
 import { Link } from "react-router-dom";
 import Price from "../Price";
 import Rate from "../Rate";
@@ -16,7 +16,7 @@ interface IProps {
 
 const Product: FC<IProps> = ({ className="", id}) => {
 
-	const product = useSelector(productsSelector)[id] as IProduct | IProductError;
+	const product = useSelector(productsSelector)[id];
 
 	if(!product || product.error || product.loading) return null;
 

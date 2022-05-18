@@ -5,7 +5,7 @@ class CartController {
 		let total = 0;
 
 		Array.from(Object.keys(fixtures.cart)).forEach((productId) => {
-			total += fixtures.products[productId].price;
+			total += fixtures.products[productId].price * fixtures.cart[productId];
 		})
 
 		res.json({

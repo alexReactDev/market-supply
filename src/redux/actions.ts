@@ -3,9 +3,9 @@ import { categoriesListLoaded, categoryLoaded, categoryLoadError, categoryLoadSt
 import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
 import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
-import { productsSelector, userIdSelector, userOrdersSelector } from "./selectors";
-import { cartItemsLoaded, cartProductsLoadError, emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
-import { addToWhitelist, clearWhitelist, removeFromWhitelist, wishlistItemsLoaded, wishlistProductsLoadError } from "./reducer/whitelist";
+import { cartProductsSelector, productsSelector, userIdSelector, userOrdersSelector, whitelistProductsSelector } from "./selectors";
+import { cartItemsLoaded, cartProductsLoaded, cartProductsLoadError, cartProductsLoadStart, emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
+import { addToWhitelist, clearWhitelist, removeFromWhitelist, wishlistItemsLoaded, wishlistProductsLoaded, wishlistProductsLoadError, wishlistProductsLoadStart } from "./reducer/whitelist";
 import { loginStart, loginSuccess, loginError, logout } from "./reducer/login";
 import { push } from "connected-react-router";
 import { signUpError, signUpStart, signUpSuccess } from "./reducer/signUp";
@@ -16,6 +16,7 @@ import { preferencesLoaded } from "./reducer/preferences";
 import { editProfileFail, editProfileRequest, editProfileSuccess } from "./reducer/editProfileData";
 import { init } from "./reducer/initialized";
 import { generalError } from "./reducer/generalError";
+import { AxiosResponse } from "axios";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -94,9 +95,17 @@ export const loadCategoryDataWithProducts = (categoryName: string, newSort?: str
 	const nonExistingProducts = data.filter((productId) => !state.products[productId]);
 
 	if(nonExistingProducts.length > 0) {
-		dispatch(productsLoadStart(nonExistingProducts));
 
-		const rawProducts = await Promise.allSettled(nonExistingProducts.map((productId) => axios.get(`/api/product/${productId}`)));
+		const rawProducts = await Promise.allSettled(nonExistingProducts.map((productId) => {
+			const productPromise = axios.get(`/api/product/${productId}`);
+
+			dispatch(productsLoadStart([{
+				productId,
+				promise: productPromise
+			}]));
+
+			return productPromise;
+		}));
 	
 		const products = rawProducts.map((product, index) => {
 			if(product.status === "rejected") return ({
@@ -136,22 +145,46 @@ export const subscribeToNewsletterAction = (email: string) => async () => {
 	}
 }
 
-export const loadProductByIdAction = (id: string) => async (dispatch: AppDispatch) => {
-	dispatch(productsLoadStart([id]));
-
+export const loadProductByIdAction = async (id: string) => {
 	try {
-		const product = (await axios.get(`api/product/${id}`)).data;
-		dispatch(productsLoaded([product]));
+		const result = await loadProductByIdActionAsync;
+		return result;
 	}
 	catch(e: any) {
-		console.log(e);
+		if(!e.handled) throw e;
+
+		return e;
+	}
+}
+
+export const loadProductByIdActionAsync = (id: string) => async (dispatch: AppDispatch) => {
+
+	try {
+		const productPromise = axios.get(`api/product/${id}`);
+		
+		dispatch(productsLoadStart([{
+			productId: id,
+			promise: productPromise
+		}]));
+
+		const loadedProduct = (await productPromise).data;
+
+		dispatch(productsLoaded([loadedProduct]));
+
+		return loadedProduct;
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
 
 		dispatch(productsLoadError([
 			{
 				id,
-				error: e as Error
+				error: e
 			}
 		]));
+
+		e.handled = true;
+		throw e;
 	}
 }
 
@@ -221,18 +254,18 @@ export const productIncrementAction = (productId: string, amount: number = 1) =>
 
 export const productDecrementAction = (productId: string, amount: number = 1) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
-	const productPrice = (productsSelector(state)[productId] as IProduct).price;
+	const productPrice = productsSelector(state)[productId].price;
 
 	try {
-		const incrementedProduct = (await axios.patch("/api/cart", {
+		const decrementedProduct = (await axios.patch("/api/cart", {
 			action: "decrement",
 			id: productId,
 			amount
 		})).data;
 
-		dispatch(productIncrement({
-			productId: incrementedProduct.id,
-			amount: incrementedProduct.amount,
+		dispatch(productDecrement({
+			productId: decrementedProduct.id,
+			amount: decrementedProduct.amount,
 			productPrice
 		}))
 	}
@@ -468,26 +501,20 @@ export const loadUserOrdersAction = () => async (dispatch: AppDispatch, getState
 	try {
 		const orders = await Promise.all(res.orders.map(async (order: IOrder) => {
 			const {productId} = order;
+			const product = products[productId];
 	
-			if(products[productId]) return order;
-	
-			dispatch(productsLoadStart([productId]));
-	
-			try {
-				const product = (await axios.get(`/api/product/${productId}`)).data as IProduct;
-	
-				dispatch(productsLoaded([product]));
-	
+			if(product && !product.error && product.loading) return order;
+
+			if(product && product.error) throw product.error;
+
+			if(product && product.loading) {
+				await product.promise;
 				return order;
 			}
-			catch(e: any) {
-				dispatch(productsLoadError([{
-					id: productId,
-					error: e
-				}]));
 	
-				throw(e);
-			}
+			await loadProductByIdActionAsync(productId);
+
+			return order;
 		}))
 
 		dispatch(userOrdersLoaded({
@@ -533,5 +560,75 @@ export const editProfileAction = (profileData: {[key: string]: string | null}) =
 		}
 
 		dispatch(editProfileFail(e.response.data));
+	}
+}
+
+export const loadCartProductsAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const cartProducts = cartProductsSelector(state);
+	const products = productsSelector(state);
+
+	dispatch(cartProductsLoadStart());
+
+	try {
+		await Promise.all(Object.keys(cartProducts).map(async (productId) => {
+			const product = products[productId];
+
+			if(product && !product.error && !product.loading) return product;
+			if(product && product.error) throw product.error;
+			if(product && product.loading) {
+				await product.promise;
+				return product;
+			}
+
+			const loadedProduct = await dispatch(loadProductByIdActionAsync(productId));
+
+			return loadedProduct;
+		}))
+
+		dispatch(cartProductsLoaded());
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(cartProductsLoadError(e));
+	}
+}
+
+export const loadWishlistProductsAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const wishlistProducts = whitelistProductsSelector(state);
+	const products = productsSelector(state);
+
+	dispatch(wishlistProductsLoadStart());
+
+	try {
+		await Promise.all(wishlistProducts.map(async (productId) => {
+			const product = products[productId];
+
+			if(product && !product.error && !product.loading) return product;
+			if(product && product.error) throw product.error;
+			if(product && product.loading) {
+				await product.promise;
+				return product;
+			}
+
+			const loadedProduct = await dispatch(loadProductByIdActionAsync(productId));
+
+			return loadedProduct;
+		}))
+
+		dispatch(wishlistProductsLoaded());
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(wishlistProductsLoadError(e));
 	}
 }

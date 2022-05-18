@@ -1,19 +1,29 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { useAppDispatch } from "../../hooks";
-import { emptyCartAction, productDecrementAction, productIncrementAction, removeProductAction } from "../../redux/actions";
-import { cartTotal, IProductWithProps } from "../../redux/selectors";
+import { Link, Redirect } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { emptyCartAction, loadCartProductsAction, productDecrementAction, productIncrementAction, removeProductAction } from "../../redux/actions";
+import { cart as cartSelector, cartTotal, IProductWithProps } from "../../redux/selectors";
 import { cartProductsWithPropsSelector } from "../../redux/selectors";
 import CurrencyConverter from "../CurrencyConverter";
+import Loader from "../Loader";
 import Price from "../Price";
 import style from "./cart.module.scss";
 
 const Cart: FC<{}> = () => {
 
+	const cart = useAppSelector(cartSelector);
 	const products = useSelector(cartProductsWithPropsSelector) as IProductWithProps[];
 	const total = useSelector(cartTotal);
 	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		if(!cart.loaded && !cart.loading && !cart.error) dispatch(loadCartProductsAction());
+	}, [])
+
+	if((!cart.loaded && !cart.error) || cart.loading) return <Loader />
+
+	if(cart.error) return <Redirect to="/error" />
 
 	return(
 		<div className={style.cart}>

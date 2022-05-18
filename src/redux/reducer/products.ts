@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosResponse } from "axios";
 
 export interface IProduct {
 	id: string,
@@ -11,24 +12,40 @@ export interface IProduct {
 	isNew: boolean,
 	pictures: string[],
 	loading: boolean,
-	error: any
+	error: any,
+	promise: null | Promise<AxiosResponse<IProduct>>
 }
 
-export interface IProductLoading {
-	id: string,
-	loading: true
+const initialProduct: IProduct = {
+	id: "",
+	webId: 0,
+	name: "",
+	price: 0,
+	oldPrice: null,
+	rate: 0,
+	categories: [],
+	isNew: false,
+	pictures: [],
+	loading: false,
+	error: null,
+	promise: null
 }
 
-export interface IProductError extends Partial<IProduct> {
+interface IProductError {
 	id: string,
 	error: any
 }
 
 export interface IState {
-	[key: string]: IProduct | IProductLoading | IProductError
+	[key: string]: IProduct 
 }
 
 type TProductsLoadedAction = Omit<IProduct, "loading" | "error">[];
+
+interface IProductLoadData {
+	productId: string,
+	promise: Promise<AxiosResponse<IProduct>>
+}
 
 const initialState: IState = {};
 
@@ -36,13 +53,15 @@ const productsSlice = createSlice({
 	name: "products",
 	initialState,
 	reducers: {
-		productsLoadStart(state, action: PayloadAction<string[]>) {
-			const productsIds = action.payload;
+		productsLoadStart(state, action: PayloadAction<IProductLoadData[]>) {
+			const products = action.payload;
 
-			productsIds.forEach((productId) => {
-				state[productId] = {
-					id: productId,
-					loading: true
+			products.forEach((productLoadData) => {
+				state[productLoadData.productId] = {
+					...initialProduct,
+					id: productLoadData.productId,
+					loading: true,
+					promise: productLoadData.promise
 				}
 			})
 		},
@@ -64,7 +83,8 @@ const productsSlice = createSlice({
 				state[product.id] = {
 					...product,
 					loading: false,
-					error: null
+					error: null,
+					promise: null
 				}
 			})
 		}

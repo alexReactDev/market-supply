@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { IProduct, IProductError } from "../../redux/reducer/products";
+import { IProduct } from "../../redux/reducer/products";
 import { productsSelector } from "../../redux/selectors";
 import style from "./productMini.module.scss";
 
@@ -16,7 +16,7 @@ interface IProps {
 
 const ProductMini: FC<IProps> = ({ className="", id }) => {
 
-	const product = useSelector(productsSelector)[id] as IProduct | IProductError;
+	const product = useSelector(productsSelector)[id];
 
 	if(!product || product.error) return null;
 

@@ -5,6 +5,7 @@ export const cart = (state: AppState) => state.cart;
 export const cartTotal = (state: AppState) => cart(state).total;
 export const cartProductsSelector = (state: AppState) => cart(state).products;
 
+export const wishlistSelector = (state: AppState) => state.whitelist;
 export const whitelistProductsSelector = (state: AppState) => state.whitelist.products;
 
 export const categoriesSelector = (state: AppState) => state.categories;
@@ -67,6 +68,7 @@ export interface IProductWithProps extends IProduct {
 }
 
 export const cartProductsWithPropsSelector = (state: AppState) => {
+	if(!cart(state).loaded || cart(state).loading || cart(state).error) return null;
 
 	const cartProducts = cartProductsSelector(state);
 	const cartProductsWithProps = [];

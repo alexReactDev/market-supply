@@ -1,15 +1,27 @@
-import { FC } from "react"
+import { FC, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { clearWishlistAction, removeFromWhitelistAction } from "../../redux/actions";
-import { IProductWithProps, whitelistProductsWithPropsSelector } from "../../redux/selectors";
+import { Redirect } from "react-router-dom";
+import { useAppSelector } from "../../hooks";
+import { clearWishlistAction, loadWishlistProductsAction, removeFromWhitelistAction } from "../../redux/actions";
+import { whitelistProductsWithPropsSelector, wishlistSelector } from "../../redux/selectors";
 import AddToCart from "../AddToCart";
+import Loader from "../Loader";
 import Price from "../Price";
 import style from "./whitelist.module.scss";
 
 const Whitelist: FC<{}> = () => {
 
-	const products = useSelector(whitelistProductsWithPropsSelector) as IProductWithProps[];
+	const wishlist = useAppSelector(wishlistSelector);
+	const products = useSelector(whitelistProductsWithPropsSelector);
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if(!wishlist.loaded && !wishlist.loading && !wishlist.error) dispatch(loadWishlistProductsAction());
+	}, [])
+
+	if((!wishlist.loaded && !wishlist.error) || wishlist.loading) return <Loader />
+
+	if(wishlist.error) return <Redirect to="/error" />
 
 	return(
 	<div className={style.whitelist}>
