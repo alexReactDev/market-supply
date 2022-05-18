@@ -145,9 +145,9 @@ export const subscribeToNewsletterAction = (email: string) => async () => {
 	}
 }
 
-export const loadProductByIdAction = async (id: string) => {
+export const loadProductByIdAction = (id: string) => async (dispatch: AppDispatch) => {
 	try {
-		const result = await loadProductByIdActionAsync;
+		const result = await dispatch(loadProductByIdActionAsync(id));
 		return result;
 	}
 	catch(e: any) {
