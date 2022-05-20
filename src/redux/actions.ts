@@ -19,6 +19,7 @@ import { generalError } from "./reducer/generalError";
 import { AxiosResponse } from "axios";
 import { editEmailFail, editEmailRequest, editEmailSuccess } from "./reducer/editEmailData";
 import { editPasswordFail, editPasswordRequest, editPasswordSuccess } from "./reducer/editPasswordData";
+import { deleteAccountFail, deleteAccountRequest, deleteAccountSuccess } from "./reducer/deleteAccountData";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -675,5 +676,29 @@ export const editPasswordAction = (data: {oldPassword: string, newPassword: stri
 		}
 
 		dispatch(editPasswordFail(e.response.data));
+	}
+}
+
+export const deleteAccountAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const userId = userIdSelector(state);
+	
+	dispatch(deleteAccountRequest());
+
+	try {
+		await axios.delete(`/api/user/${userId}`);
+
+		dispatch(deleteAccountSuccess());
+		dispatch(logout());
+		dispatch(push("/"));
+		alert("Account successfully deleted");
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(deleteAccountFail(e.response.data));
 	}
 }

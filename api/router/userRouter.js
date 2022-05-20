@@ -9,6 +9,6 @@ router.post("/", createUser);
 router.patch("/profile", changeUserProfile);
 router.patch("/email", changeUserEmail);
 router.patch("/password", changeUserPassword);
-router.delete("/", deleteUser);
+router.delete("/:userId", deleteUser);
 
 module.exports = router;
