@@ -18,6 +18,7 @@ import { init } from "./reducer/initialized";
 import { generalError } from "./reducer/generalError";
 import { AxiosResponse } from "axios";
 import { editEmailFail, editEmailRequest, editEmailSuccess } from "./reducer/editEmailData";
+import { editPasswordFail, editPasswordRequest, editPasswordSuccess } from "./reducer/editPasswordData";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -654,5 +655,25 @@ export const editEmailAction = (data: {email: string, password: string}) => asyn
 		}
 
 		dispatch(editEmailFail(e.response.data));
+	}
+}
+
+export const editPasswordAction = (data: {oldPassword: string, newPassword: string}) => async (dispatch: AppDispatch) => {
+	dispatch(editPasswordRequest());
+
+	try {
+		const res = (await axios.patch("/api/user/password", data)).data;
+
+		dispatch(editPasswordSuccess());
+		dispatch(push("/account"));
+		alert("Password successfully changed");
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(editPasswordFail(e.response.data));
 	}
 }

@@ -1,4 +1,4 @@
-import { useFormik } from "formik";
+import { FormikErrors, useFormik } from "formik";
 import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { editEmailAction } from "../../redux/actions";
@@ -19,6 +19,14 @@ const EditEmail: FC<{}> = () => {
 		},
 		onSubmit(values) {
 			dispatch(editEmailAction(values));
+		},
+		validate(values) {
+			const errors: any = {};
+
+			if(!values.email) errors.email = "Enter new email";
+			if(!values.password) errors.password = "Confirm your password";
+
+			return errors;
 		}
 	})
 
