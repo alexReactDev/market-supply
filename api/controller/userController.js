@@ -19,7 +19,10 @@ class UserController {
 	changeUserEmail(req, res) {
 		const {email} = req.body;
 
-		res.status(200).json(email);
+		res.status(200).json({
+			...fixtures.userdata,
+			email,
+		});
 	}
 
 	changeUserPassword(req, res) {

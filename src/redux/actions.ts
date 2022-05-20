@@ -17,6 +17,7 @@ import { editProfileFail, editProfileRequest, editProfileSuccess } from "./reduc
 import { init } from "./reducer/initialized";
 import { generalError } from "./reducer/generalError";
 import { AxiosResponse } from "axios";
+import { editEmailFail, editEmailRequest, editEmailSuccess } from "./reducer/editEmailData";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -632,5 +633,26 @@ export const loadWishlistProductsAction = () => async (dispatch: AppDispatch, ge
 		}
 
 		dispatch(wishlistProductsLoadError(e));
+	}
+}
+
+export const editEmailAction = (data: {email: string, password: string}) => async (dispatch: AppDispatch) => {
+	dispatch(editEmailRequest());
+
+	try {
+		const updatedUserData = (await axios.patch("/api/user/email", data)).data;
+
+		dispatch(editEmailSuccess());
+		dispatch(userDataLoaded(updatedUserData));
+		dispatch(push("/account"));
+		alert("Email successfully changed");
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(editEmailFail(e.response.data));
 	}
 }
