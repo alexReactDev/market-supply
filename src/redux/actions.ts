@@ -3,7 +3,7 @@ import { categoriesListLoaded, categoryLoaded, categoryLoadError, categoryLoadSt
 import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
 import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
-import { cartProductsSelector, productsSelector, userIdSelector, userOrdersSelector, whitelistProductsSelector } from "./selectors";
+import { cartProductsSelector, checkoutConfirmationDataSelector, productsSelector, userIdSelector, userOrdersSelector, whitelistProductsSelector } from "./selectors";
 import { cartItemsLoaded, cartProductsLoaded, cartProductsLoadError, cartProductsLoadStart, emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
 import { addToWhitelist, clearWhitelist, removeFromWhitelist, wishlistItemsLoaded, wishlistProductsLoaded, wishlistProductsLoadError, wishlistProductsLoadStart } from "./reducer/whitelist";
 import { loginStart, loginSuccess, loginError, logout } from "./reducer/login";
@@ -20,6 +20,7 @@ import { AxiosResponse } from "axios";
 import { editEmailFail, editEmailRequest, editEmailSuccess } from "./reducer/editEmailData";
 import { editPasswordFail, editPasswordRequest, editPasswordSuccess } from "./reducer/editPasswordData";
 import { deleteAccountFail, deleteAccountRequest, deleteAccountSuccess } from "./reducer/deleteAccountData";
+import { checkoutConfirmationCanceled, checkoutConfirmationDataLoaded, checkoutError, checkoutLoading, checkoutSuccess, IConfirmationData } from "./reducer/checkout";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -332,18 +333,81 @@ export const publishReviewAction = (productId: string, review: IReviewToPublish)
 	}
 }
 
-export const checkoutAction = (checkoutData: {[key: string]: string}) => async (dispatch: AppDispatch) => {
+export const checkoutAction = (checkoutData: {[key: string]: string}) => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const cart = cartProductsSelector(state);
+	const products = productsSelector(state);
 	
+	dispatch(checkoutLoading());
+
+	let confirmData;
 	try {
-		await axios.post("api/orders", {checkout: checkoutData});
-		alert("Thanks for order!");
-		dispatch(emptyCart());
+		confirmData = (await axios.post("api/orders", {cart, data: checkoutData})).data as IConfirmationData;
 	}
 	catch(e: any) {
-		if(!e.response) throw e;
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
 
-		alert("Something went wrong. Try again later.")
+		return dispatch(checkoutError(e.response.data));
 	}
+
+	try {
+		Promise.all(confirmData.products.map(async ({ productId }) => {
+			const product = products[productId];
+	
+			if(product && !product.error && product.loading) return product;
+
+			if(product && product.error) throw product.error;
+
+			if(product && product.loading) {
+				await product.promise;
+				return product;
+			}
+	
+			await dispatch(loadProductByIdActionAsync(productId));
+
+			return product;
+		}))
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		return dispatch(checkoutError(e.response.data));
+	}
+
+	dispatch(checkoutConfirmationDataLoaded(confirmData));
+}
+
+export const confirmCheckoutAction = () => async (dispatch: AppDispatch, getState: () => AppState) => { 
+	const state = getState();
+	const confirmData = checkoutConfirmationDataSelector(state);
+
+	dispatch(checkoutLoading());
+
+	try {
+		await axios.post(`/api/orders/confirm/${confirmData?.orderId}`);
+
+		dispatch(checkoutSuccess());
+		dispatch(emptyCart());
+		alert("Thanks for order");
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(checkoutError(e.response.data));
+	}
+}
+
+export const cancelCheckoutConfirmationAction = () => async (dispatch: AppDispatch) => {
+	dispatch(checkoutConfirmationCanceled());
 }
 
 export const addToWhitelistAction = (id: string) => async (dispatch: AppDispatch) => {

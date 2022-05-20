@@ -1,9 +1,12 @@
 import { AppState } from ".";
 import { IProduct } from "./reducer/products";
 
-export const cart = (state: AppState) => state.cart;
-export const cartTotal = (state: AppState) => cart(state).total;
-export const cartProductsSelector = (state: AppState) => cart(state).products;
+export const cartSelector = (state: AppState) => state.cart;
+export const cartTotal = (state: AppState) => cartSelector(state).total;
+export const cartProductsSelector = (state: AppState) => cartSelector(state).products;
+
+export const checkoutSelector = (state: AppState) => state.checkout;
+export const checkoutConfirmationDataSelector = (state: AppState) => checkoutSelector(state).confirmationData;
 
 export const wishlistSelector = (state: AppState) => state.whitelist;
 export const whitelistProductsSelector = (state: AppState) => state.whitelist.products;
@@ -68,7 +71,7 @@ export interface IProductWithProps extends IProduct {
 }
 
 export const cartProductsWithPropsSelector = (state: AppState) => {
-	if(!cart(state).loaded || cart(state).loading || cart(state).error) return null;
+	if(!cartSelector(state).loaded || cartSelector(state).loading || cartSelector(state).error) return null;
 
 	const cartProducts = cartProductsSelector(state);
 	const cartProductsWithProps = [];
@@ -112,4 +115,20 @@ export const userOrdersWithProductDataSelector = (state: AppState) => {
 	}
 
 	return ordersWithProductData;
+}
+
+export const checkoutConfirmationDataProductsWithPropsSelector = (state: AppState) => {
+	const confirmData = checkoutConfirmationDataSelector(state);
+	const products = productsSelector(state);
+
+	if(!confirmData) return null;
+
+	return confirmData.products.map(({productId, amount, total}) => ({
+		productId,
+		amount,
+		total,
+		img: products[productId].pictures[0],
+		name: products[productId].name,
+		webId: products[productId].webId
+	}))
 }

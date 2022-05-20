@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { LOGOUT } from "../../constants"
+import { CHECKOUT_SUCCESS, LOGOUT } from "../../constants"
 
 export interface IOrder {
 	productId: string,
@@ -59,7 +59,8 @@ const userOrdersSlice = createSlice({
 		}
 	},
 	extraReducers: {
-		[LOGOUT]: () => initialState
+		[LOGOUT]: () => initialState,
+		[CHECKOUT_SUCCESS]: () => initialState
 	}
 })
 

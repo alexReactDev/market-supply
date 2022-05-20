@@ -1,7 +1,8 @@
-import { cartProductsSelector } from "../../redux/selectors";
+import { cartProductsSelector, cartSelector, checkoutConfirmationDataProductsWithPropsSelector, checkoutConfirmationDataSelector, checkoutSelector } from "../../redux/selectors";
+import { cancelCheckoutConfirmationAction, checkoutAction, confirmCheckoutAction, loadCartProductsAction } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import style from "./checkout.module.scss";
 
 import mapPlaceholder from "../../images/map/map.jpg";
@@ -14,12 +15,28 @@ import bankCard5 from "../../images/payment-methods/5.png";
 import bankCard6 from "../../images/payment-methods/6.png";
 import paypalIcon from "../../images/icons/paypal.png";
 import bitcoinIcon from "../../images/icons/bitcoin.png";
-import { checkoutAction } from "../../redux/actions";
+import Loader from "../Loader";
+import CurrencyConverter from "../CurrencyConverter";
 
 const Checkout: FC<{}> = () => {
 
 	const cartProducts = useSelector(cartProductsSelector);
+	const checkoutData = useSelector(checkoutSelector);
+	const confirmData = useSelector(checkoutConfirmationDataSelector);
+	const confirmDataProducts = useSelector(checkoutConfirmationDataProductsWithPropsSelector);
+
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if(confirmData && confirmDataProducts) {
+			document.body.classList.add("body_locked");
+			return () => document.body.classList.remove("body_locked");
+		}
+	}, [confirmData, confirmDataProducts])
+
+	useEffect(() => () => {
+			dispatch(cancelCheckoutConfirmationAction());
+		}, []);
 
 	const formik = useFormik({
 		initialValues: {
@@ -70,6 +87,99 @@ const Checkout: FC<{}> = () => {
 	return (
 		<form className={style.checkout} onSubmit={formik.handleSubmit}>
 			{
+				confirmData && confirmDataProducts
+				?
+				<div className={`${style.checkout__modal} ${style.modal}`}>
+					<div className={style.modal__body}>
+						<h2 className={style.modal__title}>
+							Check your order data
+						</h2>
+						<ul className={style.modal__list}>
+							<li className={`${style.modal__listItem} ${style.item}`}>
+								<div className={style.item__item}>
+									Item
+								</div>
+								<div className={style.item__amount}>
+									Amount
+								</div>
+								<div className={style.item__total}>
+									Total
+								</div>	
+							</li>
+							{
+								confirmDataProducts.map((item) => {
+									return(
+										<li key={item.productId} className={`${style.modal__listItem} ${style.item}`}>
+											<div className={style.item__picture}>
+												<img className={style.item__img} src={item.img} alt={item.name} />
+											</div>
+											<div className={style.item__data}>
+												<h4 className={style.item__name}>
+													{item.name}
+												</h4>
+												<h5 className={style.item__webId}>
+													Web ID: {item.webId}
+												</h5>
+											</div>
+											<div className={style.item__amount}>
+												{item.amount}
+											</div>
+											<div className={style.item__total}>
+												<CurrencyConverter value={item.total} />
+											</div>
+										</li>
+									)
+								})
+							}
+						</ul>
+						<div className={`${style.modal__entry} ${style.entry}`}>
+							<p className={style.entry__name}>
+								Delivery method:
+							</p>
+							<p className={style.entry__value}>
+								{confirmData.deliveryMethod}
+							</p>
+						</div>
+						<div className={`${style.modal__entry} ${style.entry}`}>
+							<p className={style.entry__name}>
+								Payment method:
+							</p>
+							<p className={style.entry__value}>
+								{confirmData.paymentMethod}
+							</p>
+						</div>
+						<div className={`${style.modal__entry} ${style.entry}`}>
+							<p className={style.entry__name}>
+								Total:
+							</p>
+							<p className={style.entry__value}>
+								<CurrencyConverter value={confirmData.total} />
+							</p>
+						</div>
+						<div className={style.modal__controls}>
+							<div className={style.modal__control}>
+								<input
+									type="button"
+									className={`${style.checkout__btn} btn`}
+									value="Cancel"
+									onClick={() => dispatch(cancelCheckoutConfirmationAction())}
+								/>
+							</div>
+							<div className={style.modal__control}>
+								<input
+									type="button"
+									className={`${style.checkout__btn} btn`}
+									value="Confirm"
+									onClick={() => dispatch(confirmCheckoutAction())}
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+				:
+				null
+			}
+			{
 				Object.values(formik.errors).filter((val) => val !== "").length > 0
 				&& Object.values(formik.touched).find((val) => val)
 				?
@@ -78,6 +188,21 @@ const Checkout: FC<{}> = () => {
 						Some invalid values
 					</p>
 				</div>
+				:
+				checkoutData.error
+				?
+				<div className={style.checkout__errors}>
+					<p className={style.checkout__errorMessage}>
+						{checkoutData.error}
+					</p>
+				</div>
+				:
+				null
+			}
+			{
+				checkoutData.loading
+				?
+				<Loader />
 				:
 				null
 			}
@@ -93,6 +218,7 @@ const Checkout: FC<{}> = () => {
 							id="name"
 							name="name"
 							placeholder="Name"
+							disabled={checkoutData.loading}
 							value={formik.values.name}
 							onChange={formik.handleChange}
 						/>
@@ -104,6 +230,7 @@ const Checkout: FC<{}> = () => {
 							id="surname"
 							name="surname"
 							placeholder="Surname"
+							disabled={checkoutData.loading}
 							value={formik.values.surname}
 							onChange={formik.handleChange}
 						/>
@@ -115,6 +242,7 @@ const Checkout: FC<{}> = () => {
 							id="phone"
 							name="phone"
 							placeholder="Phone number"
+							disabled={checkoutData.loading}
 							value={formik.values.phone}
 							onChange={formik.handleChange}
 						/>
@@ -126,6 +254,7 @@ const Checkout: FC<{}> = () => {
 							id="email"
 							name="email"
 							placeholder="Email"
+							disabled={checkoutData.loading}
 							value={formik.values.email}
 							onChange={formik.handleChange}
 						/>
@@ -139,7 +268,7 @@ const Checkout: FC<{}> = () => {
 				<div className={style.checkout__deliveryMethod}>
 					<span 
 						className={`${style.checkout__deliveryMethodOption} ${style.deliveryMethodOption} ${formik.values.deliveryMethod === "pickup" ? style.deliveryMethodOption_active : ""}`}
-						onClick={() => formik.setFieldValue("deliveryMethod", "pickup")}	
+						onClick={() => checkoutData.loading ? null : formik.setFieldValue("deliveryMethod", "pickup")}	
 					>
 						<p className={`${style.deliveryMethodOption__text} ${style.deliveryMethodOption_pickup}`}>
 							Pickup
@@ -147,7 +276,7 @@ const Checkout: FC<{}> = () => {
 					</span>
 					<span 
 						className={`${style.checkout__deliveryMethodOption} ${style.deliveryMethodOption} ${formik.values.deliveryMethod === "delivery" ? style.deliveryMethodOption_active : ""}`}
-						onClick={() => formik.setFieldValue("deliveryMethod", "delivery")}
+						onClick={() => checkoutData.loading ? null : formik.setFieldValue("deliveryMethod", "delivery")}
 					>
 						<p className={`${style.deliveryMethodOption__text} ${style.deliveryMethodOption_delivery}`}>
 							Delivery
@@ -162,6 +291,7 @@ const Checkout: FC<{}> = () => {
 							className={style.pickup__select}
 							name="pickupAddress"
 							id="pickupAddress"
+							disabled={checkoutData.loading}
 							value={formik.values.pickupAddress}
 							onChange={formik.handleChange}
 						>
@@ -204,6 +334,7 @@ const Checkout: FC<{}> = () => {
 								id="apartmentNumber"
 								name="apartmentNumber"
 								placeholder="Apartment number (optional)"
+								disabled={checkoutData.loading}
 								value={formik.values.apartmentNumber}
 								onChange={formik.handleChange}
 							/>
@@ -215,6 +346,7 @@ const Checkout: FC<{}> = () => {
 								id="houseNumber"
 								name="houseNumber"
 								placeholder="House/Building number"
+								disabled={checkoutData.loading}
 								value={formik.values.houseNumber}
 								onChange={formik.handleChange}
 							/>
@@ -226,6 +358,7 @@ const Checkout: FC<{}> = () => {
 								id="street"
 								name="street"
 								placeholder="Street"
+								disabled={checkoutData.loading}
 								value={formik.values.street}
 								onChange={formik.handleChange}
 							/>
@@ -237,6 +370,7 @@ const Checkout: FC<{}> = () => {
 								id="town"
 								name="town"
 								placeholder="Town"
+								disabled={checkoutData.loading}
 								value={formik.values.town}
 								onChange={formik.handleChange}
 							/>
@@ -248,6 +382,7 @@ const Checkout: FC<{}> = () => {
 								id="zipCode"
 								name="zipCode"
 								placeholder="Zip code"
+								disabled={checkoutData.loading}
 								value={formik.values.zipCode}
 								onChange={formik.handleChange}
 							/>
@@ -259,6 +394,7 @@ const Checkout: FC<{}> = () => {
 								id="preferableDate"
 								name="preferableDate"
 								placeholder="Preferable delivery date"
+								disabled={checkoutData.loading}
 								value={formik.values.preferableDate}
 								onChange={formik.handleChange}
 							/>
@@ -274,7 +410,7 @@ const Checkout: FC<{}> = () => {
 					<div className={style.payment__methods}>
 						<span 
 							className={`${style.payment__method} ${formik.values.paymentMethod === "onReceive" ? style.payment__method_active : ""}`}
-							onClick={() => formik.setFieldValue("paymentMethod", "onReceive")}
+							onClick={() => checkoutData.loading ? null : formik.setFieldValue("paymentMethod", "onReceive")}
 						>
 							<p className={style.payment__methodText}>
 								On receive
@@ -282,7 +418,7 @@ const Checkout: FC<{}> = () => {
 						</span>
 						<span 
 							className={`${style.payment__method} ${formik.values.paymentMethod === "online" ? style.payment__method_active : ""}`}
-							onClick={() => formik.setFieldValue("paymentMethod", "online")}
+							onClick={() => checkoutData.loading ? null : formik.setFieldValue("paymentMethod", "online")}
 						>
 							<p className={style.payment__methodText}>
 								Online
@@ -295,7 +431,7 @@ const Checkout: FC<{}> = () => {
 						<ul className={style.payment__options}>
 							<li 
 								className={`${style.payment__option} ${formik.values.onlinePaymentOption === "card" ? style.payment__option_active : ""}`}
-								onClick={() => formik.setFieldValue("onlinePaymentOption", "card")}
+								onClick={() => checkoutData.loading ? null : formik.setFieldValue("onlinePaymentOption", "card")}
 							>
 								<p className={style.payment__optionText}>
 									Bank card
@@ -324,7 +460,7 @@ const Checkout: FC<{}> = () => {
 							</li>
 							<li 
 								className={`${style.payment__option} ${formik.values.onlinePaymentOption === "paypal" ? style.payment__option_active : ""}`}
-								onClick={() => formik.setFieldValue("onlinePaymentOption", "paypal")}
+								onClick={() => checkoutData.loading ? null : formik.setFieldValue("onlinePaymentOption", "paypal")}
 							>
 								<p className={style.payment__optionText}>
 									Paypal
@@ -335,7 +471,7 @@ const Checkout: FC<{}> = () => {
 							</li>
 							<li 
 								className={`${style.payment__option} ${formik.values.onlinePaymentOption === "bitcoin" ? style.payment__option_active : ""}`}
-								onClick={() => formik.setFieldValue("onlinePaymentOption", "bitcoin")}
+								onClick={() => checkoutData.loading ? null : formik.setFieldValue("onlinePaymentOption", "bitcoin")}
 							>
 								<p className={style.payment__optionText}>
 									Bitcoin
@@ -353,7 +489,8 @@ const Checkout: FC<{}> = () => {
 			<div className={style.checkout__basement}>
 				<input
 					type="submit"
-					className={`${style.checkout__submitBtn} btn`}
+					className={`${style.checkout__btn} btn`}
+					disabled={checkoutData.loading}
 					value="Submit"
 				/>
 			</div>

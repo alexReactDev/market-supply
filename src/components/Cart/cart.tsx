@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { emptyCartAction, loadCartProductsAction, productDecrementAction, productIncrementAction, removeProductAction } from "../../redux/actions";
-import { cart as cartSelector, cartTotal, IProductWithProps } from "../../redux/selectors";
+import { cartSelector, cartTotal, IProductWithProps } from "../../redux/selectors";
 import { cartProductsWithPropsSelector } from "../../redux/selectors";
 import CurrencyConverter from "../CurrencyConverter";
 import Loader from "../Loader";

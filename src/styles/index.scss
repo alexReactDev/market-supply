@@ -8,6 +8,10 @@ body {
 	overflow-x: hidden;
 }
 
+.body_locked {
+	overflow-y: hidden !important;
+}
+
 #root {
 	height: 100%;
 }

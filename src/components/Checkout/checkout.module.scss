@@ -4,6 +4,126 @@
 	margin: 30px 0px;
 }
 
+.checkout__modal {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+}
+
+.modal {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(185, 185, 185, 0.322);
+}
+
+.modal__body {
+	width: 600px;
+	max-height: 80%;
+	border: solid $borderC 1px;
+	padding: 15px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	box-shadow: 0px 0px 5px 0px rgb(219, 219, 219);
+	background-color: white;
+}
+
+.modal__title {
+	margin-bottom: 20px;
+	font-size: $titleFz;
+	color: $titleC;
+}
+
+.modal__list {
+	margin-bottom: 25px;
+	padding: 0px 10px;
+}
+
+.modal__listItem {
+	margin-bottom: 15px;
+
+	&:last-child {
+		margin-bottom: 0px;
+	}
+}
+
+.item {
+	display: flex;
+	list-style: none;
+}
+
+.item__item {
+	width: 60%;
+	text-align: center;
+}
+
+.item__picture {
+	width: 30%;
+}
+
+.item__img {
+	width: 90%;
+	height: 150px;
+	object-fit: cover;
+	object-position: center;
+}
+
+.item__data {
+	width: 30%;
+	box-sizing: border-box;
+}
+
+.item__name {
+	margin-bottom: 7.5px;
+	color: $titleC;
+	font-size: $titleFzSmaller;
+}
+
+.item__webID {
+	color: $fontC;
+	font-size: $defaultFzSmaller;
+}
+
+.item__amount {
+	width: 20%;
+	text-align: center;
+}
+
+.item__total {
+	width: 20%;
+	text-align: center;
+}
+
+.modal__entry {
+	margin-bottom: 12px;
+}
+
+.entry {
+	display: flex;
+	justify-content: space-between;
+}
+
+.entry__name {
+	font-weight: bolder;
+}
+
+.modal__controls {
+	margin-top: 25px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.modal__control {
+	margin-right: 15px;
+
+	&:last-child {
+		margin-right: 0px;
+	}
+}
+
 .checkout__errors {
 	margin-bottom: 10px;
 	border: solid $red 2px;
@@ -268,9 +388,21 @@
 	justify-content: flex-end;
 }
 
-.checkout__submitBtn {
+.checkout__btn {
 	border-radius: 10px !important;
 	padding: 10px 16px;
+
+	&:disabled {
+		box-shadow: none;
+	}
+
+	&:disabled:active {
+		position: static;
+	}
+
+	&:disabled:hover {
+		background-color: $faintRed;
+	}
 }
 
 .emptyCart {
