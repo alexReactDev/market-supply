@@ -16,21 +16,34 @@ const EditProfile: FC<{}> = () => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		if(!userData.loading && !userData.loaded && !userData.error) dispatch(loadUserDataAction());
+		if(loggedIn && !userData.loading && !userData.loaded && !userData.error) dispatch(loadUserDataAction());
 	}, []);
+
+	useEffect(() => {
+		if(loggedIn && userData.loaded) {
+			if(!formik.touched.name) formik.setFieldValue("name", profileData.name);
+			if(!formik.touched.surname) formik.setFieldValue("surname", profileData.surname);
+			if(!formik.touched.phone) formik.setFieldValue("phone", profileData.phone);
+			if(!formik.touched.town) formik.setFieldValue("town", profileData.town);
+			if(!formik.touched.street) formik.setFieldValue("street", profileData.street);
+			if(!formik.touched.house) formik.setFieldValue("house", profileData.house);
+			if(!formik.touched.apartment) formik.setFieldValue("apartment", profileData.apartment);
+			if(!formik.touched.zip) formik.setFieldValue("zip", profileData.zip);
+		}
+	}, [loggedIn, userData.loaded])
 
 	const profileData = userData.userData;
 
 	const formik = useFormik({
 		initialValues: {
-			name: profileData.name,
-			surname: profileData.surname,
-			phone: profileData.phone,
-			town: profileData.town,
-			street: profileData.street,
-			house: profileData.house,
-			apartment: profileData.apartment,
-			zip: profileData.zip
+			name: "",
+			surname: "",
+			phone: "",
+			town: "",
+			street: "",
+			house: "",
+			apartment: "",
+			zip: ""
 		},
 		onSubmit(values) {
 			dispatch(editProfileAction(values));
@@ -77,6 +90,7 @@ const EditProfile: FC<{}> = () => {
 						disabled={data.loading}
 						value={formik.values.name}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 					/>
 				</div>
 				<div className={style.userData__option}>
@@ -89,6 +103,7 @@ const EditProfile: FC<{}> = () => {
 						disabled={data.loading}
 						value={formik.values.surname}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 					/>
 				</div>
 				<div className={style.userData__option}>
@@ -101,6 +116,7 @@ const EditProfile: FC<{}> = () => {
 						disabled={data.loading}
 						value={formik.values.phone}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 					/>
 				</div>
 				<div className={style.userData__option}>
@@ -113,6 +129,7 @@ const EditProfile: FC<{}> = () => {
 						disabled={data.loading}
 						value={formik.values.town}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 					/>
 				</div>
 				<div className={style.userData__option}>
@@ -125,6 +142,7 @@ const EditProfile: FC<{}> = () => {
 						disabled={data.loading}
 						value={formik.values.street}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 					/>
 				</div>
 				<div className={style.userData__option}>
@@ -137,6 +155,7 @@ const EditProfile: FC<{}> = () => {
 						disabled={data.loading}
 						value={formik.values.house}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 					/>
 				</div>
 				<div className={style.userData__option}>
@@ -149,6 +168,7 @@ const EditProfile: FC<{}> = () => {
 						disabled={data.loading}
 						value={formik.values.apartment}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 					/>
 				</div>
 				<div className={style.userData__option}>
@@ -161,6 +181,7 @@ const EditProfile: FC<{}> = () => {
 						disabled={data.loading}
 						value={formik.values.zip}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 					/>
 				</div>
 				<div className={`${style.userData__option} ${style.userData__option_big} ${style.controls}`}>
