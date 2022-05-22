@@ -42,6 +42,9 @@ export const editEmailDataSelector = (state: AppState) => state.editEmailData;
 export const editPasswordDataSelector = (state: AppState) => state.editPasswordData;
 export const deleteAccountDataSelector = (state: AppState) => state.deleteAccountData;
 
+export const searchSelector = (state: AppState) => state.search;
+export const searchResultSelector = (state: AppState) => state.search.result;
+
 export const cartAmountSelector = (state: AppState) => Array.from(Object.keys(cartProductsSelector(state))).length;
 
 export const whitelistAmountSelector = (state: AppState) => Array.from(Object.keys(whitelistProductsSelector(state))).length;

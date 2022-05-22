@@ -12,6 +12,7 @@ import HomePage from "../HomePage";
 import Login from "../Login";
 import MyAccount from "../MyAccount";
 import ProductDetails from "../ProductDetails";
+import SearchPage from "../SearchPage";
 import SignUp from "../SignUp";
 import Whitelist from "../Whitelist";
 import style from './main.module.scss';
@@ -37,6 +38,7 @@ const Main: FC<{}> = () => {
 							<Route path="/account/edit-email" component={EditEmail} />
 							<Route path="/account/edit-password" component={EditPassword} />
 							<Route path="/account/delete" component={DeleteAccount} />
+							<Route path="/search" component={SearchPage} />
 							<Redirect from="*" to="/404" />
 						</Switch>
 					</div>	
