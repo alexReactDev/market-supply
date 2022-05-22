@@ -1,5 +1,5 @@
-import { cartProductsSelector, cartSelector, checkoutConfirmationDataProductsWithPropsSelector, checkoutConfirmationDataSelector, checkoutSelector } from "../../redux/selectors";
-import { cancelCheckoutConfirmationAction, checkoutAction, confirmCheckoutAction, loadCartProductsAction } from "../../redux/actions";
+import { cartProductsSelector, cartSelector, checkoutConfirmationDataProductsWithPropsSelector, checkoutConfirmationDataSelector, checkoutSelector, loggedInSelector, preferencesSelector, userDataSelector } from "../../redux/selectors";
+import { cancelCheckoutConfirmationAction, checkoutAction, confirmCheckoutAction, loadCartProductsAction, loadUserDataAction } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { FC, useEffect } from "react";
@@ -17,6 +17,7 @@ import paypalIcon from "../../images/icons/paypal.png";
 import bitcoinIcon from "../../images/icons/bitcoin.png";
 import Loader from "../Loader";
 import CurrencyConverter from "../CurrencyConverter";
+import { useAppSelector } from "../../hooks";
 
 const Checkout: FC<{}> = () => {
 
@@ -24,6 +25,10 @@ const Checkout: FC<{}> = () => {
 	const checkoutData = useSelector(checkoutSelector);
 	const confirmData = useSelector(checkoutConfirmationDataSelector);
 	const confirmDataProducts = useSelector(checkoutConfirmationDataProductsWithPropsSelector);
+	const userData = useAppSelector(userDataSelector);
+	const profileData = userData.userData;
+	const preferences = useAppSelector(preferencesSelector);
+	const loggedIn = useAppSelector(loggedInSelector);
 
 	const dispatch = useDispatch();
 
@@ -32,7 +37,37 @@ const Checkout: FC<{}> = () => {
 			document.body.classList.add("body_locked");
 			return () => document.body.classList.remove("body_locked");
 		}
-	}, [confirmData, confirmDataProducts])
+	}, [confirmData, confirmDataProducts]);
+
+	useEffect(() => {
+		if(
+			loggedIn 
+			&& preferences.autoFill 
+			&& !profileData.loaded 
+			&& !profileData.loading 
+			&& !profileData.error
+		) {
+			dispatch(loadUserDataAction());
+		}
+	}, []);
+
+	useEffect(() => {
+		if(
+			loggedIn
+			&& preferences.autoFill
+			&& userData.loaded
+		) {
+			if(!formik.touched.name) formik.setFieldValue("name", profileData.name);
+			if(!formik.touched.surname) formik.setFieldValue("surname", profileData.surname);
+			if(!formik.touched.phone) formik.setFieldValue("phone", profileData.phone);
+			if(!formik.touched.email) formik.setFieldValue("email", profileData.email);
+			if(!formik.touched.apartmentNumber) formik.setFieldValue("apartment", profileData.apartment);
+			if(!formik.touched.house) formik.setFieldValue("house", profileData.house);
+			if(!formik.touched.street) formik.setFieldValue("street", profileData.street);
+			if(!formik.touched.town) formik.setFieldValue("town", profileData.town);
+			if(!formik.touched.zip) formik.setFieldValue("zip", profileData.zip);
+		}
+	}, [userData.loaded])
 
 	useEffect(() => () => {
 			dispatch(cancelCheckoutConfirmationAction());
@@ -47,10 +82,10 @@ const Checkout: FC<{}> = () => {
 			deliveryMethod: "pickup",
 			pickupAddress: "123 Main Road, New York, NY 1234",
 			apartmentNumber: "",
-			houseNumber: "",
+			house: "",
 			street: "",
 			town: "",
-			zipCode: "",
+			zip: "",
 			preferableDate: "",
 			paymentMethod: "online",
 			onlinePaymentOption: "card"
@@ -67,10 +102,10 @@ const Checkout: FC<{}> = () => {
 			if(!values.email) errors.email = "email required";
 
 			if(values.deliveryMethod === "delivery") {
-				if(!values.houseNumber) errors.houseNumber = "house number required";
+				if(!values.house) errors.house = "house number required";
 				if(!values.street) errors.street = "street required";
 				if(!values.town) errors.town = "town required";
-				if(!values.zipCode) errors.zipCode = "zip code required";
+				if(!values.zip) errors.zip = "zip code required";
 			}
 
 			return errors;
@@ -342,12 +377,12 @@ const Checkout: FC<{}> = () => {
 						<span className={style.checkout__field}>
 							<input 
 								type="text"
-								className={`${style.checkout__input} ${formik.errors.houseNumber && formik.touched.houseNumber ? style.checkout__input_invalid : ""}`}
-								id="houseNumber"
-								name="houseNumber"
+								className={`${style.checkout__input} ${formik.errors.house && formik.touched.house ? style.checkout__input_invalid : ""}`}
+								id="house"
+								name="house"
 								placeholder="House/Building number"
 								disabled={checkoutData.loading}
-								value={formik.values.houseNumber}
+								value={formik.values.house}
 								onChange={formik.handleChange}
 							/>
 						</span>
@@ -378,12 +413,12 @@ const Checkout: FC<{}> = () => {
 						<span className={style.checkout__field}>
 							<input 
 								type="text"
-								className={`${style.checkout__input} ${formik.errors.zipCode && formik.touched.zipCode ? style.checkout__input_invalid : ""}`}
-								id="zipCode"
-								name="zipCode"
+								className={`${style.checkout__input} ${formik.errors.zip && formik.touched.zip ? style.checkout__input_invalid : ""}`}
+								id="zip"
+								name="zip"
 								placeholder="Zip code"
 								disabled={checkoutData.loading}
-								value={formik.values.zipCode}
+								value={formik.values.zip}
 								onChange={formik.handleChange}
 							/>
 						</span>
