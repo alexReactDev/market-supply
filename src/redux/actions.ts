@@ -21,6 +21,7 @@ import { editEmailFail, editEmailRequest, editEmailSuccess } from "./reducer/edi
 import { editPasswordFail, editPasswordRequest, editPasswordSuccess } from "./reducer/editPasswordData";
 import { deleteAccountFail, deleteAccountRequest, deleteAccountSuccess } from "./reducer/deleteAccountData";
 import { checkoutConfirmationCanceled, checkoutConfirmationDataLoaded, checkoutError, checkoutLoading, checkoutSuccess, IConfirmationData } from "./reducer/checkout";
+import { searchDataLoaded, searchDataLoadedAction, searchError, searchRequest } from "./reducer/search";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -764,5 +765,41 @@ export const deleteAccountAction = () => async (dispatch: AppDispatch, getState:
 		}
 
 		dispatch(deleteAccountFail(e.response.data));
+	}
+}
+
+export const searchRequestAction = (searchQuery: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
+	dispatch(searchRequest(searchQuery));
+
+	try {
+		const searchResult = (await axios.get(`api/search/${searchQuery}`)).data as searchDataLoadedAction;
+
+		const state = getState();
+		const products = productsSelector(state);
+		await Promise.all(searchResult.result.map(async (productId) => {
+			const product = products[productId];
+
+			if(product && !product.error && !product.loading) return product;
+			if(product && product.error) throw product.error;
+			if(product && product.loading) {
+				await product.promise;
+				return product;
+			}
+
+			const loadedProduct = await dispatch(loadProductByIdActionAsync(productId));
+
+			return loadedProduct;
+		}))
+
+		dispatch(searchDataLoaded(searchResult));
+		dispatch(push(`/search/${searchResult.search}?page=${searchResult.page}`));
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(searchError(e));
 	}
 }

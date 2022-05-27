@@ -1,4 +1,8 @@
+import { useFormik } from "formik";
 import { FC } from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { searchRequestAction } from "../../redux/actions";
+import { searchSelector } from "../../redux/selectors";
 import style from './search.module.scss';
 
 interface IProps {
@@ -6,15 +10,41 @@ interface IProps {
 }
 
 const Search: FC<IProps> = ({ className='' }) => {
+
+	const dispatch = useAppDispatch();
+	const search = useAppSelector(searchSelector);
+
+	const formik = useFormik({
+		initialValues: {
+			search: ""
+		},
+		onSubmit(values) {
+			dispatch(searchRequestAction(values.search));
+		}
+	})
+
 	return (
-		<div className={`${className} ${style.search}`}>
+		<form className={`${className} ${style.search}`} onSubmit={formik.handleSubmit} >
 			<div className={style.search__field}>
-				<input className={style.search__input} type='search' placeholder="Search here..." />
+				<input 
+					className={style.search__input} 
+					type='search' 
+					name="search"
+					id="search"
+					placeholder="Search here..."
+					value={formik.values.search}
+					onChange={formik.handleChange}
+				/>
+				<div className={style.search__loader} hidden={!search.loading} />
 			</div>
 			<div className={style.search__controls}>
-				<input className={style.search__button} type='button' />
+				<input 
+					className={style.search__button} 
+					type='submit'
+					value=""
+				/>
 			</div>
-		</div>
+		</form>
 	)
 }
 

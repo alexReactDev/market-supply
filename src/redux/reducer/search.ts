@@ -10,7 +10,7 @@ interface IState {
 	result: string[]
 }
 
-interface searchDataLoadedAction {
+export interface searchDataLoadedAction {
 	search: string,
 	page: number,
 	done: boolean,

@@ -16,9 +16,15 @@
 	border: none;
 	background: url('../../images/icons/search.png') center no-repeat;
 	background-color: $red;
+
+	&:active {
+		box-shadow: inset 1px 1px 5px 0px rgb(126, 126, 126);
+		background-size: 12px;
+	}
 }
 
 .search__field {
+	position: relative;
 	flex: 1;
 	display: flex;
 }
@@ -28,6 +34,15 @@
 	box-sizing: border-box;
 	border: none;
 	padding: 12px 25px;
+}
+
+.search__loader {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	top: calc(50% - 15px);
+	right: 7.5px;
+	background: url("../../images/loader/loader2.gif") center / 100% no-repeat;
 }
 
 @media(max-width: $md4) {
