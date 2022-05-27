@@ -3,7 +3,7 @@ const fixtures = require("../fixtures4.2.json");
 class SearchController {
 	productsSearch(req, res) {
 		const search = req.params.search;
-		const page = req.query.page || 1;
+		const page = +req.query.page || 1;
 
 		if(!search) res.sendStatus(400);
 

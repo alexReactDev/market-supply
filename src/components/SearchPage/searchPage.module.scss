@@ -1,0 +1,177 @@
+@import "../../styles//variables.scss";
+
+.search {
+	margin: 30px 0px;
+	box-shadow: 0px 0px 5px 0px rgb(219, 219, 219);
+	background-color: $white;
+}
+
+.search__header {
+	position: relative;
+	margin-bottom: 25px;
+	padding: 0px 20px;
+
+	&::after {
+		content: "";
+		position: absolute;
+		width: calc(100% - 40px);
+		height: 1px;
+		bottom: 0px;
+		left: 20px;
+		background-color: $borderC;
+	}
+}
+
+.search__title {
+	padding: 30px 0px 25px 5px;
+	font-size: $titleFz;
+	font-weight: bolder;
+	text-transform: uppercase;
+	color: $titleC;
+}
+
+.search__itemsList {
+	padding: 0px 20px 20px 20px;
+}
+
+.search__item {
+	margin-bottom: 20px;
+
+	&:last-child {
+		margin-bottom: 0px;
+	}
+}
+
+.item {
+	display: flex;
+	list-style: none;
+}
+
+.item__picture {
+	width: 20%;
+}
+
+.item__img {
+	width: 100%;
+	height: 150px;
+	object-fit: cover;
+	object-position: center;
+}
+
+.item__info {
+	width: 40%;
+	padding-left: 15px;
+}
+
+.item__name {
+	margin-bottom: 8px;
+	color: $titleC;
+	font-size: $titleFzSmaller;
+}
+
+.item__webId {
+	color: $grey;
+	font-size: $defaultFz;
+}
+
+.item__rate, .item__price {
+	width: 20%;
+	display: flex;
+	justify-content: center;
+}
+
+.search__btnShell {
+	display: flex;
+	justify-content: center;
+}
+
+.search__btn {
+	margin: 25px 0px;
+	padding: 7.5px 12.5px;
+	font-size: 15.5px;
+}
+
+@media (max-width: $md2) {
+	.item__name {
+		font-size: $titleFzSmall;
+	}
+
+	.item__webId {
+		font-size: $defaultFzSmaller;
+	}
+
+	.item__picture {
+		width: 30%;
+	}
+
+	.item__info {
+		width: 35%;
+	}
+
+	.item__rate, .item__price {
+		width: 17.5%;
+	}
+}
+
+@media (max-width: $md3) {
+	.search {
+		margin: 25px 0px;
+	}
+
+	.search__title {
+		padding: 20px 0px 15px 5px;
+		font-size: $titleFzSmaller;
+	}
+
+	.search__header {
+		margin-bottom: 20px;
+	}
+
+	.item {
+		flex-wrap: wrap;
+	}
+
+	.item__picture, .item__info {
+		width: 100%;
+	}
+
+	.item__picture {
+		margin-bottom: 20px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.item__img {
+		width: 80%;
+		height: 250px;
+	}
+
+	.item__info {
+		margin-bottom: 20px;
+		text-align: center;
+	}
+
+	.item__rate, .item__price {
+		width: 50%;
+	}
+}
+
+@media (max-width: $md5) {
+	.search__title {
+		padding: 15px 0px 10px 5px;
+		text-align: center;
+	}
+
+	.item__picture, .item__info {
+		margin-bottom: 15px;
+	}
+
+	.item__img {
+		width: 90%;
+		height: 180px;
+	}
+
+	.search__itemsList {
+		padding-bottom: 10px;
+	}
+}

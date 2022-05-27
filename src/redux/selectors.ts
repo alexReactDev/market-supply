@@ -35,6 +35,7 @@ export const userOrdersSelector = (state: AppState) => state.userOrders;
 
 export const preferencesSelector = (state: AppState) => state.preferences;
 
+export const URLLocationSelector = (state: AppState) => state.router.location;
 export const URLPathSelector = (state: AppState) => state.router.location.pathname;
 
 export const editProfileDataSelector = (state: AppState) => state.editProfileData;
@@ -134,4 +135,23 @@ export const checkoutConfirmationDataProductsWithPropsSelector = (state: AppStat
 		name: products[productId].name,
 		webId: products[productId].webId
 	}))
+}
+
+export const searchProductsWithPropsSelector = (state: AppState) => {
+	const products = productsSelector(state);
+	const searchResult = searchResultSelector(state);
+
+	return searchResult.map((productId) => {
+		const product = products[productId];
+
+		return({
+			productId,
+			name: product.name,
+			webId: product.webId,
+			rate: product.rate,
+			price: product.price,
+			oldPrice: product.oldPrice,
+			pictures: product.pictures
+		})
+	})
 }

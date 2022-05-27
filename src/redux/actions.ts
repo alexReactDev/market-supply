@@ -3,7 +3,7 @@ import { categoriesListLoaded, categoryLoaded, categoryLoadError, categoryLoadSt
 import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
 import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
-import { cartProductsSelector, checkoutConfirmationDataSelector, productsSelector, userIdSelector, userOrdersSelector, whitelistProductsSelector } from "./selectors";
+import { cartProductsSelector, checkoutConfirmationDataSelector, productsSelector, searchSelector, userIdSelector, userOrdersSelector, whitelistProductsSelector } from "./selectors";
 import { cartItemsLoaded, cartProductsLoaded, cartProductsLoadError, cartProductsLoadStart, emptyCart, productDecrement, productIncrement, removeProduct } from "./reducer/cart";
 import { addToWhitelist, clearWhitelist, removeFromWhitelist, wishlistItemsLoaded, wishlistProductsLoaded, wishlistProductsLoadError, wishlistProductsLoadStart } from "./reducer/whitelist";
 import { loginStart, loginSuccess, loginError, logout } from "./reducer/login";
@@ -21,7 +21,7 @@ import { editEmailFail, editEmailRequest, editEmailSuccess } from "./reducer/edi
 import { editPasswordFail, editPasswordRequest, editPasswordSuccess } from "./reducer/editPasswordData";
 import { deleteAccountFail, deleteAccountRequest, deleteAccountSuccess } from "./reducer/deleteAccountData";
 import { checkoutConfirmationCanceled, checkoutConfirmationDataLoaded, checkoutError, checkoutLoading, checkoutSuccess, IConfirmationData } from "./reducer/checkout";
-import { searchDataLoaded, searchDataLoadedAction, searchError, searchRequest } from "./reducer/search";
+import { searchDataLoaded, searchDataLoadedAction, searchDataLoading, searchError, searchRequest } from "./reducer/search";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -768,11 +768,11 @@ export const deleteAccountAction = () => async (dispatch: AppDispatch, getState:
 	}
 }
 
-export const searchRequestAction = (searchQuery: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const searchRequestAction = (searchQuery: string, page?: number) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	dispatch(searchRequest(searchQuery));
 
 	try {
-		const searchResult = (await axios.get(`api/search/${searchQuery}`)).data as searchDataLoadedAction;
+		const searchResult = (await axios.get(`api/search/${searchQuery}?page=${page ? page : 1}`)).data as searchDataLoadedAction;
 
 		const state = getState();
 		const products = productsSelector(state);
@@ -793,6 +793,44 @@ export const searchRequestAction = (searchQuery: string) => async (dispatch: App
 
 		dispatch(searchDataLoaded(searchResult));
 		dispatch(push(`/search/${searchResult.search}?page=${searchResult.page}`));
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(searchError(e));
+	}
+}
+
+export const loadMoreSearchResultsAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const search = searchSelector(state);
+
+	dispatch(searchDataLoading());
+
+	try {
+		const searchResult = (await axios.get(`/api/search/${search.search}?page=${search.page + 1}`)).data as searchDataLoadedAction;
+
+		const state = getState();
+		const products = productsSelector(state);
+		await Promise.all(searchResult.result.map(async (productId) => {
+			const product = products[productId];
+
+			if(product && !product.error && !product.loading) return product;
+			if(product && product.error) throw product.error;
+			if(product && product.loading) {
+				await product.promise;
+				return product;
+			}
+
+			const loadedProduct = await dispatch(loadProductByIdActionAsync(productId));
+
+			return loadedProduct;
+		}))
+
+		dispatch(searchDataLoaded(searchResult));
 	}
 	catch(e: any) {
 		if(!e.response) {
