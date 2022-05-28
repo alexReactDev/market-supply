@@ -130,7 +130,7 @@ const Checkout: FC<{}> = () => {
 							Check your order data
 						</h2>
 						<ul className={style.modal__list}>
-							<li className={`${style.modal__listItem} ${style.item}`}>
+							<li className={`${style.modal__listHeader} ${style.item}`}>
 								<div className={style.item__item}>
 									Item
 								</div>
@@ -157,9 +157,15 @@ const Checkout: FC<{}> = () => {
 												</h5>
 											</div>
 											<div className={style.item__amount}>
+												<span className={style.item__label}>
+													Amount:
+												</span>
 												{item.amount}
 											</div>
 											<div className={style.item__total}>
+												<span className={style.item__label}>
+													Total:
+												</span>
 												<CurrencyConverter value={item.total} />
 											</div>
 										</li>

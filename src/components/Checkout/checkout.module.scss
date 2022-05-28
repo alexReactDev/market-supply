@@ -23,6 +23,7 @@
 .modal__body {
 	width: 600px;
 	max-height: 80%;
+	margin: 0px 20px;
 	border: solid $borderC 1px;
 	padding: 15px;
 	overflow-x: hidden;
@@ -40,6 +41,10 @@
 .modal__list {
 	margin-bottom: 25px;
 	padding: 0px 10px;
+}
+
+.modal__listHeader {
+	margin-bottom: 15px;
 }
 
 .modal__listItem {
@@ -95,6 +100,11 @@
 .item__total {
 	width: 20%;
 	text-align: center;
+}
+
+.item__label {
+	display: none;
+	margin-right: 0.8em;
 }
 
 .modal__entry {
@@ -431,6 +441,62 @@
 	}
 }
 
+@media (max-width: $md2) {
+	.modal__title {
+		text-align: center;
+	}
+
+	.modal__list {
+		margin-bottom: 30px;
+	}
+
+	.modal__controls {
+		justify-content: center;
+		margin: 0px -15px;
+	}
+
+	.modal__control {
+		margin: 0px 15px;
+	}
+
+	.modal__listHeader {
+		display: none;
+	}
+
+	.item {
+		margin-bottom: 20px;
+		flex-wrap: wrap;
+	}
+
+	.item__picture {
+		width: 100%;
+		margin-bottom: 15px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.item__data {
+		width: 100%;
+		margin-bottom: 15px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.item__img {
+		width: 60%;
+		height: 260px;
+	}
+
+	.item__amount, .item__total {
+		width: 50%;
+	}
+
+	.item__label {
+		display: inline;
+	}
+}
+
 @media (max-width: $md3) {
 	.checkout {
 		margin: 15px 0px;
@@ -448,6 +514,23 @@
 	.payment__optionText {
 		flex-wrap: wrap;
 		row-gap: 7.5px;
+	}
+
+	.modal__title {
+		font-size: $titleFzSmaller;
+	}
+
+	.item__img {
+		height: 230px;
+	}
+
+	.item__amount, .item__total {
+		width: 100%;
+		margin-bottom: 10px;
+	}
+
+	.item__webId {
+		font-size: $defaultFzSmaller;
 	}
 }
 
@@ -478,5 +561,25 @@
 
 	.deliveryMethodOption__text, .payment__methodText, .payment__optionText {
 		font-size: $defaultFz;
+	}
+
+	.item__img {
+		width: 80%;
+		height: 210px;
+	}
+
+	.item__data {
+		margin-bottom: 10px;
+	}
+
+	.item__amount, .item__total {
+		margin-bottom: 5px;
+	}
+}
+
+@media (max-width: $md5) {
+	.item__img {
+		width: 100%;
+		height: 200px;
 	}
 }
