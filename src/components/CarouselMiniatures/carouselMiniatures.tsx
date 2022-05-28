@@ -24,8 +24,6 @@ const CarouselMiniatures: FC<IProps> = ({ className="", title, products, autopla
 		else productsChunks[productsChunks.length - 1].push(productId);
 	})
 
-	console.log(productsChunks);
-
 	return(
 		<div className={`${className} ${style.carousel}`}>
 			<div className={style.carousel__header}>
@@ -49,11 +47,11 @@ const CarouselMiniatures: FC<IProps> = ({ className="", title, products, autopla
 				{
 					productsChunks.map((productChunk) => {
 						return(
-							<div className={style.carousel__sliderItem}>
+							<div key={productChunk[0]} className={style.carousel__sliderItem}>
 								{
 									productChunk.map((productId) => {
 										return(
-											<ProductMini className={style.carousel__product} id={productId} />
+											<ProductMini key={productId} className={style.carousel__product} id={productId} />
 										)
 									})
 								}
