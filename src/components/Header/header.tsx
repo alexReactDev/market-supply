@@ -41,7 +41,7 @@ const Header: FC<{}> = () => {
 			<div className="content">
 				<div className={style.header__body}>
 					<Logo className={style.header__logo} />
-					<Burger className={style.header__burger} active={menuOpen} onClick={() => setState(!menuOpen)} />
+					<Burger className={`${style.header__burger} ${menuOpen ? style.header__burger_active : ""}`} active={menuOpen} onClick={() => setState(!menuOpen)} />
 					<div className={`${style.header__content} ${menuOpen ? style.header__content_active : ""}`}>
 						<ul className={`${style.header__links} ${style.links}`}>
 							<li className={style.links__link}>

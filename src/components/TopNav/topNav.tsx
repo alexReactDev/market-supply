@@ -11,51 +11,51 @@ const TopNav: FC<IProps> = ({ className='' }) => {
 		<nav className={`${className} ${style.navbar}`}>
 			<div className='content'>
 				<ul className={style.navbar__items}>
-					<li className={style.navbar__item}>
-						<Link className="nav-link" to='/categories/clothing'>
-							CLOTHING
-						</Link>
-					</li>
-					<li className={style.navbar__item}>
-						<Link className="nav-link" to='/categories/electronics'>
+					<Link className="nav-link" to='/categories/clothing'>
+						<li className={style.navbar__item}>
+								CLOTHING
+						</li>
+					</Link>
+					<Link className="nav-link" to='/categories/electronics'>
+						<li className={style.navbar__item}>
 							ELECTRONICS
-						</Link>
-					</li>
-					<li className={style.navbar__item}>
-						<Link className="nav-link" to='/categories/shoes'>
+						</li>
+					</Link>
+					<Link className="nav-link" to='/categories/shoes'>
+						<li className={style.navbar__item}>
 							SHOES
-						</Link>
-					</li>
-					<li className={style.navbar__item}>
-						<Link className="nav-link" to='/categories/watches'>
+						</li>
+					</Link>
+					<Link className="nav-link" to='/categories/watches'>
+						<li className={style.navbar__item}>
 							WATCHES
-						</Link>
-					</li>
-					<li className={style.navbar__item}>
-						<Link className="nav-link" to='/categories/jewellery'>
+						</li>
+					</Link>
+					<Link className="nav-link" to='/categories/jewellery'>
+						<li className={style.navbar__item}>
 							JEWELLERY
-						</Link>
-					</li>
-					<li className={style.navbar__item}>
-						<Link className="nav-link" to='/categories/health-and-beauty'>
+						</li>
+					</Link>
+					<Link className="nav-link" to='/categories/health-and-beauty'>
+						<li className={style.navbar__item}>
 							{"HEALTH&BEAUTY"}
-						</Link>
-					</li>
-					<li className={style.navbar__item}>
-						<Link className="nav-link" to='/categories/kids-and-babies'>
+						</li>
+					</Link>
+					<Link className="nav-link" to='/categories/kids-and-babies'>
+						<li className={style.navbar__item}>
 							{"KIDS&BABIES"}
-						</Link>
-					</li>
-					<li className={style.navbar__item}>
-						<Link className="nav-link" to='/categories/sports'>
+						</li>
+					</Link>
+					<Link className="nav-link" to='/categories/sports'>
+						<li className={style.navbar__item}>
 							SPORTS
-						</Link>
-					</li>
-					<li className={style.navbar__item}>
-						<Link className="nav-link" to='/categories/home-and-garden'>
+						</li>
+					</Link>
+					<Link className="nav-link" to='/categories/home-and-garden'>
+						<li className={style.navbar__item}>
 							{"HOME&GARDEN"}
-						</Link>
-					</li>
+						</li>
+					</Link>
 				</ul>
 			</div>
 		</nav>

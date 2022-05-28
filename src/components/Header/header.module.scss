@@ -31,6 +31,7 @@
 
 .links__link {
 	position: relative;
+	box-sizing: border-box;
 	padding: 0px 22px;
 	list-style: none;
 	color: $fontCLight;
@@ -97,7 +98,10 @@
 .header__burger {
 	display: none;
 	z-index: 100;
-	align-self: center;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 20px;
 }
 
 @media(max-width: $md1) {
@@ -132,26 +136,35 @@
 	}
 
 	.header__links {
-		max-width: 100%;
-		margin-bottom: 45px;
+		width: 100%;
+		margin: 75px 0px 35px 0px;
 		justify-content: center;
 	}
 
 	.header__items {
 		padding: 0px 25px;
-		margin-bottom: 50px;
+		margin-bottom: 45px;
 	}
 }
 
 @media(max-width: $md3) {
 	.header__links {
-		margin-top: 65px;
+		margin: 65px 0px 25px 0px;
+		flex-wrap: wrap;
+	}
+
+	.links__link {
+		margin-bottom: 15px;
+	}
+
+	.header__burger_active {
+		top: 30px;
+		right: 15px;
 	}
 }
 
 @media(max-width: $md4) {
 	.header__links {
-		margin-bottom: 25px;
 		font-size: 13px;
 	}
 
@@ -163,5 +176,17 @@
 	.header__cart {
 		margin: 15px 0px;
 		align-self: center;
+	}
+}
+
+@media (max-width: $md5) {
+	.header__links {
+		margin: 57.5px 0px 20px 0px;
+		flex-wrap: wrap;
+	}
+
+	.header__burger_active {
+		top: 25px;
+		right: 5px;
 	}
 }
