@@ -46,6 +46,8 @@ export const deleteAccountDataSelector = (state: AppState) => state.deleteAccoun
 export const searchSelector = (state: AppState) => state.search;
 export const searchResultSelector = (state: AppState) => state.search.result;
 
+export const menuOpenSelector = (state: AppState) => state.menu.isOpen;
+
 export const cartAmountSelector = (state: AppState) => Array.from(Object.keys(cartProductsSelector(state))).length;
 
 export const whitelistAmountSelector = (state: AppState) => Array.from(Object.keys(whitelistProductsSelector(state))).length;

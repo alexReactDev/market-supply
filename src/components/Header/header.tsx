@@ -2,7 +2,8 @@ import { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { logoutAction } from "../../redux/actions";
-import { cartAmountSelector, loggedInSelector, whitelistAmountSelector } from "../../redux/selectors";
+import { setMenuClosed, setMenuOpen } from "../../redux/reducer/menu";
+import { cartAmountSelector, loggedInSelector, menuOpenSelector, whitelistAmountSelector } from "../../redux/selectors";
 import Burger from "../Burger";
 import Links from "../Links";
 import Logo from "../Logo";
@@ -13,10 +14,9 @@ import style from './header.module.scss';
 
 const Header: FC<{}> = () => {
 
-	const [menuOpen, setState] = useState(false);
-
 	const [adaptive, setAdaptive] = useState(document.documentElement.clientWidth > 1024 ? false : true);
 
+	const menuOpen = useAppSelector(menuOpenSelector);
 	const cartAmount = useAppSelector(cartAmountSelector);
 	const whitelistAmount = useAppSelector(whitelistAmountSelector);
 	const loggedIn = useAppSelector(loggedInSelector);
@@ -36,12 +36,14 @@ const Header: FC<{}> = () => {
 		else document.body.style.overflowY = "auto";
 	})
 
+	const handleClick = () => menuOpen ? dispatch(setMenuClosed()) : dispatch(setMenuOpen());
+
 	return(
 		<div className={style.header}>
 			<div className="content">
 				<div className={style.header__body}>
 					<Logo className={style.header__logo} />
-					<Burger className={`${style.header__burger} ${menuOpen ? style.header__burger_active : ""}`} active={menuOpen} onClick={() => setState(!menuOpen)} />
+					<Burger className={`${style.header__burger} ${menuOpen ? style.header__burger_active : ""}`} active={menuOpen} onClick={handleClick} />
 					<div className={`${style.header__content} ${menuOpen ? style.header__content_active : ""}`}>
 						<ul className={`${style.header__links} ${style.links}`}>
 							<li className={style.links__link}>

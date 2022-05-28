@@ -22,6 +22,7 @@ import editPasswordData from "./editPasswordData";
 import deleteAccountData from "./deleteAccountData";
 import checkout from "./checkout";
 import search from "./search";
+import menu from "./menu";
 
 const rootReducer = combineReducers({
 	router: connectRouter(history),
@@ -44,7 +45,8 @@ const rootReducer = combineReducers({
 	editPasswordData,
 	deleteAccountData,
 	checkout,
-	search
+	search,
+	menu
 })
 
 export default rootReducer;
