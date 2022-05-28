@@ -16,7 +16,6 @@ import { preferencesLoaded } from "./reducer/preferences";
 import { editProfileFail, editProfileRequest, editProfileSuccess } from "./reducer/editProfileData";
 import { init } from "./reducer/initialized";
 import { generalError } from "./reducer/generalError";
-import { AxiosResponse } from "axios";
 import { editEmailFail, editEmailRequest, editEmailSuccess } from "./reducer/editEmailData";
 import { editPasswordFail, editPasswordRequest, editPasswordSuccess } from "./reducer/editPasswordData";
 import { deleteAccountFail, deleteAccountRequest, deleteAccountSuccess } from "./reducer/deleteAccountData";
@@ -358,7 +357,7 @@ export const checkoutAction = (checkoutData: {[key: string]: string}) => async (
 		Promise.all(confirmData.products.map(async ({ productId }) => {
 			const product = products[productId];
 	
-			if(product && !product.error && product.loading) return product;
+			if(product && !product.error && !product.loading) return product;
 
 			if(product && product.error) throw product.error;
 
@@ -571,7 +570,7 @@ export const loadUserOrdersAction = () => async (dispatch: AppDispatch, getState
 			const {productId} = order;
 			const product = products[productId];
 	
-			if(product && !product.error && product.loading) return order;
+			if(product && !product.error && !product.loading) return order;
 
 			if(product && product.error) throw product.error;
 

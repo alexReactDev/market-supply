@@ -129,6 +129,7 @@
 .orders {
 	margin: 0px 20px 30px 20px;
 	border: solid $borderC 1px;
+	padding-bottom: 10px;
 }
 
 .orders__header {
@@ -143,6 +144,10 @@
 	margin-bottom: 15px;
 	padding: 0px 10px;
 	display: flex;
+
+	&:last-child {
+		margin-bottom: 0px;
+	}
 }
 
 .orders__order {
@@ -203,3 +208,8 @@
 	text-align: center;
 }
 
+.orders__btnShell {
+	padding: 15px 0px;
+	display: flex;
+	justify-content: center;
+}

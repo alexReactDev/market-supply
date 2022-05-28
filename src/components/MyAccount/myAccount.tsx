@@ -177,10 +177,6 @@ const MyAccount: FC<{}> = () => {
 						Failed to load orders
 					</p>
 					:
-					orders.loading
-					?
-					<Loader />
-					:
 					orders.orders.map((order) => {
 						return(
 							<div key={order.webId} className={style.orders__item}>
@@ -212,6 +208,20 @@ const MyAccount: FC<{}> = () => {
 							</div>
 						)
 					})
+				}
+				{
+					!orders.done && !orders.loading
+					?
+					<div className={style.orders__btnShell}>
+						<input
+							type="button"
+							className={style.myAccount__btn}
+							value="Load more"
+							onClick={() => dispatch(loadUserOrdersAction())}
+						/>
+					</div>
+					:
+					null
 				}
 			</div>
 			<div className={`${style.myAccount__entry} ${style.controls}`}>
