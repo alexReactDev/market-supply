@@ -45,7 +45,8 @@
 }
 
 .userData__input {
-	width: 90%;
+	width: 95%;
+	box-sizing: border-box;
 	padding: 7.5px 10px;
 	color: $fontC;
 	font-size: $defaultFz;
@@ -96,3 +97,39 @@
 	}
 }
 
+@media (max-width: $md2) {
+	.editProfile__title {
+		text-align: center;
+	}
+
+	.userData__option {
+		width: 100%;
+	}
+
+	.userData__input {
+		width: 100%;
+	}
+
+	.controls {
+		justify-content: center;
+	}
+}
+
+@media (max-width: $md3) {
+	.editProfile {
+		margin: 25px 0px;
+	}
+
+	.editProfile__title {
+		font-size: $titleFzSmaller;
+	}
+
+	.userData__option {
+		margin-bottom: 10px;
+	}
+
+	.userData__input {
+		padding: 5px 7.5px;
+		font-size: $defaultFzSmaller;
+	}
+}

@@ -135,3 +135,28 @@
 		background-color: $faintRed;
 	}
 }
+
+@media (max-width: $md2) {
+	.deleteAccount__title {
+		text-align: center;
+	}
+
+	.form__controls {
+		justify-content: center;
+	}
+}
+
+@media (max-width: $md3) {
+	.deleteAccount {
+		margin: 25px 0px;
+	}
+
+	.deleteAccount__title {
+		font-size: $titleFzSmaller;
+	}
+
+	.form__input {
+		padding: 5px 8px;
+		font-size: $defaultFzSmaller;
+	}
+}

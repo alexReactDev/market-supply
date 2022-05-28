@@ -194,15 +194,27 @@ const MyAccount: FC<{}> = () => {
 									</div>
 								</div>
 								<div className={style.orders__amount}>
-									{order.amount}
+									<span className={style.orders__label}>
+										Amount:
+									</span>
+								 	{order.amount}
 								</div>
 								<div className={style.orders__total}>
+									<span className={style.orders__label}>
+										Total:
+									</span>
 									<CurrencyConverter value={order.total} />
 								</div>
 								<div className={style.orders__deliveryMethod}>
+									<span className={style.orders__label}>
+										Delivery method:
+									</span>
 									{order.deliveryMethod}
 								</div>
 								<div className={style.orders__paymentMethod}>
+									<span className={style.orders__label}>
+										Payment method:
+									</span>
 									{order.paymentMethod}
 								</div>
 							</div>

@@ -213,3 +213,119 @@
 	display: flex;
 	justify-content: center;
 }
+
+.orders__label {
+	display: none;
+	margin-right: 0.8em;
+}
+
+@media (max-width: $md2) {
+	.myAccount__title {
+		text-align: center;
+	}
+
+	.orders__header {
+		display: none;
+	}
+
+	.orders__item {
+		flex-wrap: wrap;
+		justify-content: space-evenly;
+		margin-bottom: 10px;
+	}
+
+	.orders__order {
+		width: 100%;
+		margin: 20px 0px;
+		flex-direction: column;
+	}
+
+	.order__picture {
+		width: 100%;
+		margin-bottom: 20px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.order__img {
+		width: 50%;
+		height: 260px;
+	}
+
+	.order__info {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+
+	.orders__amount, .orders__total, .orders__deliveryMethod, .orders__paymentMethod {
+		width: 50%;
+		margin-bottom: 20px;
+	}
+
+	.orders__label {
+		display: inline;
+	}
+
+	.controls {
+		justify-content: center;
+		margin: 0px -12px;
+	}
+
+	.controls__option {
+		margin: 0px 12px !important;
+	}
+}
+
+@media (max-width: $md3) {
+	.myAccount {
+		margin: 25px 0px;
+	}
+
+	.myAccount__title {
+		font-size: $titleFzSmaller;
+	}
+
+	.orders__item {
+		flex-direction: column;
+		flex-wrap: nowrap;
+		align-items: center;
+	}
+
+	.orders__amount, .orders__total, .orders__deliveryMethod, .orders__paymentMethod {
+		width: 100%;
+	}
+
+	.order__img {
+		width: 70%;
+	}
+}
+
+@media (max-width: $md4) {
+	.userData__item {
+		width: 100%;
+		text-align: center;
+	}
+
+	.orders__item {
+		margin-bottom: 5px;
+	}
+
+	.order__img {
+		width: 80%;
+		height: 230px;
+	}
+
+	.orders__amount, .orders__total, .orders__deliveryMethod, .orders__paymentMethod {
+		margin-bottom: 12px;
+	}
+}
+
+@media (max-width: $md5) {
+	.order__img {
+		width: 100%;
+		height: 210px;
+	}
+}
