@@ -10,13 +10,13 @@ interface IProps {
 	maxAmount?: number
 }
 
-const AddToCart: FC<IProps> = ({ className="", productId, initialAmount = 0, maxAmount = 10 }) => {
+const AddToCart: FC<IProps> = ({ className="", productId, initialAmount = 1, maxAmount = 10 }) => {
 
 	const [amount, setAmount] = useState(initialAmount);
 	const dispatch = useDispatch();
 
 	const increment = () => setAmount((prev) => prev === maxAmount ? maxAmount : prev + 1);
-	const decrement = () => setAmount((prev) => prev - 1 > 0 ? prev - 1 : 0);
+	const decrement = () => setAmount((prev) => prev - 1 > 1 ? prev - 1 : 1);
 	const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = +e.target.value;
 		if(isFinite(value)) setAmount(value > maxAmount ? maxAmount : value);
