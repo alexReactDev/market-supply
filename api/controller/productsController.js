@@ -1,13 +1,14 @@
-const fixtures = require("../fixtures4.2.json");
-
+const db = require("../db");
 class ProductsController {
-	getProduct(req, res, next) {
+	async getProduct(req, res, next) {
 		const id = req.params.id;
 
-		if(fixtures.products[id]) {
-			res.send(fixtures.products[id]);
-		}
+		const product = (await db.query("SELECT * FROM products where id = $1", [id])).rows[0];
 	
+		if(!product) res.sendStatus(404);
+
+		res.send(product);
+
 		next();
 	}
 }
