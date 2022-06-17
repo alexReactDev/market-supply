@@ -10,6 +10,7 @@ const newsletterRouter = require("./newsletterRouter");
 const ordersRouter = require("./ordersRouter");
 const preferencesRouter = require("./preferencesRouter");
 const searchRouter = require("./searchRouter");
+const collectionsRouter = require("./collectionsRouter");
 
 const router = new express.Router();
 
@@ -23,5 +24,6 @@ router.use("/newsletter", newsletterRouter);
 router.use("/orders", ordersRouter);
 router.use("/preferences", preferencesRouter);
 router.use("/search", searchRouter);
+router.use("/collections", collectionsRouter);
 
 module.exports = router;
