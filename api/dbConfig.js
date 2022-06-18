@@ -136,16 +136,18 @@ async function createTestUser() {
 
 	await db.query("INSERT INTO users_passwords (user_id, password) values($1, $2);", [user.id, password]);
 
+	const userPersonId = (await db.query("INSERT INTO persons (user_id) values($1) RETURNING id;", [user.id])).rows[0].id;
+
 	const products = (await db.query("SELECT * FROM products;")).rows;
 
-	await db.query("INSERT INTO cart_products (user_id, product_id, amount) values($1, $2, $3);", [user.id, products[0].id, lodash.random(1, 3)]);
-	await db.query("INSERT INTO cart_products (user_id, product_id, amount) values($1, $2, $3);", [user.id, products[1].id, lodash.random(1, 3)]);
+	await db.query("INSERT INTO cart_products (person_id, product_id, amount) values($1, $2, $3);", [userPersonId, products[0].id, lodash.random(1, 3)]);
+	await db.query("INSERT INTO cart_products (person_id, product_id, amount) values($1, $2, $3);", [userPersonId, products[1].id, lodash.random(1, 3)]);
 
-	await db.query("INSERT INTO wishlist_products (user_id, product_id) values($1, $2);", [user.id, products[3].id]);
-	await db.query("INSERT INTO wishlist_products (user_id, product_id) values($1, $2);", [user.id, products[4].id]);
-	await db.query("INSERT INTO wishlist_products (user_id, product_id) values($1, $2);", [user.id, products[5].id]);
+	await db.query("INSERT INTO wishlist_products (person_id, product_id) values($1, $2);", [userPersonId, products[3].id]);
+	await db.query("INSERT INTO wishlist_products (person_id, product_id) values($1, $2);", [userPersonId, products[4].id]);
+	await db.query("INSERT INTO wishlist_products (person_id, product_id) values($1, $2);", [userPersonId, products[5].id]);
 
-	await db.query("INSERT INTO users_preferences (user_id, auto_fill, currency) values($1, $2, $3);", [user.id, true, "USD"]);
+	await db.query("INSERT INTO users_preferences (person_id, auto_fill, currency) values($1, $2, $3);", [userPersonId, true, "USD"]);
 
 	for(let i = 0; i < orders_per_user; i++) {
 		const user_id = user.id;
