@@ -1,6 +1,7 @@
 const db = require("../db");
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 class UserController {
 	async getUser(req, res) {
 		const userId = req.params.userId;
@@ -25,9 +26,13 @@ class UserController {
 
 		let createdUser;
 
+		let userPersonId;
+
 		try {
 			createdUser = (await db.query("INSERT INTO users (id, name, surname, email, phone, town, street, house, apartment, zip) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;",
 			[userId, payload.name, payload.surname, payload.email, payload.phone, payload.town, payload.street, payload.house, payload.apartment, payload.zip])).rows[0];
+
+			userPersonId = (await db.query("INSERT INTO persons (user_id) values($1) RETURNING id;", [createdUser.id])).rows[0].id;
 		}
 		catch(e) {
 			console.log(e);
@@ -44,12 +49,24 @@ class UserController {
 			return res.sendStatus(500);
 		}
 
+		const tokenData = {
+			authorized: true,
+			userId: createdUser.id,
+			personId: userPersonId
+		}
+
+		const token = jwt.sign({data: tokenData}, process.env.JWT_SECRET, {expiresIn: process.env.SESSION_EXPIRES_IN / 1000});
+
+		res.cookie("jwt", token);
+
 		res.status(201).send(createdUser);
 	}
 
 	async changeUserProfile(req, res) {
 		const userId = req.params.userId;
 		const {password, payload} = req.body;
+
+		if(req.tokenData.userId !== userId) res.sendStatus(403);
 		
 		let user;
 
@@ -69,6 +86,7 @@ class UserController {
 			if(!isCorrect) return res.sendStatus(403);
 		}
 		catch(e) {
+			console.log(e);
 			return res.sendStatus(500);
 		}
 
@@ -89,6 +107,8 @@ class UserController {
 		const userId = req.params.userId;
 		const {password, payload} = req.body;
 
+		if(req.tokenData.userId !== userId) res.sendStatus(403);
+		
 		let user;
 
 		try {
@@ -126,13 +146,16 @@ class UserController {
 		const userId = req.params.userId;
 		const {password, payload} = req.body;
 
+		if(req.tokenData.userId !== userId) return res.sendStatus(403);
+
 		let user; 
 
 		try {
-			const user = (await db.query("SELECT * FROM users where id = $1;", [userId])).rows[0];
+			user = (await db.query("SELECT * FROM users where id = $1;", [userId])).rows[0];
 			if(!user) return res.sendStatus(400);
 		}
 		catch(e) {
+			console.log(e);
 			return res.sendStatus(500);
 		}
 
@@ -144,6 +167,7 @@ class UserController {
 			if(!isCorrect) return res.sendStatus(403);
 		}
 		catch(e) {
+			console.log(e);
 			return res.sendStatus(500);
 		}
 
@@ -155,6 +179,8 @@ class UserController {
 		catch(e) {
 			return res.sendStatus(500);
 		}
+
+		res.cookie("jwt", "", {maxAge: 0});
 		
 		res.sendStatus(200);
 	}
@@ -163,6 +189,8 @@ class UserController {
 		const userId = req.params.userId;
 		const {password} = req.body;
 
+		if(req.tokenData.userId !== userId) res.sendStatus(403);
+
 		let user;
 
 		try {
@@ -170,6 +198,7 @@ class UserController {
 			if(!user) res.sendStatus(400);
 		}
 		catch(e) {
+			console.log(e);
 			return res.sendStatus(500);
 		}
 
@@ -181,20 +210,19 @@ class UserController {
 			if(!isCorrect) return res.sendStatus(403);
 		}
 		catch(e) {
+			console.log(e);
 			return res.sendStatus(500);
 		}
 
 		try {
-			await db.query("DELETE FROM cart_products where user_id = $1;", [user.id]);
-			await db.query("DELETE FROM wishlist_products where user_id = $1;", [user.id]);
-			await db.query("DELETE FROM users_passwords where user_id = $1;", [user.id]);
-			await db.query("DELETE FROM users_preferences where user_id = $1;", [user.id]);
-			await db.query("DELETE FROM users_orders where user_id = $1;", [user.id]);
 			await db.query("DELETE FROM users where id = $1;", [user.id]);
 		}
 		catch(e) {
+			console.log(e);
 			res.sendStatus(500);
 		}
+
+		res.cookie("jwt", "", 0);
 
 		res.sendStatus(200);
 	}
@@ -204,17 +232,23 @@ class UserController {
 		const expires = new Date().getTime() + +process.env.SESSION_EXPIRES_IN;
 
 		let createdUser;
+		let createdUserPersonId;
 
 		try {
 			createdUser = (await db.query("INSERT INTO temporary_users (id, expires) values($1, $2) RETURNING *;",
 			[userId, expires])).rows[0];
+
+			createdUserPersonId = (await db.query("INSERT INTO persons (temporary_user_id) values($1) RETURNING id;", [createdUser.id])).rows[0].id;
 		}
 		catch(e) {
 			console.log(e);
 			throw new Error(e);
 		}
 
-		return createdUser;
+		return {
+			...createdUser,
+			personId: createdUserPersonId
+		};
 	}
 
 	async updateTemporaryUser(userId) {

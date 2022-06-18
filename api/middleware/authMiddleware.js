@@ -19,7 +19,8 @@ const authMiddleware = (allowUnauthorized) => async (req, res, next) => {
 		const tokenData = {
 			data: {
 				authorized: false,
-				userId: tempUser.id
+				userId: tempUser.id,
+				personId: tempUser.personId
 			}
 		};
 
@@ -29,14 +30,12 @@ const authMiddleware = (allowUnauthorized) => async (req, res, next) => {
 
 		if(!allowUnauthorized) return res.sendStatus(401);
 
-		res.tokenData = tokenData;
+		req.tokenData = tokenData;
 
 		return next();
 	}
 
 	if(!tokenData.authorized) updateTemporaryUser(tokenData.userId);
-
-	console.log(tokenData);
 
 	const updatedToken = jwt.sign({data: {...tokenData}}, process.env.JWT_SECRET, {expiresIn: +process.env.SESSION_EXPIRES_IN / 1000});
 
@@ -44,7 +43,7 @@ const authMiddleware = (allowUnauthorized) => async (req, res, next) => {
 
 	if(!tokenData.authorized && !allowUnauthorized) return res.sendStatus(401);
 
-	res.tokenData = tokenData;
+	req.tokenData = tokenData;
 
 	next();
 }
