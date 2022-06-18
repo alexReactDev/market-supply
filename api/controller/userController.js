@@ -261,10 +261,36 @@ class UserController {
 		}
 		catch(e) {
 			console.log(e);
-			throw new Error(e);
+			throw e;
 		}
 
 		return updatedUser;
+	}
+
+	async deleteExpiredTemporaryUsers() {
+		let temporaryUsers;
+
+		try {
+			temporaryUsers = (await db.query("SELECT * FROM temporary_users;")).rows;
+		}
+		catch(e) {
+			console.log(e);
+			throw e;
+		}
+
+		const timestamp = new Date().getTime();
+
+		try {
+			temporaryUsers.forEach(async (tempUser) => {
+				if(tempUser.expires < timestamp) {
+					await db.query("DELETE FROM temporary_users where id = $1;", [tempUser.id]);
+				}
+			});
+		}
+		catch(e) {
+			console.log(e);
+			throw e;
+		}
 	}
 }
 
