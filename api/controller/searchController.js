@@ -1,26 +1,29 @@
-const fixtures = require("../fixtures4.2.json");
+const db = require("../db");
 
 class SearchController {
-	productsSearch(req, res) {
-		const search = req.params.search;
+	async productsSearch(req, res) {
+		const search = req.query.q;
 		const page = +req.query.page || 1;
 
-		if(!search) res.sendStatus(400);
+		let products;
 
-		const found = [];
-		
-		Array.from(Object.values(fixtures.products)).forEach((product) => {
-			if(product.name.includes(search)) found.push(product.id);
-		});
+		try {
+			products = (await db.query("SELECT * FROM products;")).rows;
+		}
+		catch(e) {
+			return res.sendStatus(500);
+		}
 
-		const result = found.slice(20 * page - 20, 20 * page);
+		const matchingProductsIds = products.filter((product) => product.name.includes(search)).map((product) => product.id);
 
-		res.json({
+		const result = matchingProductsIds.slice(process.env.PAGE_LENGTH * page - process.env.PAGE_LENGTH, process.env.PAGE_LENGTH * page);
+
+		res.send({
 			search,
 			page,
-			done: found.length <= 20 * page,
+			done: matchingProductsIds.length <= process.env.PAGE_LENGTH * page,
 			result
-		})
+		});
 	}
 }
 
