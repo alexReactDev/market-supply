@@ -141,12 +141,7 @@ CREATE TABLE orders (
 	email VARCHAR NOT NULL,
 	delivery_method VARCHAR NOT NULL CHECK (delivery_method = 'pickup' or delivery_method = 'delivery'),
 	payment_method VARCHAR NOT NULL CHECK (payment_method = 'online' or payment_method = 'onRecieve'),
-	total INTEGER NOT NULL
-);
-
-CREATE TABLE orders_confirm_status (
-	order_id INTEGER PRIMARY KEY NOT NULL,
-	FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+	total INTEGER NOT NULL,
 	confirmed BOOLEAN NOT NULL DEFAULT false
 );
 
