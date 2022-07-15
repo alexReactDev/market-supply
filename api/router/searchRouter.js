@@ -4,6 +4,6 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 const router = new Router();
 
-router.get("/:search", authMiddleware(true), productsSearch);
+router.get("/", authMiddleware(true), productsSearch);
 
 module.exports = router;
