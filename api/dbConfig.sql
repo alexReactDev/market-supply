@@ -118,7 +118,7 @@ CREATE TABLE users_preferences (
 	person_id INTEGER PRIMARY KEY,
 	FOREIGN KEY (person_id) REFERENCES persons(id) ON DELETE CASCADE,
 	auto_fill BOOLEAN NOT NULL DEFAULT false,
-	currency VARCHAR NOT NULL DEFAULT 'USD'
+	currency VARCHAR NOT NULL DEFAULT 'USD' CHECK (currency = 'USD' OR currency = 'EUR')
 );
 
 CREATE TABLE users_orders (
