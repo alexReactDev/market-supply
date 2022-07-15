@@ -22,7 +22,7 @@ class authorizationController {
 		try {
 			const userHashPassword = (await db.query("SELECT password FROM users_passwords where user_id = $1;", [user.id])).rows[0].password;
 
-			isPasswordCorrect = await bcrypt.compare(password, userHashPassword);
+			isPasswordCorrect = await bcrypt.compare(password + "", userHashPassword);
 		}
 		catch(e) {
 			return res.sendStatus(500);

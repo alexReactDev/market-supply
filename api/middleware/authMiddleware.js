@@ -30,7 +30,7 @@ const authMiddleware = (allowUnauthorized) => async (req, res, next) => {
 
 		if(!allowUnauthorized) return res.sendStatus(401);
 
-		req.tokenData = tokenData;
+		req.tokenData = tokenData.data;
 
 		return next();
 	}
