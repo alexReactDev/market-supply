@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { categoriesSelector, publicCategoriesKeysSelector } from "../../redux/selectors";
+import { categoriesSelector, foldersWithItemsSelector } from "../../redux/selectors";
 
 import style from "./asideNav.module.scss";
 
@@ -11,18 +11,37 @@ interface IProps {
 
 const AsideNav: FC<IProps> = ({ className="" }) => {
 
-	const categories = useSelector(categoriesSelector);
-	const publicCategories = useSelector(publicCategoriesKeysSelector);
+	const categories = useSelector(foldersWithItemsSelector);
+
+	const [openCat, setOpenCat] = useState<number | null>(null);
 
 	return(
 		<ul className={`${className} ${style.nav}`}>
 			{
-				publicCategories.map((cat) => {
+				categories.map((cat) => {
 					return(
-						<li className={style.nav__item} key={cat}>
-							<Link to={`/categories/${cat}`} className={`${style.nav__link} nav-link`}>
-								{categories[cat].name}
-							</Link>
+						<li className={`${style.nav__item} ${style.folder}`} key={cat.id}>
+							<div className={style.folder__profile} onClick={() => setOpenCat(cat.id)} >
+								<div className={`${style.folder__isOpen} ${openCat === cat.id ? style.folder__isOpen_true : ""}`} />
+								<p className={style.folder__name}>
+									{cat.name}
+								</p>
+							</div>
+							<ul className={`${style.folder__items} ${openCat === cat.id ? style.folder__items_visible : ""}`}>
+								{
+									cat.items.map((item) => {
+										return (
+											<li className={style.folder__item} key={item.id}>
+												<Link to={`/categories/${cat.url_name}/${item.url_name}`} className={`${style.folder__itemLink} nav-link`}>
+													<p className={style.folder__itemName}>
+														{item.name}
+													</p>
+												</Link>
+											</li>
+										)
+									})
+								}
+							</ul>
 						</li>
 					)
 				})

@@ -1,6 +1,8 @@
 import { AppState } from ".";
 import { IProduct } from "./reducer/products";
 
+export const foldersSelector = (state: AppState) => state.folders;
+
 export const cartSelector = (state: AppState) => state.cart;
 export const cartTotal = (state: AppState) => cartSelector(state).total;
 export const cartProductsSelector = (state: AppState) => cartSelector(state).products;
@@ -60,15 +62,21 @@ export const URLPathEndSelector = (state: AppState) => {
 	return urlEnd;
 }
 
-export const publicCategoriesKeysSelector = (state: AppState) => {
-	const categories = categoriesSelector(state);
-	const publicCategoriesKeys = [];
+export const foldersWithItemsSelector = (state: AppState) => {
+	const folders = foldersSelector(state);
 
-	for(let key in categories) {
-		if(categories[key].isPublic) publicCategoriesKeys.push(key);
-	}
+	return folders.map((folder) => ({
+		...folder,
+		items: folder.items.map((catName) => {
+			const cat = categoriesSelector(state)[catName];
 
-	return publicCategoriesKeys;
+			return {
+				id: cat.id,
+				name: cat.name,
+				url_name: cat.url_name,
+			}
+		})
+	}))
 }
 
 export interface IProductWithProps extends IProduct {

@@ -7,18 +7,6 @@
 .nav__item {
 	position: relative;
 	list-style: none;
-	padding: 0px 15px;
-
-	&::before {
-		content: '';
-		width: 10px;
-		height: 10px;
-		position: absolute;
-		top: calc(50% - 5px);
-		left: 25px;
-		border: solid #a6a6a6 2px;
-		border-radius: 50%;
-	}
 
 	&::after {
 		content: '';
@@ -29,19 +17,76 @@
 		left: 15px;
 		background-color: $borderC;
 	}
+}
+
+.folder {
+
+}
+
+.folder__profile {
+	position: relative;
 
 	&:active {
 		background-color: rgb(214, 214, 214);
 	}
 }
 
-.nav__link {
+.folder__name {
 	display: block;
-	padding: 17px 10px 18px 45px;
+	padding: 17px 10px 18px 55px;
 	font-size: $defaultFz;
 	color: $lightblack;
 
 	&:hover {
 		color: $darkgrey;
+	}
+}
+
+.folder__isOpen {
+	position: absolute;
+	width: 13px;
+	height: 13px;
+	top: calc(50% - 6.5px);
+	left: 25px;
+	background: url("../../images/icons/bullet.png");
+	transition-duration: 0.2s;
+}
+
+.folder__isOpen_true {
+	transform: rotate(90deg);
+	transition-duration: 0.3s;
+}
+
+.folder__items {
+	visibility: hidden;
+	opacity: 0;
+	height: 0px;
+	transform: translateX(-20%);
+}
+
+.folder__items_visible {
+	height: auto;
+	visibility: visible;
+	opacity: 1;
+	transition-duration: 0.8s;
+	transform: none;
+}
+
+.folder__item {
+	list-style: none;
+	padding: 12px 10px 12px 60px;
+	font-size: $defaultFzSmaller;
+	color: $lightblack;
+
+	&:first-child {
+		padding-top: 5px;
+	}
+
+	&:hover {
+		color: $darkgrey;
+	}
+
+	&:active {
+		background-color: rgb(214, 214, 214);
 	}
 }

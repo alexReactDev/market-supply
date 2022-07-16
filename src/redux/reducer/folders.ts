@@ -14,7 +14,7 @@ const folderSlice = createSlice({
 	initialState,
 	reducers: {
 		foldersLoaded(state, action: PayloadAction<IFolder[]>) {
-			state = [...action.payload];
+			return [...action.payload];
 		}
 	}
 })
