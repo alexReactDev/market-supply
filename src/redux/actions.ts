@@ -1,5 +1,5 @@
 import { AppDispatch, AppState } from ".";
-import { categoriesListLoaded, categoryLoaded, categoryLoadError, categoryLoadStart } from "./reducer/categories";
+import { categoriesListLoaded, categoryLoaded, categoryLoadError, categoryLoadStart, ICategoryInitialData } from "./reducer/categories";
 import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
 import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
@@ -21,19 +21,44 @@ import { editPasswordFail, editPasswordRequest, editPasswordSuccess } from "./re
 import { deleteAccountFail, deleteAccountRequest, deleteAccountSuccess } from "./reducer/deleteAccountData";
 import { checkoutConfirmationCanceled, checkoutConfirmationDataLoaded, checkoutError, checkoutLoading, checkoutSuccess, IConfirmationData } from "./reducer/checkout";
 import { searchDataLoaded, searchDataLoadedAction, searchDataLoading, searchError, searchRequest } from "./reducer/search";
+import { foldersLoaded, IFolder } from "./reducer/folders";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
 	//get userId
+	let folders;
 
 	try {
-		const categories = (await axios.get("/api/categories")).data;
-		dispatch(categoriesListLoaded(categories));
+		folders = (await axios.get("/api/categories")).data;
 	}
-	catch(e: any) {
-		dispatch(generalError(e));
-		throw e;
+	catch(e) {
+		return dispatch(generalError(e));
 	}
+
+	let categories: ICategoryInitialData[] = [];
+
+	let foldersWithItems: IFolder[];
+
+	try {
+		foldersWithItems = await Promise.all(folders.map(async (folder: any) => {
+
+			const folderItems = (await axios.get(`/api/categories/${folder.url_name}`)).data;
+
+			categories.push(...folderItems.map((cat: any) => ({...cat, internalName: `${folder.url_name}/${cat.url_name}`})));
+
+			return {
+				...folder,
+				items: folderItems.map((item: any) => `${folder.url_name}/${item.url_name}`)
+			}
+		}))
+	}
+	catch(e) {
+		return dispatch(generalError(e));
+	}
+
+	dispatch(foldersLoaded(foldersWithItems));
+
+	dispatch(categoriesListLoaded(categories));
 
 	try {
 		const cartItems = (await axios.get("/api/cart")).data;
@@ -128,7 +153,7 @@ export const loadCategoryDataWithProducts = (categoryName: string, newSort?: str
 		if(loadedProducts.length > 0) dispatch(productsLoaded(loadedProducts));
 	}
 
-	dispatch(categoryLoaded({
+	/*dispatch(categoryLoaded({
 		category: categoryName,
 		data: {
 			done: page === totalPages,
@@ -136,7 +161,7 @@ export const loadCategoryDataWithProducts = (categoryName: string, newSort?: str
 			page,
 			sort,
 		}
-	}))
+	}))*/
 }
 
 export const subscribeToNewsletterAction = (email: string) => async () => {
