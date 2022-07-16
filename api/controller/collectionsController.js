@@ -6,12 +6,35 @@ class CollectionsController {
 		const page = +req.query.page || 1;
 		const sort = req.query.sort || "default";
 	
-		const collection = (await db.query("SELECT * FROM collections where url_name = $1;", [reqCollection])).rows[0];
+		let collection;
+
+		try {
+			collection = (await db.query("SELECT * FROM collections where url_name = $1;", [reqCollection])).rows[0];
+		}
+		catch(e) {
+			res.sendStatus(500);
+		}
 
 		if(!collection) res.sendStatus(404);
 
-		let collectionItemsIds = (await db.query("SELECT product_id FROM items_of_collections where collection_id = $1;", [collection.id])).rows.map((item) => item.product_id);
-		const products = (await db.query("SELECT * FROM products;")).rows;
+		let collectionItemsIds;
+
+		try {
+			collectionItemsIds = (await db.query("SELECT product_id FROM items_of_collections where collection_id = $1;", [collection.id])).rows.map((item) => item.product_id);	
+		}
+		catch(e) {
+			res.sendStatus(500);
+		}
+		
+		let products;
+
+		try {
+			products = (await db.query("SELECT * FROM products;")).rows;
+		}
+		catch(e) {
+			res.sendStatus(500);
+		}
+
 		const collectionItems = products.filter((product) => collectionItemsIds.includes(product.id));
 
 		let sortedCollectionItems;

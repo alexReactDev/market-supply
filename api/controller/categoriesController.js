@@ -6,17 +6,47 @@ class CategoriesController {
 		const reqSubCategory = req.params.subcategory;
 		const page = +req.query.page || 1;
 		const sort = req.query.sort || "default";
-	
-		const category = (await db.query("SELECT * FROM categories where url_name = $1;", [reqCategory])).rows[0];
+		
+		let category;
+
+		try {
+			category = (await db.query("SELECT * FROM categories where url_name = $1;", [reqCategory])).rows[0];
+		}
+		catch(e) {
+			return res.sendStatus(500);
+		}
 
 		if(!category) res.sendStatus(404);
 
-		const subcategory = (await db.query("SELECT * FROM subcategories where url_name = $1 and category_id = $2;", [reqSubCategory, category.id])).rows[0];
+		let subcategory;
+		
+		try {
+			subcategory = (await db.query("SELECT * FROM subcategories where url_name = $1 and category_id = $2;", [reqSubCategory, category.id])).rows[0];	
+		}
+		catch(e) {
+			res.sendStatus(500);
+		}
 
 		if(!subcategory) res.sendStatus(404);
 
-		let subcategoryItemsIds = (await db.query("SELECT product_id FROM items_of_subcategories where subcategory_id = $1;", [subcategory.id])).rows.map((item) => item.product_id);
-		const products = (await db.query("SELECT * FROM products;")).rows;
+		let subcategoryItemsIds;
+
+		try {
+			subcategoryItemsIds = (await db.query("SELECT product_id FROM items_of_subcategories where subcategory_id = $1;", [subcategory.id])).rows.map((item) => item.product_id);
+		}
+		catch(e) {
+			res.sendStatus(500);
+		}
+
+		let products;
+
+		try {
+			products = (await db.query("SELECT * FROM products;")).rows;
+		}
+		catch(e) {
+			res.sendStatus(500);
+		}
+
 		const subcategoryItems = products.filter((product) => subcategoryItemsIds.includes(product.id));
 
 		/*
@@ -67,18 +97,39 @@ class CategoriesController {
 
 	async getCategoryData(req, res) {
 		const requestedCategory = req.params.category;
+		
+		let cat;
 
-		const cat = (await db.query("SELECT * FROM categories where url_name = $1;", [requestedCategory])).rows[0];
+		try {
+			cat = (await db.query("SELECT * FROM categories where url_name = $1;", [requestedCategory])).rows[0];	
+		}
+		catch(e) {
+			res.sendStatus(500);
+		}
 
 		if(!cat) res.sendStatus(404);
 
-		const catContent = (await db.query("SELECT * FROM subcategories where category_id = $1;", [cat.id])).rows;
+		let catContent;
+
+		try {
+			catContent = (await db.query("SELECT * FROM subcategories where category_id = $1;", [cat.id])).rows;
+		}
+		catch(e) {
+			res.sendStatus(500);
+		}
 
 		res.send(catContent);
 	}
 
 	async getCategoriesList(req, res) {
-		const categories = (await db.query("SELECT * FROM categories;")).rows;
+		let categories;
+
+		try {
+			categories = (await db.query("SELECT * FROM categories;")).rows;
+		}
+		catch(e) {
+			res.sendStatus(500);
+		}
 	
 		res.send(categories);
 	}
