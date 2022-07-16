@@ -1,13 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface ICategory {
+	id: number,
+	name: string, // foldername/categoryname
+	url_name: string,
+	category_id: number,
 	page: number,
 	sort: string,
 	done: boolean,
 	loading: boolean,
 	products: string[],
-	error: Error | null,
-	name: string,
-	isPublic: boolean
+	error: Error | null
 }
 
 interface IState {
@@ -19,10 +21,12 @@ interface ICategoryAction extends Partial<ICategory> {
 	category: string
 }
 
-interface IInitialCategoryData {
-	URLName: string,
+export interface ICategoryInitialData {
+	id: number,
 	name: string,
-	isPublic: boolean
+	url_name: string,
+	internalName: string,
+	category_id: number
 }
 
 interface ICategoryLoadAction extends ICategoryAction {
@@ -41,19 +45,20 @@ const categoriesSlice = createSlice({
 	name: "categories",
 	initialState,
 	reducers: {
-		categoriesListLoaded(state, action: PayloadAction<IInitialCategoryData[]>) {
+		categoriesListLoaded(state, action: PayloadAction<ICategoryInitialData[]>) {
 			const categories = action.payload;
 
 			categories.forEach((cat) => {
-				state[cat.URLName] = {
+				const { internalName, ...data } = cat;
+
+				state[internalName] = {
+					...data,
 					page: 0,
 					sort: "default",
 					done: false,
 					loading: false,
 					products: [],
 					error: null,
-					name: cat.name,
-					isPublic: cat.isPublic
 				}
 			})
 		},
