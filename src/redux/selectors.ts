@@ -3,6 +3,8 @@ import { IProduct } from "./reducer/products";
 
 export const foldersSelector = (state: AppState) => state.folders;
 
+export const collectionsSelector = (state: AppState) => state.collections;
+
 export const cartSelector = (state: AppState) => state.cart;
 export const cartTotal = (state: AppState) => cartSelector(state).total;
 export const cartProductsSelector = (state: AppState) => cartSelector(state).products;

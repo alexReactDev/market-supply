@@ -22,6 +22,7 @@ import { deleteAccountFail, deleteAccountRequest, deleteAccountSuccess } from ".
 import { checkoutConfirmationCanceled, checkoutConfirmationDataLoaded, checkoutError, checkoutLoading, checkoutSuccess, IConfirmationData } from "./reducer/checkout";
 import { searchDataLoaded, searchDataLoadedAction, searchDataLoading, searchError, searchRequest } from "./reducer/search";
 import { foldersLoaded, IFolder } from "./reducer/folders";
+import { collectionsListLoaded } from "./reducer/collections";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -59,6 +60,17 @@ export const initialize = () => async (dispatch: AppDispatch) => {
 	dispatch(foldersLoaded(foldersWithItems));
 
 	dispatch(categoriesListLoaded(categories));
+
+	let collections;
+
+	try {
+		collections = (await axios.get("/api/collections")).data;
+	}
+	catch(e) {
+		return dispatch(generalError(e));
+	}
+
+	dispatch(collectionsListLoaded(collections));
 
 	try {
 		const cartItems = (await axios.get("/api/cart")).data;
