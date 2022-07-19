@@ -2,6 +2,7 @@
 
 .nav {
 	background-color: $white;
+	user-select: none;
 }
 
 .nav__item {
@@ -25,9 +26,13 @@
 
 .folder__profile {
 	position: relative;
+	transition-property: background-color;
+	transition-duration: 0.3s;
 
 	&:active {
 		background-color: rgb(214, 214, 214);
+		transition-property: background-color;
+		transition-duration: 0.1s;
 	}
 }
 
@@ -60,16 +65,18 @@
 .folder__items {
 	visibility: hidden;
 	opacity: 0;
-	height: 0px;
-	transform: translateX(-20%);
+	max-height: 0px;
+	transition: max-height 0.3s ease-out 0.1s, opacity 0.3s ease 0s, visibility 0.3s ease 0s;
 }
 
 .folder__items_visible {
-	height: auto;
+	max-height: 999px;
 	visibility: visible;
 	opacity: 1;
-	transition-duration: 0.8s;
-	transform: none;
+	transition-property: max-height, visibility, opacity;
+	transition-duration: 0.8s, 0.3s, 0.3s;
+	transition-timing-function: ease-in;
+	transition-delay: 0s, 0.1s, 0.1s;
 }
 
 .folder__item {
@@ -77,6 +84,8 @@
 	padding: 12px 10px 12px 60px;
 	font-size: $defaultFzSmaller;
 	color: $lightblack;
+	transition-property: background-color;
+	transition-duration: 0.3s;
 
 	&:first-child {
 		padding-top: 5px;
@@ -84,9 +93,12 @@
 
 	&:hover {
 		color: $darkgrey;
+		text-decoration: underline;
 	}
 
 	&:active {
 		background-color: rgb(214, 214, 214);
+		transition-property: background-color;
+		transition-duration: 0.1s;
 	}
 }

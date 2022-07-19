@@ -17,7 +17,7 @@ const Aside: FC<IProps> = ({ className="" }) => {
 	const categories = useSelector(categoriesSelector);
 	const dispatch = useDispatch();
 
-	useEffect(() => {
+	/*useEffect(() => {
 		if(
 			categories["hot-deal"].products.length === 0 &&
 			!categories["hot-deal"].done &&
@@ -35,12 +35,12 @@ const Aside: FC<IProps> = ({ className="" }) => {
 		{
 			dispatch(loadCategoryDataWithProducts("special-deal"));
 		}
-	})
+	})*/
 
 	return (
 		<aside className={`${className} ${style.aside}`}>
 			<AsideNav className={style.aside__item} />
-			<Carousel
+			{/*<Carousel
 				className={style.aside__item}
 				title="HOT DEALS" 
 				products={categories["hot-deal"].products}
@@ -49,7 +49,7 @@ const Aside: FC<IProps> = ({ className="" }) => {
 				className={style.aside__item} 
 				title="SPECIAL DEAL" 
 				products={categories["special-deal"].products}
-			/>
+			/>*/}
 			<Newsletter className={style.aside__item} />
 			<Banner className={style.aside__item} src={banner} />
 		</aside>

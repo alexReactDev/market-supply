@@ -55,7 +55,7 @@ export const initialize = () => async (dispatch: AppDispatch) => {
 	catch(e) {
 		return dispatch(generalError(e));
 	}
-
+	
 	dispatch(foldersLoaded(foldersWithItems));
 
 	dispatch(categoriesListLoaded(categories));

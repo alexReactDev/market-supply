@@ -22,7 +22,7 @@ const Categories: FC<{}> = () => {
 		}
 	}, [categoryName])
 	
-	if(!categories[categoryName] || !categories[categoryName].isPublic) return <Redirect to={"/404"} />
+	if(!categories[categoryName]) return <Redirect to={"/404"} />
 
 	const { name, sort, done, loading, products, error } = categories[categoryName];
 
