@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { IProduct } from "../../redux/reducer/products";
@@ -8,6 +8,8 @@ import style from "./productMini.module.scss";
 import picturePlaceholder from "../../images/products/placeholder.png";
 import Price from "../Price";
 import Rate from "../Rate";
+import { loadProductByIdAction } from "../../redux/actions";
+import { useAppDispatch } from "../../hooks";
 
 interface IProps {
 	className?: string,
@@ -17,6 +19,13 @@ interface IProps {
 const ProductMini: FC<IProps> = ({ className="", id }) => {
 
 	const product = useSelector(productsSelector)[id];
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		if(!product || (!product.loading && !product.loaded && !product.error)) {
+			dispatch(loadProductByIdAction(id));
+		}
+	})
 
 	if(!product || product.error) return null;
 
@@ -25,7 +34,7 @@ const ProductMini: FC<IProps> = ({ className="", id }) => {
 	return(
 		<Link to={`/product/${id}`} className={`${className} ${style.product} nav-link`}>
 			<div className={style.product__picture}>
-				<img src={pictures[0] || picturePlaceholder} alt={name} />
+				<img src={pictures[0] || picturePlaceholder} alt={name} onError={(e: any) => e.target.src = picturePlaceholder} />
 			</div>
 			<div className={style.product__body}>
 				<h5 className={style.product__title}>

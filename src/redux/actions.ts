@@ -22,7 +22,7 @@ import { deleteAccountFail, deleteAccountRequest, deleteAccountSuccess } from ".
 import { checkoutConfirmationCanceled, checkoutConfirmationDataLoaded, checkoutError, checkoutLoading, checkoutSuccess, IConfirmationData } from "./reducer/checkout";
 import { searchDataLoaded, searchDataLoadedAction, searchDataLoading, searchError, searchRequest } from "./reducer/search";
 import { foldersLoaded, IFolder } from "./reducer/folders";
-import { collectionsListLoaded } from "./reducer/collections";
+import { collectionLoaded, collectionLoadError, collectionLoadStart, collectionsListLoaded } from "./reducer/collections";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -876,4 +876,34 @@ export const loadMoreSearchResultsAction = () => async (dispatch: AppDispatch, g
 
 		dispatch(searchError(e));
 	}
+}
+
+export const loadCollectionData = (colName: string, sort?: string ) => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	if(!sort) sort = state.collections[colName].sort;
+
+	dispatch(collectionLoadStart({
+		collection: colName, 
+		sortChanging: sort !== state.collections[colName].sort ? true : false
+	}));
+
+	let collectionData;
+
+	try {
+		collectionData = (await axios.get(`/api/collections/${colName}?sort=${sort}`)).data;
+	}
+	catch(e) {
+		dispatch(collectionLoadError({
+			collection: colName,
+			error: e
+		}))
+	}
+
+	dispatch(collectionLoaded({
+		collection: colName,
+		sort,
+		page: collectionData.page,
+		done: collectionData.page >= collectionData.totalPages ? true : false,
+		data: collectionData.data
+	}))
 }

@@ -45,9 +45,9 @@ const CarouselMiniatures: FC<IProps> = ({ className="", title, products, autopla
 			</div>
 			<Slider className={style.carousel__slider} ref={(e) => setRef(e)}>
 				{
-					productsChunks.map((productChunk) => {
+					productsChunks.map((productChunk, i) => {
 						return(
-							<div key={productChunk[0]} className={style.carousel__sliderItem}>
+							<div key={i} className={style.carousel__sliderItem}>
 								{
 									productChunk.map((productId) => {
 										return(

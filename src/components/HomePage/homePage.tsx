@@ -7,43 +7,43 @@ import banner2 from "../../images/banners/2.jpg";
 import banner3 from "../../images/banners/3.jpg";
 import banner4 from "../../images/banners/4.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { categoriesSelector } from "../../redux/selectors";
+import { collectionsSelector } from "../../redux/selectors";
 import Carousel from "../Carousel";
-import { loadCategoryDataWithProducts } from "../../redux/actions";
+import { loadCollectionData } from "../../redux/actions";
 import TilesWrapper from "../TilesWrapper";
 import CarouselMiniatures from "../CarouselMiniatures";
 
 const HomePage: FC<{}> = () => {
 
-	const categories = useSelector(categoriesSelector);
+	const collections = useSelector(collectionsSelector);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if(
-			categories["new"].products.length === 0 &&
-			!categories["new"].done &&
-			!categories["new"].loading
+			!collections["new"].error &&
+			!collections["new"].done &&
+			!collections["new"].loading
 		)
 		{
-			dispatch(loadCategoryDataWithProducts("new"));
+			dispatch(loadCollectionData("new"));
 		}
 
 		if(
-			categories["latest"].products.length === 0 &&
-			!categories["latest"].done &&
-			!categories["latest"].loading
+			!collections["latest"].error &&
+			!collections["latest"].done &&
+			!collections["latest"].loading
 		)
 		{
-			dispatch(loadCategoryDataWithProducts("latest"));
+			dispatch(loadCollectionData("latest"));
 		}
 
 		if(
-			categories["featured"].products.length === 0 &&
-			!categories["featured"].done &&
-			!categories["featured"].loading
+			!collections["featured"].error &&
+			!collections["featured"].done &&
+			!collections["featured"].loading
 		)
 		{
-			dispatch(loadCategoryDataWithProducts("featured"));
+			dispatch(loadCollectionData("featured"));
 		}
 	})
 
@@ -53,7 +53,7 @@ const HomePage: FC<{}> = () => {
 			<Carousel 
 				className={style.homePage__item} 
 				title="NEW PRODUCTS" 
-				products={categories["new"].products} 
+				products={collections["new"].products} 
 				maxCards={4}
 				autoplay={true} 
 			/>
@@ -64,7 +64,7 @@ const HomePage: FC<{}> = () => {
 			<Carousel 
 				className={style.homePage__item} 
 				title="LATEST PRODUCTS" 
-				products={categories["latest"].products} 
+				products={collections["latest"].products} 
 				maxCards={4}
 				autoplay={true} 
 			/>
@@ -72,7 +72,7 @@ const HomePage: FC<{}> = () => {
 			<CarouselMiniatures 
 				className={style.homePage__item}
 				title="FEATURED PRODUCTS"
-				products={categories["featured"].products}
+				products={collections["featured"].products}
 			/>
 		</div>
 	)

@@ -14,6 +14,8 @@ interface IProps {
 
 const Carousel: FC<IProps> = ({ className="", title, products, maxCards = 1, autoplay }) => {
 
+	if(products.length > 16) products = products.slice(0, 16);
+
 	const [sliderRef, setSliderRef] = useState<any>(null);
 
 	const sliderConfig = {

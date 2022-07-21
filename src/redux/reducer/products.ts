@@ -13,6 +13,7 @@ export interface IProduct {
 	pictures: string[],
 	loading: boolean,
 	error: any,
+	loaded: boolean,
 	promise: null | Promise<AxiosResponse<IProduct>>
 }
 
@@ -28,6 +29,7 @@ const initialProduct: IProduct = {
 	pictures: [],
 	loading: false,
 	error: null,
+	loaded: false,
 	promise: null
 }
 
@@ -84,7 +86,8 @@ const productsSlice = createSlice({
 					...product,
 					loading: false,
 					error: null,
-					promise: null
+					promise: null,
+					loaded: true
 				}
 			})
 		}
