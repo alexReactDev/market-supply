@@ -66,7 +66,7 @@ async function createOutlets() {
 	['12 Small Road, New York, NY 8121', '9:00-23:00 mon-sun', "+ 1 (321) 987 654"]);
 }
 
-async function createProduct() {
+async function createProduct(catURL) {
 	const id = uuid.v4();
 	let webId;
 
@@ -83,8 +83,13 @@ async function createProduct() {
 	let rate = lodash.random(1, 5);
 	if(rate < 4 && lodash.random(0, 1) === 1) rate = lodash.random(3, 5);
 	const isNew = lodash.random(1) ? true : false;
+	const picture = `/images/${catURL}/${lodash.random(1, 20)}.jpg`;
 
 	const product = (await db.query("INSERT INTO products (id, web_id, name, price, old_price, rate, is_new) values($1, $2, $3, $4, $5, $6, $7) RETURNING *;", [id, webId, name, price, oldPrice, rate, isNew])).rows[0];
+
+	for (let i = 0; i < 3; i++) {
+		await db.query("INSERT INTO products_pictures (product_id, picture) values($1, $2);", [product.id, picture]);
+	}
 
 	return product;
 }
@@ -177,7 +182,7 @@ async function config() {
 		for(let j = 0; j < subcategories.length; j++) {
 
 			for (let k = 0; k < products_per_subcategory; k++) {
-				const product = await createProduct();
+				const product = await createProduct(categories[i].url_name);
 				await createProductDetails(product.id);
 				
 				for(let l = 0; l < reviews_per_product; l++) {

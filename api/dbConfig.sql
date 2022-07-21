@@ -24,6 +24,13 @@ CREATE TABLE products (
 	is_new BOOLEAN NOT NULL
 );
 
+CREATE TABLE products_pictures (
+	id SERIAL PRIMARY KEY,
+	product_id VARCHAR NOT NULL,
+	FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+	picture VARCHAR NOT NULL
+);
+
 CREATE TABLE products_reviews (
 	id SERIAL PRIMARY KEY,
 	title VARCHAR NOT NULL,

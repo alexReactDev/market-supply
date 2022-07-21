@@ -9,12 +9,25 @@ class ProductsController {
 			product = (await db.query("SELECT * FROM products where id = $1", [id])).rows[0];
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 	
 		if(!product) res.sendStatus(404);
 
-		res.send(product);
+		let productPictures;
+
+		try {
+			productPictures = (await db.query("SELECT picture from products_pictures where product_id = $1;", [product.id])).rows.map((productPicture) => productPicture.picture);
+		}
+		catch(e) {
+			console.log(e);
+			return res.sendStatus(500);
+		}
+
+		res.send({
+			...product,
+			pictures: productPictures
+		});
 
 		next();
 	}
