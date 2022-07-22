@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-interface ICollection {
+export interface ICollection {
 	id: number
 	name: string,
 	url_name: string,

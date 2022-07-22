@@ -2,12 +2,14 @@ import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { loadCategoryDataWithProducts } from "../../redux/actions";
+import { ICategory } from "../../redux/reducer/categories";
+import { ICollection } from "../../redux/reducer/collections";
 import { categoriesSelector, URLPathEndSelector } from "../../redux/selectors";
 import Loader from "../Loader";
 import Product from "../Product";
 import style from "./categories.module.scss";
 
-const Categories: FC<{}> = () => {
+const Categories: FC<{cat: ICategory | ICollection}> = (cat) => {
 	
 	const categoryName = useSelector(URLPathEndSelector);
 	const categories = useSelector(categoriesSelector);

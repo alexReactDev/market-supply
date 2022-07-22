@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-interface ICategory {
+export interface ICategory {
 	id: number,
 	name: string, // foldername/categoryname
 	url_name: string,
