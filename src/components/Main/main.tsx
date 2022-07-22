@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+import CollectionsAndCategoriesHoc from "../../hocs/collectionsAndCategoriesHoc";
 import Aside from "../Aside";
 import Cart from "../Cart";
 import Categories from "../Categories";
@@ -26,7 +27,8 @@ const Main: FC<{}> = () => {
 					<div className={style.main__content}>
 						<Switch>
 							<Route path="/" exact component={HomePage} />
-							<Route path="/categories" component={Categories} />
+							<Route path="/collections/" component={CollectionsAndCategoriesHoc} />
+							<Route path="/categories/*/*" component={CollectionsAndCategoriesHoc} />
 							<Route path="/product" component={ProductDetails} />
 							<Route path="/cart" component={Cart} />
 							<Route path="/checkout" component={Checkout} />
