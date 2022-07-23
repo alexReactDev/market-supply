@@ -8,7 +8,6 @@ export interface IProduct {
 	price: number,
 	oldPrice: number | null,
 	rate: number,
-	categories: string[],
 	isNew: boolean,
 	pictures: string[],
 	loading: boolean,
@@ -24,7 +23,6 @@ const initialProduct: IProduct = {
 	price: 0,
 	oldPrice: null,
 	rate: 0,
-	categories: [],
 	isNew: false,
 	pictures: [],
 	loading: false,
@@ -42,7 +40,16 @@ export interface IState {
 	[key: string]: IProduct 
 }
 
-type TProductsLoadedAction = Omit<IProduct, "loading" | "error">[];
+interface IProductLoadedAction {
+	id: string,
+	webId: number,
+	name: string,
+	price: number,
+	oldPrice: number | null,
+	rate: number,
+	is_new: boolean,
+	pictures: string[],
+}
 
 interface IProductLoadData {
 	productId: string,
@@ -78,18 +85,18 @@ const productsSlice = createSlice({
 				}
 			})
 		},
-		productsLoaded(state, action: PayloadAction<TProductsLoadedAction>) {
-			const products  = action.payload;
+		productsLoaded(state, action: PayloadAction<IProductLoadedAction>) {
+			const { id, is_new, ...product }  = action.payload;
 
-			products.forEach((product) => {
-				state[product.id] = {
-					...product,
-					loading: false,
-					error: null,
-					promise: null,
-					loaded: true
-				}
-			})
+			state[id] = {
+				...product,
+				loading: false,
+				loaded: true,
+				error: null,
+				isNew: is_new,
+				promise: null,
+				id
+			}
 		}
 	}
 })

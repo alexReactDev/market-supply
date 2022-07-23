@@ -24,8 +24,7 @@ interface ICollectionData {
 }
 
 interface ICollectionLoadAction {
-	collection: string,
-	sortChanging: boolean | undefined
+	collection: string
 }
 
 interface ICollectionLoadError {
@@ -64,12 +63,10 @@ const collectionsSlice = createSlice({
 			})
 		},
 		collectionLoadStart(state, action: PayloadAction<ICollectionLoadAction>) {
-			const { collection, sortChanging = false } = action.payload;
+			const { collection } = action.payload;
 
 			state[collection].error = null;
 			state[collection].loading = true;
-
-			if(sortChanging) state[collection].products = [];
 		},
 		collectionLoadError(state, action: PayloadAction<ICollectionLoadError>) {
 			const { collection, error } = action.payload;
@@ -80,11 +77,29 @@ const collectionsSlice = createSlice({
 		collectionLoaded(state, action: PayloadAction<ICollectionLoadedAction>) {
 			const { collection, page, sort, done, data } = action.payload;
 
-			state[collection].page = page;
-			state[collection].sort = sort;
-			state[collection].done = done;
-			state[collection].products = [
-				...state[collection].products,
+			const col = state[collection];
+			
+			col.page = page;
+			col.sort = sort;
+			col.done = done;
+			col.loading = false;
+			col.loaded = true;
+			col.error = null;
+			col.products = [...data]
+		},
+		collectionDataLoaded(state, action: PayloadAction<ICollectionLoadedAction>) {
+			const { collection, page, sort, done, data } = action.payload;
+
+			const col = state[collection];
+			
+			col.page = page;
+			col.sort = sort;
+			col.done = done;
+			col.loading = false;
+			col.loaded = true;
+			col.error = null;
+			col.products = [
+				...col.products,
 				...data
 			]
 		}
@@ -93,4 +108,4 @@ const collectionsSlice = createSlice({
 
 export default collectionsSlice.reducer;
 
-export const { collectionsListLoaded, collectionLoadStart, collectionLoadError, collectionLoaded } = collectionsSlice.actions;
+export const { collectionsListLoaded, collectionLoadStart, collectionLoadError, collectionLoaded, collectionDataLoaded } = collectionsSlice.actions;

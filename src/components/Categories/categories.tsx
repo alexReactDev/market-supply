@@ -1,42 +1,34 @@
 import { FC, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { loadCategoryDataWithProducts } from "../../redux/actions";
 import { ICategory } from "../../redux/reducer/categories";
 import { ICollection } from "../../redux/reducer/collections";
-import { categoriesSelector, URLPathEndSelector } from "../../redux/selectors";
 import Loader from "../Loader";
 import Product from "../Product";
 import style from "./categories.module.scss";
 
-const Categories: FC<{cat: ICategory | ICollection}> = (cat) => {
+interface IProps {
+	cat: ICategory | ICollection,
+	loadCategory: (catId: number, sort?: string) => void,
+	loadCategoryProducts: (catId: number) => void
+}
+
+const Categories: FC<IProps> = ({ cat, loadCategory, loadCategoryProducts}) => {
 	
-	const categoryName = useSelector(URLPathEndSelector);
-	const categories = useSelector(categoriesSelector);
 	const dispatch = useDispatch();
 	
 	useEffect(() => {
-		if(
-			categories[categoryName] &&
-			categories[categoryName].page === 0
-		) {
-			dispatch(loadCategoryDataWithProducts(categoryName));
-		}
-	}, [categoryName])
+		if(!cat.loaded && !cat.loading && !cat.error) dispatch(loadCategory(cat.id));
+	}, [cat])
 	
-	if(!categories[categoryName]) return <Redirect to={"/404"} />
 
-	const { name, sort, done, loading, products, error } = categories[categoryName];
+	const { name, sort, done, loading, products, error } = cat;
 
 	const changeSort = (newSort: string) => {
-		dispatch(loadCategoryDataWithProducts(categoryName, newSort));
+		dispatch(loadCategory(cat.id, newSort));
 	}
 
-	if(error) return(
-		<div className="text-center">
-			Failed to load data
-		</div>
-	)
+	if(error) return <Redirect to="/error" />
 
 	return(
 		<div className={style.category}>
@@ -138,7 +130,7 @@ const Categories: FC<{cat: ICategory | ICollection}> = (cat) => {
 						type="button"
 						className={`btn ${style.category__button}`}
 						value="Load more"
-						onClick={() => dispatch(loadCategoryDataWithProducts(categoryName))}
+						onClick={() => dispatch(loadCategoryProducts(cat.id))}
 					/>
 				</div>
 				:

@@ -9,7 +9,7 @@ import banner4 from "../../images/banners/4.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { collectionsSelector } from "../../redux/selectors";
 import Carousel from "../Carousel";
-import { loadCollectionData } from "../../redux/actions";
+import { loadCollectionDataByUrlName } from "../../redux/actions";
 import TilesWrapper from "../TilesWrapper";
 import CarouselMiniatures from "../CarouselMiniatures";
 
@@ -21,29 +21,29 @@ const HomePage: FC<{}> = () => {
 	useEffect(() => {
 		if(
 			!collections["new"].error &&
-			!collections["new"].done &&
+			!collections["new"].loaded &&
 			!collections["new"].loading
 		)
 		{
-			dispatch(loadCollectionData("new"));
+			dispatch(loadCollectionDataByUrlName("new"));
 		}
 
 		if(
 			!collections["latest"].error &&
-			!collections["latest"].done &&
+			!collections["latest"].loaded &&
 			!collections["latest"].loading
 		)
 		{
-			dispatch(loadCollectionData("latest"));
+			dispatch(loadCollectionDataByUrlName("latest"));
 		}
 
 		if(
 			!collections["featured"].error &&
-			!collections["featured"].done &&
+			!collections["featured"].loaded &&
 			!collections["featured"].loading
 		)
 		{
-			dispatch(loadCollectionData("featured"));
+			dispatch(loadCollectionDataByUrlName("featured"));
 		}
 	})
 

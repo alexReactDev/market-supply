@@ -3,13 +3,14 @@ export interface ICategory {
 	id: number,
 	name: string, // foldername/categoryname
 	url_name: string,
-	category_id: number,
+	folder_id: number,
 	page: number,
 	sort: string,
 	done: boolean,
 	loading: boolean,
+	loaded: boolean,
 	products: string[],
-	error: Error | null
+	error: any
 }
 
 interface IState {
@@ -17,7 +18,7 @@ interface IState {
 }
 
 const initialState: IState = {}
-interface ICategoryAction extends Partial<ICategory> {
+interface ICategoryAction {
 	category: string
 }
 
@@ -29,16 +30,16 @@ export interface ICategoryInitialData {
 	category_id: number
 }
 
-interface ICategoryLoadAction extends ICategoryAction {
-	sortChanging: boolean
-}
-
-interface ICategoryLoadedAction extends ICategoryAction {
-	data: Omit<ICategory, "loading" | "isPublic" | "name" | "error">
+interface ICategoryLoadedAction {
+	category: string,
+	page: number,
+	sort: string,
+	done: boolean,
+	data: string[]
 }
 
 interface ICategoryErrorAction extends ICategoryAction {
-	error: Error
+	error: any
 }
 
 const categoriesSlice = createSlice({
@@ -49,24 +50,25 @@ const categoriesSlice = createSlice({
 			const categories = action.payload;
 
 			categories.forEach((cat) => {
-				const { internalName, ...data } = cat;
+				const { internalName, category_id, ...data } = cat;
 
 				state[internalName] = {
 					...data,
+					folder_id: category_id,
 					page: 0,
 					sort: "default",
 					done: false,
 					loading: false,
+					loaded: false,
 					products: [],
 					error: null,
 				}
 			})
 		},
-		categoryLoadStart(state, action: PayloadAction<ICategoryLoadAction>) {
-			const { category, sortChanging } = action.payload;
+		categoryLoadStart(state, action: PayloadAction<ICategoryAction>) {
+			const { category } = action.payload;
 
 			state[category].loading = true;
-			if(sortChanging) state[category].products = [];
 		},
 		categoryLoadError(state, action: PayloadAction<ICategoryErrorAction>) {
 			const { category, error } = action.payload;
@@ -76,21 +78,37 @@ const categoriesSlice = createSlice({
 			state[category].page = 0;
 		},
 		categoryLoaded(state, action: PayloadAction<ICategoryLoadedAction>) {
-			const { category, data } = action.payload;
+			const { category, page, sort, done, data } = action.payload;
 
-			state[category] = {
-				...state[category],
-				...data,
-				loading: false,
-				error: null,
-				products: [
-					...data.products
-				]
-			}
+			const cat = state[category];
+
+			cat.page = page;
+			cat.sort = sort;
+			cat.done = done;
+			cat.error = null;
+			cat.loading = false;
+			cat.loaded = true;
+			cat.products = [...data]
 		},
+		categoryDataLoaded(state, action: PayloadAction<ICategoryLoadedAction>) {
+			const { category, page, sort, done, data } = action.payload;
+
+			const cat = state[category];
+
+			cat.page = page;
+			cat.sort = sort;
+			cat.done = done;
+			cat.error = null;
+			cat.loading = false;
+			cat.loaded = true;
+			cat.products = [
+				...cat.products,
+				...data
+			]
+		}
 	}
 })
 
 export default categoriesSlice.reducer;
 
-export const { categoriesListLoaded, categoryLoadStart, categoryLoadError, categoryLoaded } = categoriesSlice.actions;
+export const { categoriesListLoaded, categoryLoadStart, categoryLoadError, categoryLoaded, categoryDataLoaded } = categoriesSlice.actions;

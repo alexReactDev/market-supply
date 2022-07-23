@@ -1,7 +1,6 @@
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { categoriesSelector } from "../../redux/selectors";
-import { loadCategoryDataWithProducts } from "../../redux/actions";
 import AsideNav from "../AsideNav";
 import Banner from "../Banner";
 import Newsletter from "../Newsletter";

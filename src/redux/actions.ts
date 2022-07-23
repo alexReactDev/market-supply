@@ -1,5 +1,5 @@
 import { AppDispatch, AppState } from ".";
-import { categoriesListLoaded, categoryLoaded, categoryLoadError, categoryLoadStart, ICategoryInitialData } from "./reducer/categories";
+import { categoriesListLoaded, categoryDataLoaded, categoryLoaded, categoryLoadError, categoryLoadStart, ICategoryInitialData } from "./reducer/categories";
 import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
 import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
@@ -22,7 +22,7 @@ import { deleteAccountFail, deleteAccountRequest, deleteAccountSuccess } from ".
 import { checkoutConfirmationCanceled, checkoutConfirmationDataLoaded, checkoutError, checkoutLoading, checkoutSuccess, IConfirmationData } from "./reducer/checkout";
 import { searchDataLoaded, searchDataLoadedAction, searchDataLoading, searchError, searchRequest } from "./reducer/search";
 import { foldersLoaded, IFolder } from "./reducer/folders";
-import { collectionLoaded, collectionLoadError, collectionLoadStart, collectionsListLoaded } from "./reducer/collections";
+import { collectionDataLoaded, collectionLoaded, collectionLoadError, collectionLoadStart, collectionsListLoaded } from "./reducer/collections";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -108,72 +108,98 @@ interface ICategoryData {
 	data: string[]
 }
 
-export const loadCategoryDataWithProducts = (categoryName: string, newSort?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const loadCategoryProducts = (catId: number, sort?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
-	const category = state.categories[categoryName];
-	const catSort = newSort || category.sort;
+	let category;
+	let categoryName;
+
+	for (let key in state.categories) {
+		if(state.categories[key].id === catId) {
+			categoryName = key;
+			category = state.categories[key];
+		}
+	}
+
+	if(!category || !categoryName) return dispatch(push("/error"));
+
+	const catSort = sort || category.sort;
 	
-	dispatch(categoryLoadStart({category: categoryName, sortChanging: catSort === category.sort ? false : true}));
+	dispatch(categoryLoadStart({category: categoryName}));
 
 	let categoryData: ICategoryData;
 
 	try {
-		categoryData =  (await axios.get(`/api/categories/${categoryName}?page=${catSort === category.sort ? category.page + 1 : 1}&sort=${catSort}`)).data;
+		categoryData = (await axios.get(`/api/categories/${categoryName}?sort=${catSort}`)).data;
 	}
 	catch(e) {
 		console.log(e);
 
 		dispatch(categoryLoadError({
 			category: categoryName,
-			error: e as Error
+			error: e
 		}))
 
 		return;
 	}
 
-	const { page, totalPages, sort, data } = categoryData;
+	const { page, totalPages, data } = categoryData;
 
 	const nonExistingProducts = data.filter((productId) => !state.products[productId]);
 
-	if(nonExistingProducts.length > 0) {
+	if(nonExistingProducts.length > 0) await Promise.allSettled(nonExistingProducts.map((productId) => loadProductByIdActionAsync(productId)));
 
-		const rawProducts = await Promise.allSettled(nonExistingProducts.map((productId) => {
-			const productPromise = axios.get(`/api/product/${productId}`);
+	dispatch(categoryLoaded({
+		category: categoryName,
+		done: page >= totalPages,
+		sort: categoryData.sort,
+		page,
+		data
+	}))
+}
 
-			dispatch(productsLoadStart([{
-				productId,
-				promise: productPromise
-			}]));
+export const loadMoreCategoryProducts = (catId: number) => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	let category;
+	let categoryName;
 
-			return productPromise;
-		}));
-	
-		const products = rawProducts.map((product, index) => {
-			if(product.status === "rejected") return ({
-				id: nonExistingProducts[index],
-				error: product.reason
-			})
-			else return ({
-				...product.value.data
-			})
-		})
-	
-		const rejectedProducts = products.filter((product) => product.error);
-		if(rejectedProducts.length > 0) dispatch(productsLoadError(rejectedProducts));
-	
-		const loadedProducts = products.filter((product) => !product.error);
-		if(loadedProducts.length > 0) dispatch(productsLoaded(loadedProducts));
+	for (let key in state.categories) {
+		if(state.categories[key].id === catId) {
+			categoryName = key;
+			category = state.categories[key];
+		}
 	}
 
-	/*dispatch(categoryLoaded({
+	if(!category || !categoryName) return dispatch(push("/error"));
+
+	dispatch(categoryLoadStart({
+		category: categoryName
+	}));
+
+	let categoryData;
+
+	try {
+		categoryData = (await axios.get(`/api/categories/${categoryName}?page=${category.page + 1}&sort=${category.sort}`)).data;
+	}
+	catch(e) {
+		return dispatch(categoryLoadError({
+			category: categoryName,
+			error: e
+		}))
+	}
+
+	const { page, totalPages, sort, data } = categoryData;
+
+	const nonExistingProducts = data.filter((productId: string) => !state.products[productId]);
+
+	if(nonExistingProducts.length > 0) await Promise.allSettled(nonExistingProducts.map((productId: string) => loadProductByIdActionAsync(productId)));
+
+	dispatch(categoryDataLoaded({
 		category: categoryName,
-		data: {
-			done: page === totalPages,
-			products: data,
-			page,
-			sort,
-		}
-	}))*/
+		done: page >= totalPages,
+		page,
+		sort,
+		data
+	}))
 }
 
 export const subscribeToNewsletterAction = (email: string) => async () => {
@@ -210,7 +236,7 @@ export const loadProductByIdActionAsync = (id: string) => async (dispatch: AppDi
 
 		const loadedProduct = (await productPromise).data;
 
-		dispatch(productsLoaded([loadedProduct]));
+		dispatch(productsLoaded(loadedProduct));
 
 		return loadedProduct;
 	}
@@ -878,13 +904,24 @@ export const loadMoreSearchResultsAction = () => async (dispatch: AppDispatch, g
 	}
 }
 
-export const loadCollectionData = (colName: string, sort?: string ) => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const loadCollectionData = (colId: number, sort?: string ) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
-	if(!sort) sort = state.collections[colName].sort;
+	let collection;
+	let colName;
+	
+	for (let key in state.collections) {
+		if(state.collections[key].id === colId) {
+			colName = key;
+			collection = state.collections[key]
+		}
+	}
+
+	if(!colName || !collection) return dispatch(push("/error"));
+
+	sort = sort || collection.sort;
 
 	dispatch(collectionLoadStart({
-		collection: colName, 
-		sortChanging: sort !== state.collections[colName].sort ? true : false
+		collection: colName
 	}));
 
 	let collectionData;
@@ -899,11 +936,68 @@ export const loadCollectionData = (colName: string, sort?: string ) => async (di
 		}))
 	}
 
+	const { page, totalPages, data } = collectionData;
+
+	const nonExistingProducts = data.filter((productId: string) => !state.products[productId]);
+
+	if(nonExistingProducts.length > 0) await Promise.allSettled(nonExistingProducts.map((productId: string) => loadProductByIdActionAsync(productId)));
+
 	dispatch(collectionLoaded({
 		collection: colName,
+		done: page >= totalPages,
 		sort,
-		page: collectionData.page,
-		done: collectionData.page >= collectionData.totalPages ? true : false,
-		data: collectionData.data
+		page,
+		data,
 	}))
+}
+
+export const loadMoreCollectionProducts = (colId: number) => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	let collection;
+	let colName;
+
+	for (let key in state.collections) {
+		if(state.collections[key].id === colId) {
+			colName = key;
+			collection = state.collections[key]
+		}
+	}
+
+	if(!colName || !collection) return dispatch(push("/error"));
+
+	dispatch(collectionLoadStart({
+		collection: colName
+	}));
+
+	let collectionData;
+
+	try {
+		collectionData = (await axios.get(`/api/collections/${colName}?sort=${collection.sort}&page=${collection.page + 1}`)).data;
+	}
+	catch(e) {
+		dispatch(collectionLoadError({
+			collection: colName,
+			error: e
+		}))
+	}
+
+	const { page, totalPages, data, sort } = collectionData;
+
+	const nonExistingProducts = data.filter((productId: string) => !state.products[productId]);
+
+	if(nonExistingProducts.length > 0) await Promise.allSettled(nonExistingProducts.map((productId: string) => loadProductByIdActionAsync(productId)));
+
+	dispatch(collectionDataLoaded({
+		collection: colName,
+		done: page >= totalPages,
+		sort,
+		page,
+		data,
+	}))
+}
+
+export const loadCollectionDataByUrlName = (url: string, sort?: string) => (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+
+	dispatch(loadCollectionData(state.collections[url].id, sort));
 }
