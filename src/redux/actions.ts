@@ -259,7 +259,7 @@ export const loadProductDetailsAction = (id: string) => async (dispatch: AppDisp
 	dispatch(productDetailsLoadStart({id}));
 
 	try {
-		const productDetails = (await axios.get(`/api/product/${id}/details`)).data;
+		const productDetails = (await axios.get(`/api/product/details/${id}`)).data;
 		dispatch(productDetailsLoaded({
 			id,
 			details: productDetails
@@ -279,7 +279,7 @@ export const loadProductReviewsAction = (id: string) => async (dispatch: AppDisp
 	dispatch(productReviewsLoadStart({id}));
 
 	try {
-		const productReviews = (await axios.get(`/api/product/${id}/reviews`)).data;
+		const productReviews = (await axios.get(`/api/product/reviews/${id}`)).data;
 		dispatch(productReviewsLoaded({
 			id,
 			reviews: productReviews

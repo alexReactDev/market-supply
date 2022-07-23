@@ -72,6 +72,7 @@ const PublishReview: FC<IProps> = ({ className="", productId }) => {
 						value={formik.values.name}
 						onChange={formik.handleChange}
 						onBlur={formik.handleBlur}
+						onFocus={() => formik.setFieldError("name", "")}
 					/>
 				</span>
 				<span className={style.publishReview__email}>
@@ -92,6 +93,7 @@ const PublishReview: FC<IProps> = ({ className="", productId }) => {
 						value={formik.values.email}
 						onChange={formik.handleChange}
 						onBlur={formik.handleBlur}
+						onFocus={() => formik.setFieldError("email", "")}
 					/>
 				</span>
 			</div>
@@ -112,6 +114,7 @@ const PublishReview: FC<IProps> = ({ className="", productId }) => {
 					value={formik.values.text}
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
+					onFocus={() => formik.setFieldError("text", "")}
 				></textarea>
 			</div>
 			<div className={style.publishReview__controls}>

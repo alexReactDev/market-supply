@@ -23,7 +23,7 @@ const Review: FC<IProps> = ({ className="", title, rate, text, timestamp }) => {
 				{text}	
 			</p>
 			<p className={style.review__date}>
-				{`${new Date(timestamp).getHours()}:${new Date(timestamp).getMinutes()} ${new Date(timestamp).toDateString()}`}
+				{`${new Date(timestamp).getHours()}:${new Date(timestamp).getMinutes() > 10 ? new Date(timestamp).getMinutes() : "0" + new Date(timestamp).getMinutes() } ${new Date(timestamp).toDateString()}`}
 			</p>
 		</div>
 	)

@@ -42,7 +42,7 @@ export interface IState {
 
 interface IProductLoadedAction {
 	id: string,
-	webId: number,
+	web_id: number,
 	name: string,
 	price: number,
 	oldPrice: number | null,
@@ -86,7 +86,7 @@ const productsSlice = createSlice({
 			})
 		},
 		productsLoaded(state, action: PayloadAction<IProductLoadedAction>) {
-			const { id, is_new, ...product }  = action.payload;
+			const { id, is_new, web_id, ...product }  = action.payload;
 
 			state[id] = {
 				...product,
@@ -95,6 +95,7 @@ const productsSlice = createSlice({
 				error: null,
 				isNew: is_new,
 				promise: null,
+				webId: web_id,
 				id
 			}
 		}

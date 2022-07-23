@@ -13,7 +13,6 @@ import Price from "../Price";
 import AddToCart from "../AddToCart";
 import Slider from "react-slick";
 import { IoMdArrowDropleftCircle, IoMdArrowDroprightCircle } from "react-icons/io";
-import { IProductDetails } from "../../redux/reducer/productsDetails";
 import PublishReview from "../PublishReview";
 import { IProductReviews } from "../../redux/reducer/productsReviews";
 import Review from "../Review";
@@ -38,20 +37,18 @@ const ProductDetails: FC<{}> = () => {
 	const [currentPicture, setPicture] = useState<string>("");
 
 	useEffect(() => {
-		if(product && product.pictures && product.pictures.length > 0 && !currentPicture) setPicture(product.pictures[0]);
-		if(product && product.pictures && product.pictures.length > 0 && currentPicture !== product.pictures[0]) setPicture(product.pictures[0]);
-	})
+		if(product && product.pictures.length > 0) setPicture(product.pictures[0]);
+	}, [product])
 
 	if (!product || !productDetails || !productReviews || product.loading || productDetails.loading || productReviews.loading) return <Loader />
-	if (product?.error?.response?.status === 404) return <Redirect to="/404" />
-	if(product.error) return(
-		<p className="text-center">
-			Failed to load product data
-		</p>
-	)
 
-	const { name, webId, rate, price, oldPrice, pictures = [productPlaceholder] } = product as IProduct;
-	const { description } = (productDetails as IProductDetails).details;
+	if (product?.error?.response?.status === 404) return <Redirect to="/404" />
+
+	if(product.error) return <Redirect to="/error" />
+
+	const { name, webId, rate, price, oldPrice, pictures } = product as IProduct;
+
+	const { description } = productDetails.details;
 
 	const sliderConfig = {
 		slidesToShow: 3,
@@ -64,7 +61,7 @@ const ProductDetails: FC<{}> = () => {
 			<div className={style.product__basicInfo}>
 				<div className={style.product__pictures}>
 					<div className={style.product__mainPicture}>
-						<img className={style.product__image} src={currentPicture || productPlaceholder} />
+						<img className={style.product__image} src={currentPicture || productPlaceholder} alt={product.name} />
 					</div>
 					<div className={style.product__additionalPictures}>
 						<IoMdArrowDropleftCircle

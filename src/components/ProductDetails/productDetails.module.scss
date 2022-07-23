@@ -41,14 +41,31 @@
 	position: absolute;
 	top: calc(50% - 13.5px);
 	z-index: 10;
+	border-radius: 2.5px;
+	background-color: rgb(223, 222, 222);
+	box-shadow: 0px 2px 5px 0px black;
+	
+	&:active {
+		top: calc(50% - 12.5px);
+	}
 }
 
 .sliderButtonPrev {
-	left: 2px;
+	left: -1.5px;
+
+	&:active {
+		background-color: rgb(209, 206, 206);
+		box-shadow: none;
+	}
 }
 
 .sliderButtonNext {
-	right: 5px;
+	right: -1.5px;
+
+	&:active {
+		background-color: rgb(209, 206, 206);
+		box-shadow: none;
+	}
 }
 
 .sliderPicture {

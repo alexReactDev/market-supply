@@ -1,27 +1,33 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface IDetails {
+	description: string
+}
 export interface IProductDetails {
 	id: string,
 	loading: boolean,
 	error: any,
-	details: {
-		description: string
-	}
+	details: IDetails
 }
 
-interface IProductDetailsLoading extends Pick<IProductDetails, "id" | "loading"> {}
-interface IProductDetailsError extends Pick<IProductDetails, "id" | "error" | "loading"> {}
-
-
 interface IState {
-	[key: string]: IProductDetails | IProductDetailsLoading | IProductDetailsError
+	[key: string]: IProductDetails
 }
 
 const initialState: IState = {};
 
-interface IProductsDetailsAction extends Pick<IProductDetailsLoading, "id"> {}
-interface IProductDetailsErrorAction extends Pick<IProductDetailsError, "id" | "error"> {}
-interface IProductDetailsLoadedAction extends Omit<IProductDetails, "loading" | "error"> {}
+interface IProductsDetailsAction {
+	id: string
+}
+
+interface IProductDetailsErrorAction {
+	id: string,
+	error: any
+}
+interface IProductDetailsLoadedAction {
+	id: string,
+	details: IDetails
+}
 
 const productsDetailsSlice = createSlice({
 	name: "productDetails",
@@ -32,7 +38,11 @@ const productsDetailsSlice = createSlice({
 
 			state[id] = {
 				id,
-				loading: true
+				loading: true,
+				error: null,
+				details: {
+					description: ""
+				}
 			}
 		},
 		productDetailsLoadError(state, action: PayloadAction<IProductDetailsErrorAction>) {
@@ -51,7 +61,7 @@ const productsDetailsSlice = createSlice({
 				id,
 				loading: false,
 				error: null,
-				details,
+				details
 			}
 		}
 	}
