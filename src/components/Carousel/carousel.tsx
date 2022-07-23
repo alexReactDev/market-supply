@@ -3,16 +3,18 @@ import { IoMdArrowDropleftCircle, IoMdArrowDroprightCircle } from "react-icons/i
 import Product from "../Product";
 import style from "./carousel.module.scss";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 
 interface IProps {
 	className?: string,
 	title: string,
 	products: string[],
 	maxCards?: 1 | 2 | 3 | 4,
-	autoplay?: boolean
+	autoplay?: boolean,
+	link?: string
 }
 
-const Carousel: FC<IProps> = ({ className="", title, products, maxCards = 1, autoplay }) => {
+const Carousel: FC<IProps> = ({ className="", title, products, maxCards = 1, autoplay, link }) => {
 
 	if(products.length > 16) products = products.slice(0, 16);
 
@@ -55,7 +57,15 @@ const Carousel: FC<IProps> = ({ className="", title, products, maxCards = 1, aut
 		<div className={`${className} ${style.carousel}`}>
 			<div className={style.carousel__header}>
 				<h4 className={style.carousel__title}>
-					{title}
+					{
+						link
+						?
+						<Link to={link} className="nav-link" >
+							{title}
+						</Link>	
+						:
+						<p>{title}</p>
+					}
 				</h4>
 				<div className={style.carousel__controls}>
 					<IoMdArrowDropleftCircle

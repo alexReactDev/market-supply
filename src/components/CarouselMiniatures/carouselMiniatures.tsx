@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { IoMdArrowDropleftCircle, IoMdArrowDroprightCircle } from "react-icons/io";
+import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import ProductMini from "../ProductMini";
 import style from "./carouselMiniatures.module.scss";
@@ -8,10 +9,11 @@ interface IProps {
 	className?: string,
 	title: string,
 	products: string[],
-	autoplay?: boolean
+	autoplay?: boolean,
+	link?: string
 }
 
-const CarouselMiniatures: FC<IProps> = ({ className="", title, products, autoplay }) => {
+const CarouselMiniatures: FC<IProps> = ({ className="", title, products, autoplay, link }) => {
 
 	const [sliderRef, setRef] = useState<any>(null);
 	
@@ -28,7 +30,15 @@ const CarouselMiniatures: FC<IProps> = ({ className="", title, products, autopla
 		<div className={`${className} ${style.carousel}`}>
 			<div className={style.carousel__header}>
 				<h4 className={style.carousel__title}>
-					{title}
+					{
+						link
+						?
+						<Link to={link} className="nav-link" >
+							{title}
+						</Link>	
+						:
+						<p>{title}</p>
+					}
 				</h4>
 				<div className={style.carousel__controls}>
 					<IoMdArrowDropleftCircle

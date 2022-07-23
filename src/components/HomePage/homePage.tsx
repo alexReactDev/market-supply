@@ -56,6 +56,7 @@ const HomePage: FC<{}> = () => {
 				products={collections["new"].products} 
 				maxCards={4}
 				autoplay={true} 
+				link="/collections/new"
 			/>
 			<TilesWrapper className={`${style.homePage__tiles}`} >
 				<Banner className={style.homePage__item} src={banner2} />
@@ -67,12 +68,14 @@ const HomePage: FC<{}> = () => {
 				products={collections["latest"].products} 
 				maxCards={4}
 				autoplay={true} 
+				link="/collections/latest"
 			/>
 			<Banner className={style.homePage__item} src={banner4} />
 			<CarouselMiniatures 
 				className={style.homePage__item}
 				title="FEATURED PRODUCTS"
 				products={collections["featured"].products}
+				link="/collections/featured"
 			/>
 		</div>
 	)
