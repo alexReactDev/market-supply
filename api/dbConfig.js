@@ -82,13 +82,20 @@ async function createProduct(catURL) {
 	const oldPrice = lodash.random(1) ? lodash.random(price, 500.00) : null;
 	let rate = lodash.random(1, 5);
 	if(rate < 4 && lodash.random(0, 1) === 1) rate = lodash.random(3, 5);
-	const isNew = lodash.random(1) ? true : false;
+	let isNew = lodash.random(1) ? true : false;
+
+	if(isNew) isNew = lodash.random(1) ? false : true;
+
 	const picture = `/images/${catURL}/${lodash.random(1, 20)}.jpg`;
 
 	const product = (await db.query("INSERT INTO products (id, web_id, name, price, old_price, rate, is_new) values($1, $2, $3, $4, $5, $6, $7) RETURNING *;", [id, webId, name, price, oldPrice, rate, isNew])).rows[0];
 
 	for (let i = 0; i < 3; i++) {
 		await db.query("INSERT INTO products_pictures (product_id, picture) values($1, $2);", [product.id, picture]);
+	}
+
+	if(isNew) {
+		await db.query("INSERT INTO items_of_collections (collection_id, product_id) values($1, $2);", [1, id]);
 	}
 
 	return product;
@@ -193,7 +200,7 @@ async function config() {
 
 				const collections = (await db.query("SELECT * FROM collections;")).rows;
 
-				if(k < collections.length) {
+				if(k < collections.length && k > 0) {
 					await db.query("INSERT INTO items_of_collections (collection_id, product_id) values($1, $2);", [collections[k].id, product.id]);
 				}
 			}
