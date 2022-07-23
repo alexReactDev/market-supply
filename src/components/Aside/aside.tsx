@@ -1,54 +1,57 @@
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { categoriesSelector } from "../../redux/selectors";
+import { collectionsSelector } from "../../redux/selectors";
 import AsideNav from "../AsideNav";
 import Banner from "../Banner";
 import Newsletter from "../Newsletter";
 import Carousel from "../Carousel";
 import style from "./aside.module.scss";
 import banner from "../../images/banners/1.jpg";
+import { loadCollectionDataByUrlName } from "../../redux/actions";
 interface IProps {
 	className?: string
 }
 
 const Aside: FC<IProps> = ({ className="" }) => {
 
-	const categories = useSelector(categoriesSelector);
+	const collections = useSelector(collectionsSelector);
 	const dispatch = useDispatch();
 
-	/*useEffect(() => {
+	useEffect(() => {
 		if(
-			categories["hot-deal"].products.length === 0 &&
-			!categories["hot-deal"].done &&
-			!categories["hot-deal"].loading
+			!collections["hot-deal"].error &&
+			!collections["hot-deal"].loaded &&
+			!collections["hot-deal"].loading
 		)
 		{
-			dispatch(loadCategoryDataWithProducts("hot-deal"));
+			dispatch(loadCollectionDataByUrlName("hot-deal"));
 		}
 
 		if(
-			categories["special-deal"].products.length === 0 &&
-			!categories["special-deal"].done &&
-			!categories["special-deal"].loading
+			!collections["special-deal"].error &&
+			!collections["special-deal"].loaded &&
+			!collections["special-deal"].loading
 		)
 		{
-			dispatch(loadCategoryDataWithProducts("special-deal"));
+			dispatch(loadCollectionDataByUrlName("special-deal"));
 		}
-	})*/
+	})
 
 	return (
 		<aside className={`${className} ${style.aside}`}>
 			<AsideNav className={style.aside__item} />
-			{/*<Carousel
+			<Carousel
 				className={style.aside__item}
-				title="HOT DEALS" 
-				products={categories["hot-deal"].products}
+				title="HOT DEAL" 
+				products={collections["hot-deal"].products}
+				link="/collections/hot-deal"
 			/>
 			<Carousel 
 				className={style.aside__item} 
 				title="SPECIAL DEAL" 
-				products={categories["special-deal"].products}
-			/>*/}
+				products={collections["special-deal"].products}
+				link="/collections/special-deal"
+			/>
 			<Newsletter className={style.aside__item} />
 			<Banner className={style.aside__item} src={banner} />
 		</aside>
