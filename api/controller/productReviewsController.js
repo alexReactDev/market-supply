@@ -17,7 +17,7 @@ class ProductReviewsController {
 		let reviews;
 
 		try {
-			reviews = (await db.query("SELECT * FROM products_reviews where product_id = $1;", [product.id])).rows;
+			reviews = (await db.query("SELECT * FROM products_reviews where product_id = $1;", [product.id])).rows.map((review) => ({...review, timestamp: +review.timestamp}));
 		}
 		catch(e) {
 			res.sendStatus(500);
