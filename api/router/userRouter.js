@@ -1,10 +1,11 @@
 const Router = require("express").Router;
-const { getUser, createUser, changeUserProfile, changeUserEmail, changeUserPassword, deleteUser } = require("../controller/userController");
+const { getUser, createUser, changeUserProfile, changeUserEmail, changeUserPassword, deleteUser, getUserId } = require("../controller/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 
 
 const router = new Router();
 
+router.get("/id", authMiddleware(), getUserId);
 router.get("/:userId", authMiddleware(), getUser);
 router.post("/", authMiddleware(true), createUser);
 router.put("/profile/:userId", authMiddleware(), changeUserProfile);

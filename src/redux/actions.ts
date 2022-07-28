@@ -10,7 +10,7 @@ import { loginStart, loginSuccess, loginError, logout } from "./reducer/login";
 import { push } from "connected-react-router";
 import { signUpError, signUpStart, signUpSuccess } from "./reducer/signUp";
 import axios from "../httpConfig";
-import { userDataLoaded, userDataLoadError, userDataLoadStart } from "./reducer/userdata";
+import { userDataLoaded, userDataLoadError, userDataLoadStart, userIdLoaded } from "./reducer/userdata";
 import { IOrder, userOrdersLoaded, userOrdersLoadError, userOrdersLoadStart } from "./reducer/userOrders";
 import { preferencesLoaded } from "./reducer/preferences";
 import { editProfileFail, editProfileRequest, editProfileSuccess } from "./reducer/editProfileData";
@@ -25,6 +25,20 @@ import { foldersLoaded, IFolder } from "./reducer/folders";
 import { collectionDataLoaded, collectionLoaded, collectionLoadError, collectionLoadStart, collectionsListLoaded } from "./reducer/collections";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
+
+	let userId;
+
+	try {
+		userId = (await axios.get("/api/user/id")).data;
+	}
+	catch(e: any) {
+		if(!e.response) return dispatch(generalError(e));
+	}
+
+	if(userId) {
+		dispatch(loginSuccess());
+		dispatch(userIdLoaded(userId));
+	}
 
 	let folders;
 
@@ -71,18 +85,8 @@ export const initialize = () => async (dispatch: AppDispatch) => {
 
 	dispatch(collectionsListLoaded(collections));
 
-	try {
-		const cartItems = (await axios.get("/api/cart")).data;
-		dispatch(cartItemsLoaded(cartItems));
-	}
-	catch(e: any) {
-		if(!e.response) {
-			dispatch(generalError(e));
-			throw e;
-		}
 
-		dispatch(cartProductsLoadError(e));
-	}
+	dispatch(loadCartAction());
 
 	try {
 		const wishlistItems = (await axios.get("/api/wishlist")).data;
@@ -294,6 +298,23 @@ export const loadProductReviewsAction = (id: string) => async (dispatch: AppDisp
 	}
 }
 
+//Cart
+
+export const loadCartAction = () => async (dispatch: AppDispatch) => {
+	try {
+		const cartItems = (await axios.get("/api/cart")).data;
+		dispatch(cartItemsLoaded(cartItems));
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(cartProductsLoadError(e));
+	}
+}
+
 export const productIncrementAction = (productId: string, amount: number = 1) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
 	const productPrice = (productsSelector(state)[productId] as IProduct).price;
@@ -368,6 +389,43 @@ export const emptyCartAction = () => async (dispatch: AppDispatch) => {
 
 interface IReviewToPublish extends IReview {
 	email: string
+}
+
+export const loadCartProductsAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const cartProducts = cartProductsSelector(state);
+	const products = productsSelector(state);
+
+	console.log("Where is the error?")
+
+	dispatch(cartProductsLoadStart());
+
+	try {
+		await Promise.all(Object.keys(cartProducts).map(async (productId) => {
+			const product = products[productId];
+
+			if(product && !product.error && !product.loading) return product;
+			if(product && product.error) throw product.error;
+			if(product && product.loading) {
+				await product.promise;
+				return product;
+			}
+
+			const loadedProduct = await dispatch(loadProductByIdActionAsync(productId));
+
+			return loadedProduct;
+		}))
+
+		dispatch(cartProductsLoaded());
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(cartProductsLoadError(e));
+	}
 }
 
 export const publishReviewAction = (productId: string, review: IReviewToPublish) => async (dispatch: AppDispatch) => {
@@ -513,7 +571,6 @@ export const loginAction = (loginData: loginData) => async (dispatch: AppDispatc
 
 	try {
 		await axios.post("/api/login", {payload: loginData.email, password: loginData.password});
-		return dispatch(loginSuccess());
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
@@ -524,18 +581,24 @@ export const loginAction = (loginData: loginData) => async (dispatch: AppDispatc
 
 		return;
 	}
+
+	dispatch(loadCartAction());
+
+	return dispatch(loginSuccess());
 }
 
 export const logoutAction = () => async (dispatch: AppDispatch) => {
 	try {
 		await axios.post("/api/logout");
-		return dispatch(logout());
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
 
 		return dispatch(push("/error"));
 	}
+
+	dispatch(emptyCart());
+	dispatch(logout());
 }
 
 interface signUpData {
@@ -681,43 +744,6 @@ export const editProfileAction = (profileData: {[key: string]: string | null}) =
 		}
 
 		dispatch(editProfileFail(e.response.data));
-	}
-}
-
-export const loadCartProductsAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
-	const state = getState();
-	const cartProducts = cartProductsSelector(state);
-	const products = productsSelector(state);
-
-	console.log("Where is the error?")
-
-	dispatch(cartProductsLoadStart());
-
-	try {
-		await Promise.all(Object.keys(cartProducts).map(async (productId) => {
-			const product = products[productId];
-
-			if(product && !product.error && !product.loading) return product;
-			if(product && product.error) throw product.error;
-			if(product && product.loading) {
-				await product.promise;
-				return product;
-			}
-
-			const loadedProduct = await dispatch(loadProductByIdActionAsync(productId));
-
-			return loadedProduct;
-		}))
-
-		dispatch(cartProductsLoaded());
-	}
-	catch(e: any) {
-		if(!e.response) {
-			dispatch(generalError(e));
-			throw e;
-		}
-
-		dispatch(cartProductsLoadError(e));
 	}
 }
 

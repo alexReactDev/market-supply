@@ -3,6 +3,12 @@ const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 class UserController {
+	async getUserId(req, res) {
+		const userId = req.tokenData.userId;
+
+		res.send(userId);
+	}
+
 	async getUser(req, res) {
 		const userId = req.params.userId;
 
