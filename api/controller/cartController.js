@@ -13,11 +13,20 @@ class CartController {
 			return res.sendStatus(500);
 		}
 
-		const cart = {};
+		const products = {};
 
-		items.forEach((item) => cart[item.product_id] = item.amount);
+		items.forEach((item) => products[item.product_id] = item.amount);
 
-		res.send(cart);
+		const total = (await Promise.all(items.map(async (item) => {
+			const product = (await db.query("SELECT * FROM products where id = $1;", [item.product_id])).rows[0];
+
+			return product.price * item.amount;
+		}))).reduce((total, productTotal) => total + productTotal, 0);
+
+		res.send({
+			products,
+			total
+		});
 	}
 
 	async cartItemIncrement(req, res) {

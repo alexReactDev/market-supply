@@ -26,7 +26,6 @@ import { collectionDataLoaded, collectionLoaded, collectionLoadError, collection
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
-	//get userId
 	let folders;
 
 	try {
@@ -300,22 +299,18 @@ export const productIncrementAction = (productId: string, amount: number = 1) =>
 	const productPrice = (productsSelector(state)[productId] as IProduct).price;
 
 	try {
-		const incrementedProduct = (await axios.patch("/api/cart", {
-			action: "increment",
-			id: productId,
-			amount
-		})).data;
+		await axios.patch(`/api/cart/increment/${productId}`, {payload: amount});
 
 		dispatch(productIncrement({
-			productId: incrementedProduct.id,
-			amount: incrementedProduct.amount,
+			productId,
+			amount,
 			productPrice
-		}))
+		}));
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
 
-		dispatch(push("/error"));
+		return dispatch(push("/error"));
 	}
 }
 
@@ -324,22 +319,18 @@ export const productDecrementAction = (productId: string, amount: number = 1) =>
 	const productPrice = productsSelector(state)[productId].price;
 
 	try {
-		const decrementedProduct = (await axios.patch("/api/cart", {
-			action: "decrement",
-			id: productId,
-			amount
-		})).data;
+		await axios.patch(`/api/cart/decrement/${productId}`, {payload: amount});
 
 		dispatch(productDecrement({
-			productId: decrementedProduct.id,
-			amount: decrementedProduct.amount,
+			productId,
+			amount,
 			productPrice
-		}))
+		}));
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
 
-		dispatch(push("/error"));
+		return dispatch(push("/error"));
 	}
 }
 
@@ -348,17 +339,17 @@ export const removeProductAction = (productId: string) => async (dispatch: AppDi
 	const productPrice = (productsSelector(state)[productId] as IProduct).price;
 
 	try {
-		const removedItem = await (await axios.delete(`/api/cart/${productId}`)).data;
+		await (await axios.delete(`/api/cart/${productId}`));
 
 		dispatch(removeProduct({
-			productId: removedItem,
+			productId,
 			productPrice
 		}))
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
 
-		dispatch(push("/error"));
+		return dispatch(push("/error"));
 	}
 }
 
@@ -521,7 +512,7 @@ export const loginAction = (loginData: loginData) => async (dispatch: AppDispatc
 	dispatch(loginStart());
 
 	try {
-		await axios.post("/api/login", loginData);
+		await axios.post("/api/login", {payload: loginData.email, password: loginData.password});
 		return dispatch(loginSuccess());
 	}
 	catch(e: any) {

@@ -96,7 +96,6 @@ export const cartProductsWithPropsSelector = (state: AppState) => {
 		cartProductsWithProps.push({
 			...productsSelector(state)[key],
 			amount: cartProducts[key],
-			//@ts-ignore
 			total: productsSelector(state)[key].price * cartProducts[key]
 		})
 	}
