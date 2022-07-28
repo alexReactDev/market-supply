@@ -86,20 +86,9 @@ export const initialize = () => async (dispatch: AppDispatch) => {
 	dispatch(collectionsListLoaded(collections));
 
 
-	dispatch(loadCartAction());
+	await dispatch(loadCartAction());
 
-	try {
-		const wishlistItems = (await axios.get("/api/wishlist")).data;
-		dispatch(wishlistItemsLoaded(wishlistItems));
-	}
-	catch(e: any) {
-		if(!e.response) {
-			dispatch(generalError(e));
-			throw e;
-		}
-
-		dispatch(wishlistProductsLoadError(e));
-	}
+	await dispatch(loadWishlistAction());
 
 	dispatch(init());
 }
@@ -522,11 +511,30 @@ export const cancelCheckoutConfirmationAction = () => async (dispatch: AppDispat
 	dispatch(checkoutConfirmationCanceled());
 }
 
+
+//Wishlist
+
+export const loadWishlistAction = () => async (dispatch: AppDispatch) => {
+	try {
+		const wishlistItems = (await axios.get("/api/wishlist")).data;
+
+		dispatch(wishlistItemsLoaded(wishlistItems));
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(wishlistProductsLoadError(e));
+	}
+}
+
 export const addToWhitelistAction = (id: string) => async (dispatch: AppDispatch) => {
 	try {
-		const savedItem = await (await axios.post("/api/wishlist", {id})).data;
+		await axios.post(`/api/wishlist/${id}`);
 		
-		dispatch(addToWhitelist({id: savedItem}));
+		dispatch(addToWhitelist({id}));
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
@@ -537,9 +545,9 @@ export const addToWhitelistAction = (id: string) => async (dispatch: AppDispatch
 
 export const removeFromWhitelistAction = (id: string) => async (dispatch: AppDispatch) => {
 	try {
-		const removedItem = await (await axios.delete(`/api/wishlist/${id}`)).data;
+		await axios.delete(`/api/wishlist/${id}`);
 
-		dispatch(removeFromWhitelist({id: removedItem}));
+		dispatch(removeFromWhitelist({id}));
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
@@ -584,6 +592,8 @@ export const loginAction = (loginData: loginData) => async (dispatch: AppDispatc
 
 	dispatch(loadCartAction());
 
+	dispatch(loadWishlistAction());
+
 	return dispatch(loginSuccess());
 }
 
@@ -598,6 +608,7 @@ export const logoutAction = () => async (dispatch: AppDispatch) => {
 	}
 
 	dispatch(emptyCart());
+	dispatch(clearWhitelist());
 	dispatch(logout());
 }
 
