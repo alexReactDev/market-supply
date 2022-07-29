@@ -12,7 +12,7 @@ class UserController {
 	async getUser(req, res) {
 		const userId = req.params.userId;
 
-		if(req.tokenData.userId !== userId) res.sendStatus(403);
+		if(req.tokenData.userId !== userId) return res.sendStatus(403);
 
 		let user;
 

@@ -118,13 +118,13 @@ export const userOrdersWithProductDataSelector = (state: AppState) => {
 	const ordersWithProductData = {
 		...userOrders,
 		orders: userOrders.orders.map((order) => {
-			const {productId, ...orderData} = order;
+			const {product_id, ...orderData} = order;
 
 			return {
 				...orderData,
-				picture: products[productId].pictures[0],
-				name: products[productId].name,
-				webId: products[productId].webId
+				picture: products[product_id].pictures[0],
+				name: products[product_id].name,
+				webId: products[product_id].webId
 			}
 		})
 	}

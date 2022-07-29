@@ -130,7 +130,7 @@ class OrdersController {
 		const userId = req.params.userId;
 		const page = +req.query.page || 1;
 
-		if(userId !== req.tokenData.userId) res.sendStatus(403);
+		if(userId !== req.tokenData.userId) return res.sendStatus(403);
 
 		let userOrders;
 

@@ -675,13 +675,13 @@ export const loadUserOrdersAction = () => async (dispatch: AppDispatch, getState
 	catch(e: any) {
 		if(!e.response) throw e;
 
-		dispatch(userOrdersLoadError(e));
+		return dispatch(userOrdersLoadError(e));
 	}
 
 	try {
-		const orders = await Promise.all(res.orders.map(async (order: IOrder) => {
-			const {productId} = order;
-			const product = products[productId];
+		const orders = await Promise.all(res.data.map(async (order: IOrder) => {
+			const {product_id} = order;
+			const product = products[product_id];
 	
 			if(product && !product.error && !product.loading) return order;
 
@@ -692,13 +692,14 @@ export const loadUserOrdersAction = () => async (dispatch: AppDispatch, getState
 				return order;
 			}
 	
-			await dispatch(loadProductByIdActionAsync(productId));
+			await dispatch(loadProductByIdActionAsync(product_id));
 
 			return order;
 		}))
 
 		dispatch(userOrdersLoaded({
-			...res,
+			page: res.page,
+			done: res.page >= res.totalPages,
 			orders,
 		}))
 	}

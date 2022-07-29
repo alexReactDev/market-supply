@@ -2,11 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { CHECKOUT_SUCCESS, LOGOUT } from "../../constants"
 
 export interface IOrder {
-	productId: string,
+	id: number,
+	user_id: string,
+	product_id: string,
 	amount: number,
 	total: number,
-	deliveryMethod: "pickup" | "delivery",
-	paymentMethod: "online" | "onReceive"
+	delivery_method: "pickup" | "delivery",
+	payment_method: "online" | "onReceive"
 }
 
 interface IState {
@@ -53,9 +55,6 @@ const userOrdersSlice = createSlice({
 				...state.orders,
 				...orders
 			]
-		},
-		newOrder(state, action: PayloadAction<IOrder>) {
-			state.orders.unshift(action.payload);
 		}
 	},
 	extraReducers: {
@@ -66,4 +65,4 @@ const userOrdersSlice = createSlice({
 
 export default userOrdersSlice.reducer;
 
-export const {userOrdersLoadStart, userOrdersLoadError, userOrdersLoaded, newOrder} = userOrdersSlice.actions;
+export const {userOrdersLoadStart, userOrdersLoadError, userOrdersLoaded } = userOrdersSlice.actions;

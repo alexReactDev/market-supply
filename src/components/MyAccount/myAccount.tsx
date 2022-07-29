@@ -6,6 +6,7 @@ import { loggedInSelector, preferencesSelector, userDataSelector, userOrdersWith
 import CurrencyConverter from "../CurrencyConverter";
 import Loader from "../Loader";
 import style from "./myAccount.module.scss";
+import imgPlaceholder from "../../images/products/placeholder.png";
 
 const MyAccount: FC<{}> = () => {
 
@@ -34,9 +35,7 @@ const MyAccount: FC<{}> = () => {
 
 	if(!loggedIn) return <Redirect to="/login"/>
 	
-	if(userData.loading) return <Loader />
-
-	if(!userData.loading && !userData.loaded && !userData.error) return <Loader />
+	if((userData.loading) || (!userData.loaded && !userData.error)) return <Loader />
 
 	if(userData.error) return <Redirect to="/error"/>
 
@@ -182,7 +181,7 @@ const MyAccount: FC<{}> = () => {
 							<div key={order.webId} className={style.orders__item}>
 								<div className={`${style.orders__order} ${style.order}`}>
 									<div className={style.order__picture}>
-										<img className={style.order__img} src={order.picture} alt={order.name} />
+										<img className={style.order__img} src={order.picture} alt={order.name} onError={(e: any) => e.target.src = imgPlaceholder} />
 									</div>
 									<div className={style.order__info}>
 										<h4 className={style.order__name}>
@@ -209,13 +208,13 @@ const MyAccount: FC<{}> = () => {
 									<span className={style.orders__label}>
 										Delivery method:
 									</span>
-									{order.deliveryMethod}
+									{order.delivery_method}
 								</div>
 								<div className={style.orders__paymentMethod}>
 									<span className={style.orders__label}>
 										Payment method:
 									</span>
-									{order.paymentMethod}
+									{order.payment_method}
 								</div>
 							</div>
 						)

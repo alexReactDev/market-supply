@@ -164,7 +164,7 @@ async function createTestUser() {
 	for(let i = 0; i < orders_per_user; i++) {
 		const user_id = user.id;
 		const product_id = products[i].id;
-		const amount = lodash.random(3);
+		const amount = lodash.random(1, 3);
 		const total = products[i].price * amount;
 		const deliveryMethod = lodash.random(1) ? "delivery" : "pickup";
 		const paymentMethod = lodash.random(1) ? "online" : "onRecieve";
