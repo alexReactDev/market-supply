@@ -25,6 +25,7 @@ import search from "./search";
 import menu from "./menu";
 import folders from "./folders";
 import collections from "./collections";
+import outlets from "./outlets";
 
 const rootReducer = combineReducers({
 	router: connectRouter(history),
@@ -50,7 +51,8 @@ const rootReducer = combineReducers({
 	search,
 	menu,
 	folders,
-	collections
+	collections,
+	outlets
 })
 
 export default rootReducer;
