@@ -72,7 +72,7 @@ class UserController {
 
 	async changeUserProfile(req, res) {
 		const userId = req.params.userId;
-		const {password, payload} = req.body;
+		const { payload } = req.body;
 
 		if(req.tokenData.userId !== userId) res.sendStatus(403);
 		
@@ -81,17 +81,6 @@ class UserController {
 		try {
 			user = (await db.query("SELECT * FROM users where id = $1;", [userId])).rows[0];
 			if(!user) return res.sendStatus(400);
-		}
-		catch(e) {
-			return res.sendStatus(500);
-		}	
-
-		try {
-			const hashPassword = (await db.query("SELECT password FROM users_passwords where user_id = $1;", [user.id])).rows[0].password;
-
-			const isCorrect = await bcrypt.compare(password, hashPassword);
-			
-			if(!isCorrect) return res.sendStatus(403);
 		}
 		catch(e) {
 			console.log(e);
@@ -105,6 +94,7 @@ class UserController {
 			[payload.name, payload.surname, payload.phone, payload.town, payload.street, payload.house, payload.apartment, payload.zip, user.id])).rows[0];
 		}
 		catch(e) {
+			console.log(e);
 			return res.sendStatus(500);
 		}
 

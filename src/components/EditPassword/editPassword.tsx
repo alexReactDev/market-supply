@@ -56,7 +56,7 @@ const EditPassword: FC<{}> = () => {
 				:
 				data.error
 				?
-				<p className={style.editEmail__errorMessage}>
+				<p className={style.editPassword__errorMessage}>
 					{data.error}
 				</p>
 				:

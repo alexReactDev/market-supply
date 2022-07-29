@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { changePreferencesAction, loadUserDataAction, loadUserOrdersAction } from "../../redux/actions";
+import { changePreferenceAutoFillAction, loadUserDataAction, loadUserOrdersAction } from "../../redux/actions";
 import { loggedInSelector, preferencesSelector, userDataSelector, userOrdersWithProductDataSelector } from "../../redux/selectors";
 import CurrencyConverter from "../CurrencyConverter";
 import Loader from "../Loader";
@@ -28,9 +28,7 @@ const MyAccount: FC<{}> = () => {
 	const profileData = userData.userData;
 
 	function changeAutofill() {
-		dispatch(changePreferencesAction({
-			autoFill: !preferences.autoFill
-		}))
+		dispatch(changePreferenceAutoFillAction(!preferences.autoFill));
 	}
 
 	if(!loggedIn) return <Redirect to="/login"/>
@@ -231,6 +229,15 @@ const MyAccount: FC<{}> = () => {
 							onClick={() => dispatch(loadUserOrdersAction())}
 						/>
 					</div>
+					:
+					null
+				}
+				{
+					orders.orders.length === 0 && orders.done
+					?
+					<p className="text-center">
+						No orders
+					</p>
 					:
 					null
 				}

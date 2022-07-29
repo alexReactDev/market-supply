@@ -542,12 +542,46 @@ export const clearWishlistAction = () => async (dispatch: AppDispatch) => {
 	}
 }
 
+export const loadWishlistProductsAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const wishlistProducts = whitelistProductsSelector(state);
+	const products = productsSelector(state);
+
+	dispatch(wishlistProductsLoadStart());
+
+	try {
+		await Promise.all(wishlistProducts.map(async (productId) => {
+			const product = products[productId];
+
+			if(product && !product.error && !product.loading) return product;
+			if(product && product.error) throw product.error;
+			if(product && product.loading) {
+				await product.promise;
+				return product;
+			}
+
+			const loadedProduct = await dispatch(loadProductByIdActionAsync(productId));
+
+			return loadedProduct;
+		}))
+
+		dispatch(wishlistProductsLoaded());
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(wishlistProductsLoadError(e));
+	}
+}
+
+//Authorization
 interface loginData {
 	email: string,
 	password: string
 }
-
-//Authorization
 
 export const loginAction = (loginData: loginData) => async (dispatch: AppDispatch) => {
 	dispatch(loginStart());
@@ -634,6 +668,20 @@ export const signUpAction = (signUpData: signUpData) => async (dispatch: AppDisp
 		return;
 	}
 
+	try {
+		await dispatch(loadUserIdActionAsync());
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(loginError({error: e.response.data}));
+		dispatch(signUpError(e.response.data));
+		dispatch(push("/error"));
+	}
+
 	dispatch(loginSuccess());
 	dispatch(signUpSuccess());
 }
@@ -645,6 +693,8 @@ export const loadUserIdActionAsync = () => async (dispatch: AppDispatch) => {
 
 	return userId;
 }
+
+//UserData&UserProfile
 
 export const loadUserDataAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
@@ -715,24 +765,13 @@ export const loadUserOrdersAction = () => async (dispatch: AppDispatch, getState
 	}
 }
 
-export const changePreferencesAction = (pref: {[key: string]: string | boolean}) => async (dispatch: AppDispatch) => {
-	try {
-		const newPreferences = (await axios.patch("/api/preferences", pref)).data;
-		console.log(newPreferences);
-
-		dispatch(preferencesLoaded(newPreferences));
-	}
-	catch(e: any) {
-		dispatch(push("/error"));
-		throw e;
-	}
-}
-
-export const editProfileAction = (profileData: {[key: string]: string | null}) => async (dispatch: AppDispatch) => {
+export const editProfileAction = (profileData: {[key: string]: string | null}) => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const userId = userIdSelector(state);
 	dispatch(editProfileRequest());
 
 	try {
-		const newUserData = (await axios.patch("/api/user/profile", profileData)).data;
+		const newUserData = (await axios.put(`/api/user/profile/${userId}`, {payload: profileData})).data;
 
 		dispatch(userDataLoaded(newUserData));
 		dispatch(editProfileSuccess());
@@ -741,7 +780,7 @@ export const editProfileAction = (profileData: {[key: string]: string | null}) =
 	}
 	catch(e: any) {
 		if(!e.response) {
-			push("/error");
+			dispatch(push("/error"));
 			throw e;
 		}
 
@@ -749,46 +788,14 @@ export const editProfileAction = (profileData: {[key: string]: string | null}) =
 	}
 }
 
-export const loadWishlistProductsAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const editEmailAction = (data: {email: string, password: string}) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
-	const wishlistProducts = whitelistProductsSelector(state);
-	const products = productsSelector(state);
+	const userId = userIdSelector(state);
 
-	dispatch(wishlistProductsLoadStart());
-
-	try {
-		await Promise.all(wishlistProducts.map(async (productId) => {
-			const product = products[productId];
-
-			if(product && !product.error && !product.loading) return product;
-			if(product && product.error) throw product.error;
-			if(product && product.loading) {
-				await product.promise;
-				return product;
-			}
-
-			const loadedProduct = await dispatch(loadProductByIdActionAsync(productId));
-
-			return loadedProduct;
-		}))
-
-		dispatch(wishlistProductsLoaded());
-	}
-	catch(e: any) {
-		if(!e.response) {
-			dispatch(generalError(e));
-			throw e;
-		}
-
-		dispatch(wishlistProductsLoadError(e));
-	}
-}
-
-export const editEmailAction = (data: {email: string, password: string}) => async (dispatch: AppDispatch) => {
 	dispatch(editEmailRequest());
 
 	try {
-		const updatedUserData = (await axios.patch("/api/user/email", data)).data;
+		const updatedUserData = (await axios.put(`/api/user/email/${userId}`, {payload: data.email, password: data.password})).data;
 
 		dispatch(editEmailSuccess());
 		dispatch(userDataLoaded(updatedUserData));
@@ -805,14 +812,17 @@ export const editEmailAction = (data: {email: string, password: string}) => asyn
 	}
 }
 
-export const editPasswordAction = (data: {oldPassword: string, newPassword: string}) => async (dispatch: AppDispatch) => {
+export const editPasswordAction = (data: {oldPassword: string, newPassword: string}) => async (dispatch: AppDispatch, getState: () => AppState) => {
+	const state = getState();
+	const userId = userIdSelector(state);
 	dispatch(editPasswordRequest());
 
 	try {
-		const res = (await axios.patch("/api/user/password", data)).data;
+		await axios.put(`/api/user/password/${userId}`, {password: data.oldPassword, payload: data.newPassword});
 
 		dispatch(editPasswordSuccess());
-		dispatch(push("/account"));
+		await dispatch(logoutAction());
+		dispatch(push("/login"));
 		alert("Password successfully changed");
 	}
 	catch(e: any) {
@@ -825,17 +835,17 @@ export const editPasswordAction = (data: {oldPassword: string, newPassword: stri
 	}
 }
 
-export const deleteAccountAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const deleteAccountAction = (password: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
 	const userId = userIdSelector(state);
 	
 	dispatch(deleteAccountRequest());
 
 	try {
-		await axios.delete(`/api/user/${userId}`);
+		await axios.delete(`/api/user/${userId}`, {data: {password}});
 
 		dispatch(deleteAccountSuccess());
-		dispatch(logout());
+		await dispatch(logoutAction());
 		dispatch(push("/"));
 		alert("Account successfully deleted");
 	}
@@ -847,6 +857,26 @@ export const deleteAccountAction = () => async (dispatch: AppDispatch, getState:
 
 		dispatch(deleteAccountFail(e.response.data));
 	}
+}
+
+//Preferences
+
+export const changePreferenceAutoFillAction = (autofill: boolean) => async (dispatch: AppDispatch) => {
+	let preferences;
+	
+	try {
+		preferences = (await axios.put("/api/preferences/auto-fill", {payload: autofill})).data;
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		dispatch(push("/error"));
+	}
+
+	dispatch(preferencesLoaded(preferences));
 }
 
 export const searchRequestAction = (searchQuery: string, page?: number) => async (dispatch: AppDispatch, getState: () => AppState) => {

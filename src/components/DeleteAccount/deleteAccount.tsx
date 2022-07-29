@@ -19,7 +19,7 @@ const DeleteAccount: FC<{}> = () => {
 		},
 		onSubmit(values) {
 			changeDisplayModal(false);
-			dispatch(deleteAccountAction());
+			dispatch(deleteAccountAction(values.password));
 		},
 		validate(values) {
 			const errors: any = {};
