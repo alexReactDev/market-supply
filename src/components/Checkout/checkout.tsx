@@ -1,5 +1,5 @@
-import { cartProductsSelector, cartSelector, checkoutConfirmationDataProductsWithPropsSelector, checkoutConfirmationDataSelector, checkoutSelector, loggedInSelector, preferencesSelector, userDataSelector } from "../../redux/selectors";
-import { cancelCheckoutConfirmationAction, checkoutAction, confirmCheckoutAction, loadCartProductsAction, loadUserDataAction } from "../../redux/actions";
+import { cartProductsSelector, cartSelector, checkoutConfirmationDataProductsWithPropsSelector, checkoutConfirmationDataSelector, checkoutSelector, loggedInSelector, outletsSelector, preferencesSelector, userDataSelector } from "../../redux/selectors";
+import { cancelCheckoutConfirmationAction, checkoutAction, confirmCheckoutAction, loadCartProductsAction, loadOutletsAction, loadUserDataAction } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { FC, useEffect } from "react";
@@ -29,6 +29,7 @@ const Checkout: FC<{}> = () => {
 	const profileData = userData.userData;
 	const preferences = useAppSelector(preferencesSelector);
 	const loggedIn = useAppSelector(loggedInSelector);
+	const outlets = useAppSelector(outletsSelector);
 
 	const dispatch = useDispatch();
 
@@ -71,7 +72,11 @@ const Checkout: FC<{}> = () => {
 
 	useEffect(() => () => {
 			dispatch(cancelCheckoutConfirmationAction());
-		}, []);
+	}, []);
+
+	useEffect(() => {
+		if(!outlets.loaded && !outlets.loading && !outlets.error) dispatch(loadOutletsAction());
+	}, [outlets]);
 
 	const formik = useFormik({
 		initialValues: {
@@ -80,7 +85,7 @@ const Checkout: FC<{}> = () => {
 			phone: "",
 			email: "",
 			deliveryMethod: "pickup",
-			pickupAddress: "123 Main Road, New York, NY 1234",
+			outlet_id: "1",
 			apartmentNumber: "",
 			house: "",
 			street: "",
@@ -111,6 +116,8 @@ const Checkout: FC<{}> = () => {
 			return errors;
 		}
 	});
+
+	const pickedOutlet = outlets.outlets.find((outlet) => outlet.id + "" === formik.values.outlet_id);
 
 	if(Object.keys(cartProducts).length === 0) return (
 		<p className={style.emptyCart}>
@@ -327,44 +334,53 @@ const Checkout: FC<{}> = () => {
 				{
 					formik.values.deliveryMethod === "pickup"
 					?
+					outlets.loaded
+					?
 					<div className={`${style.checkout__pickup} ${style.pickup}`}>
 						<select 
 							className={style.pickup__select}
-							name="pickupAddress"
-							id="pickupAddress"
+							name="outlet_id"
+							id="outlet_id"
 							disabled={checkoutData.loading}
-							value={formik.values.pickupAddress}
+							value={formik.values.outlet_id}
 							onChange={formik.handleChange}
 						>
-							<option className={style.pickup__option}>
-								123 Main Road, New York, NY 1234
-							</option>
-							<option className={style.pickup__option}>
-								1 Second Road, New York, NY 4321
-							</option>
-							<option className={style.pickup__option}>
-								12 Small Road, New York, NY 8121
-							</option>
+							{
+								outlets.outlets.map((outlet) => {
+									return (
+										<option key={outlet.id} value={outlet.id} className={style.pickup__option}>
+											{outlet.address}
+										</option>
+									)
+								})
+							}
 						</select>
 						<div className={style.pickup__shopDetails}>
 							<div className={style.pickup__shopInfo}>
 								<h4 className={style.pickup__shopName}>
-									{formik.values.pickupAddress}
+									{pickedOutlet?.address}
 								</h4>
 								<p className={style.pickup__shopSchedule}>
-									9:00 - 20:00 mon-fri
+									{pickedOutlet?.schedule}
 								</p>
 								<p className={style.pickup__shopPhone}>
-									+1 (234) 567 89 10
-								</p>
-								<p className={style.pickup__deliveryDate}>
-									Delivery date: 17: 00 6 apr 2022
+									{pickedOutlet?.phone}
 								</p>
 							</div>
 							<div className={style.pickup__map}>
 								<img src={mapPlaceholder} alt="map" />
 							</div>
 						</div>
+					</div>
+					:
+					outlets.loading || (!outlets.loaded && !outlets.error)
+					?
+					<Loader />
+					:
+					<div className={style.checkout__errors}>
+						<p className={style.checkout__errorMessage}>
+							Sorry, this way of delivery is unavailable now
+						</p>	
 					</div>
 					:
 					<div className={style.checkout__delivery}>

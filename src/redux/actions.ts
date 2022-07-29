@@ -23,6 +23,7 @@ import { checkoutConfirmationCanceled, checkoutConfirmationDataLoaded, checkoutE
 import { searchDataLoaded, searchDataLoadedAction, searchDataLoading, searchError, searchRequest } from "./reducer/search";
 import { foldersLoaded, IFolder } from "./reducer/folders";
 import { collectionDataLoaded, collectionLoaded, collectionLoadError, collectionLoadStart, collectionsListLoaded } from "./reducer/collections";
+import { outletsLoadError, outletsLoadStart, outletsLoadSuccess } from "./reducer/outlets";
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -482,6 +483,26 @@ export const confirmCheckoutAction = () => async (dispatch: AppDispatch, getStat
 
 export const cancelCheckoutConfirmationAction = () => async (dispatch: AppDispatch) => {
 	dispatch(checkoutConfirmationCanceled());
+}
+
+export const loadOutletsAction = () => async (dispatch: AppDispatch) => {
+	let outlets;
+
+	dispatch(outletsLoadStart());
+
+	try {
+		outlets = (await axios.get("/api/outlets")).data;
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+
+		return dispatch(outletsLoadError(e));
+	}
+
+	dispatch(outletsLoadSuccess(outlets));
 }
 
 
