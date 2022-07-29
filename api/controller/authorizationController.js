@@ -45,7 +45,7 @@ class authorizationController {
 				const tempUserCartProducts = (await db.query("SELECT * FROM cart_products where person_id = $1;", [previousUserTokenData.personId])).rows;
 
 				tempUserCartProducts.forEach(async (tempUserCartProduct) => {
-					const userCartProduct = (await db.query("SELECT * FROM cart_products where person_id = $1;", [userPersonId])).rows[0];
+					const userCartProduct = (await db.query("SELECT * FROM cart_products where person_id = $1 and product_id = $2;", [userPersonId, tempUserCartProduct.product_id])).rows[0];
 
 					if(userCartProduct) {
 						const sum = tempUserCartProduct.amount + userCartProduct.amount;

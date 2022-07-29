@@ -66,12 +66,8 @@ const cartSlice = createSlice({
 		cartItemsLoaded(state, action: PayloadAction<ICartItemsLoadedPayload>) {
 			const {total, products} = action.payload;
 
-			state.products = {
-				...state.products,
-				...products
-			}
-
-			state.total += total;
+			state.products = products;
+			state.total = total;
 		},
 		cartProductsLoadStart(state) {
 			state.error = null;

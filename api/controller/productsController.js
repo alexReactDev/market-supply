@@ -12,7 +12,7 @@ class ProductsController {
 			return res.sendStatus(500);
 		}
 	
-		if(!product) res.sendStatus(404);
+		if(!product) return res.sendStatus(404);
 
 		let productPictures;
 
