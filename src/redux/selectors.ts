@@ -100,7 +100,7 @@ export const cartProductsWithPropsSelector = (state: AppState) => {
 		})
 	}
 
-	return cartProductsWithProps;
+	return cartProductsWithProps.concat().sort((productA, productB) => productA.webId - productB.webId);
 }
 
 export const whitelistProductsWithPropsSelector = (state: AppState) => {

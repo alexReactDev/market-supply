@@ -309,13 +309,9 @@ export const productIncrementAction = (productId: string, amount: number = 1) =>
 	const productPrice = (productsSelector(state)[productId] as IProduct).price;
 
 	try {
-		await axios.patch(`/api/cart/increment/${productId}`, {payload: amount});
+		const cart = (await axios.patch(`/api/cart/increment/${productId}`, {payload: amount})).data;
 
-		dispatch(productIncrement({
-			productId,
-			amount,
-			productPrice
-		}));
+		dispatch(productIncrement(cart));
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
@@ -326,16 +322,11 @@ export const productIncrementAction = (productId: string, amount: number = 1) =>
 
 export const productDecrementAction = (productId: string, amount: number = 1) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
-	const productPrice = productsSelector(state)[productId].price;
 
 	try {
-		await axios.patch(`/api/cart/decrement/${productId}`, {payload: amount});
+		const cart = (await axios.patch(`/api/cart/decrement/${productId}`, {payload: amount})).data;
 
-		dispatch(productDecrement({
-			productId,
-			amount,
-			productPrice
-		}));
+		dispatch(productDecrement(cart));
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
@@ -346,15 +337,11 @@ export const productDecrementAction = (productId: string, amount: number = 1) =>
 
 export const removeProductAction = (productId: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
-	const productPrice = (productsSelector(state)[productId] as IProduct).price;
 
 	try {
-		await (await axios.delete(`/api/cart/${productId}`));
+		const cart = (await (await axios.delete(`/api/cart/${productId}`))).data;
 
-		dispatch(removeProduct({
-			productId,
-			productPrice
-		}))
+		dispatch(removeProduct(cart))
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
@@ -384,8 +371,6 @@ export const loadCartProductsAction = () => async (dispatch: AppDispatch, getSta
 	const state = getState();
 	const cartProducts = cartProductsSelector(state);
 	const products = productsSelector(state);
-
-	console.log("Where is the error?")
 
 	dispatch(cartProductsLoadStart());
 

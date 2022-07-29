@@ -12,12 +12,8 @@ interface IState {
 }
 
 interface IPayload {
-	productId: string,
-	productPrice: number
-}
-
-interface IPayloadWithAmount extends IPayload {
-	amount: number
+	total: number,
+	products: ICartProducts
 }
 
 interface ICartItemsLoadedPayload {
@@ -37,27 +33,23 @@ const cartSlice = createSlice({
 	name: 'cart',
 	initialState,
 	reducers: {
-		productIncrement(state, action: PayloadAction<IPayloadWithAmount>) {
-			const { productId, productPrice, amount } = action.payload;
+		productIncrement(state, action: PayloadAction<IPayload>) {
+			const { products, total } = action.payload;
 			
-			state.products[productId] = (state.products[productId] || 0) + amount;
-			state.total = state.total + productPrice * amount;
+			state.products = products;
+			state.total = total;
 		},
-		productDecrement(state, action: PayloadAction<IPayloadWithAmount>) {
-			const { productId, productPrice } = action.payload;
-			let { amount } = action.payload;
+		productDecrement(state, action: PayloadAction<IPayload>) {
+			const { products, total } = action.payload;
 
-			if(amount > state.products[productId]) amount = state.products[productId];
-
-			state.total = state.total - productPrice * amount;
-			state.products[productId] = state.products[productId] - amount;
-			if(state.products[productId] <= 0) delete state.products[productId];
+			state.products = products;
+			state.total = total;
 		},
 		removeProduct(state, action: PayloadAction<IPayload>) {
-			const { productId, productPrice } = action.payload;
+			const { products, total } = action.payload;
 
-			state.total = state.total - productPrice * state.products[productId];
-			delete state.products[productId];
+			state.products = products;
+			state.total = total;
 		},
 		emptyCart(state) {
 			state.total = 0;
