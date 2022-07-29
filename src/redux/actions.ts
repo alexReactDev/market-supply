@@ -26,18 +26,13 @@ import { collectionDataLoaded, collectionLoaded, collectionLoadError, collection
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
-	let userId;
-
 	try {
-		userId = (await axios.get("/api/user/id")).data;
+		await dispatch(loadUserIdActionAsync());
+
+		dispatch(loginSuccess());
 	}
 	catch(e: any) {
 		if(!e.response) return dispatch(generalError(e));
-	}
-
-	if(userId) {
-		dispatch(loginSuccess());
-		dispatch(userIdLoaded(userId));
 	}
 
 	let folders;
@@ -305,9 +300,6 @@ export const loadCartAction = () => async (dispatch: AppDispatch) => {
 }
 
 export const productIncrementAction = (productId: string, amount: number = 1) => async (dispatch: AppDispatch, getState: () => AppState) => {
-	const state = getState();
-	const productPrice = (productsSelector(state)[productId] as IProduct).price;
-
 	try {
 		const cart = (await axios.patch(`/api/cart/increment/${productId}`, {payload: amount})).data;
 
@@ -321,8 +313,6 @@ export const productIncrementAction = (productId: string, amount: number = 1) =>
 }
 
 export const productDecrementAction = (productId: string, amount: number = 1) => async (dispatch: AppDispatch, getState: () => AppState) => {
-	const state = getState();
-
 	try {
 		const cart = (await axios.patch(`/api/cart/decrement/${productId}`, {payload: amount})).data;
 
@@ -336,8 +326,6 @@ export const productDecrementAction = (productId: string, amount: number = 1) =>
 }
 
 export const removeProductAction = (productId: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
-	const state = getState();
-
 	try {
 		const cart = (await (await axios.delete(`/api/cart/${productId}`))).data;
 
@@ -559,6 +547,8 @@ interface loginData {
 	password: string
 }
 
+//Authorization
+
 export const loginAction = (loginData: loginData) => async (dispatch: AppDispatch) => {
 	dispatch(loginStart());
 
@@ -578,6 +568,13 @@ export const loginAction = (loginData: loginData) => async (dispatch: AppDispatc
 	dispatch(loadCartAction());
 
 	dispatch(loadWishlistAction());
+
+	try {
+		await dispatch(loadUserIdActionAsync());
+	}
+	catch(e: any) {
+		return dispatch(loginError(e));
+	}
 
 	return dispatch(loginSuccess());
 }
@@ -639,6 +636,14 @@ export const signUpAction = (signUpData: signUpData) => async (dispatch: AppDisp
 
 	dispatch(loginSuccess());
 	dispatch(signUpSuccess());
+}
+
+export const loadUserIdActionAsync = () => async (dispatch: AppDispatch) => {
+	let userId = (await axios.get("/api/user/id")).data;
+
+	dispatch(userIdLoaded(userId));
+
+	return userId;
 }
 
 export const loadUserDataAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
