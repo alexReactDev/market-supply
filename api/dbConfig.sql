@@ -147,7 +147,7 @@ CREATE TABLE orders (
 	phone VARCHAR NOT NULL,
 	email VARCHAR NOT NULL,
 	delivery_method VARCHAR NOT NULL CHECK (delivery_method = 'pickup' or delivery_method = 'delivery'),
-	payment_method VARCHAR NOT NULL CHECK (payment_method = 'online' or payment_method = 'onRecieve'),
+	payment_method VARCHAR NOT NULL CHECK (payment_method = 'online' or payment_method = 'onReceive'),
 	total INTEGER NOT NULL,
 	confirmed BOOLEAN NOT NULL DEFAULT false
 );
@@ -167,7 +167,7 @@ CREATE TABLE orders_delivery_data (
 	house VARCHAR NOT NULL,
 	apartment_no VARCHAR,
 	zip VARCHAR NOT NULL,
-	prefered_date VARCHAR
+	preferred_date VARCHAR
 );
 
 CREATE TABLE orders_products (

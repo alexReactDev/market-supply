@@ -140,13 +140,13 @@ export const checkoutConfirmationDataProductsWithPropsSelector = (state: AppStat
 
 	if(!confirmData) return null;
 
-	return confirmData.products.map(({productId, amount, total}) => ({
-		productId,
+	return confirmData.products.map(({product_id, amount, total}) => ({
+		product_id,
 		amount,
 		total,
-		img: products[productId].pictures[0],
-		name: products[productId].name,
-		webId: products[productId].webId
+		img: products[product_id].pictures[0],
+		name: products[product_id].name,
+		webId: products[product_id].webId
 	}))
 }
 

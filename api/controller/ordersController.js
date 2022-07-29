@@ -11,6 +11,7 @@ class OrdersController {
 			orderedProducts = await Promise.all(Object.keys(payload.products).map(async (productId) => (await db.query("SELECT * FROM products where id = $1;", [productId])).rows[0]));
 		}
 		catch(e) {
+			console.log(e);
 			return res.sendStatus(500);
 		}
 		
@@ -31,11 +32,11 @@ class OrdersController {
 
 		try {
 			if(createdOrder.delivery_method === "delivery") {
-				await db.query("INSERT INTO orders_delivery_data (order_id, town, street, house, apartment_no, zip, prefered_date) values ($1, $2, $3, $4, $5, $6, $7);",
+				await db.query("INSERT INTO orders_delivery_data (order_id, town, street, house, apartment_no, zip, preferred_date) values ($1, $2, $3, $4, $5, $6, $7);",
 				[createdOrder.id, payload.town, payload.street, payload.house, payload.apartment, payload.zip, payload.preferred_date]);
 			}
 			else if(createdOrder.delivery_method === "pickup") {
-				await db.query("INSERT INTO orders_pickup_outlet (order_id, outlet_id) values ($1, $2);", [createdOrder.id, payload.outlet_id]);
+				await db.query("INSERT INTO orders_pickup_outlet (order_id, outlet_id) values ($1, $2);", [createdOrder.id, +payload.outlet_id]);
 			}
 		}
 		catch(e) {
@@ -121,6 +122,14 @@ class OrdersController {
 				console.log(e);
 				return res.sendStatus(500);
 			}
+		}
+
+		try {
+			await db.query("DELETE FROM cart_products where person_id = $1;", [req.tokenData.personId]);
+		}
+		catch(e) {
+			console.log(e);
+			return res.sendStatus(500);
 		}
 
 		res.sendStatus(200);

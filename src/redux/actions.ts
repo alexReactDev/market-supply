@@ -408,6 +408,8 @@ export const publishReviewAction = (productId: string, review: IReviewToPublish)
 	}
 }
 
+//Checkout
+
 export const checkoutAction = (checkoutData: {[key: string]: string}) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
 	const cart = cartProductsSelector(state);
@@ -416,8 +418,12 @@ export const checkoutAction = (checkoutData: {[key: string]: string}) => async (
 	dispatch(checkoutLoading());
 
 	let confirmData;
+	
 	try {
-		confirmData = (await axios.post("api/orders", {cart, data: checkoutData})).data as IConfirmationData;
+		confirmData = (await axios.post("api/orders", {payload: {
+			...checkoutData,
+			products: cart
+		}})).data as IConfirmationData;
 	}
 	catch(e: any) {
 		if(!e.response) {
@@ -429,8 +435,8 @@ export const checkoutAction = (checkoutData: {[key: string]: string}) => async (
 	}
 
 	try {
-		Promise.all(confirmData.products.map(async ({ productId }) => {
-			const product = products[productId];
+		Promise.all(confirmData.products.map(async ({ product_id }) => {
+			const product = products[product_id];
 	
 			if(product && !product.error && !product.loading) return product;
 
@@ -441,7 +447,7 @@ export const checkoutAction = (checkoutData: {[key: string]: string}) => async (
 				return product;
 			}
 	
-			await dispatch(loadProductByIdActionAsync(productId));
+			await dispatch(loadProductByIdActionAsync(product_id));
 
 			return product;
 		}))
@@ -465,7 +471,7 @@ export const confirmCheckoutAction = () => async (dispatch: AppDispatch, getStat
 	dispatch(checkoutLoading());
 
 	try {
-		await axios.post(`/api/orders/confirm/${confirmData?.orderId}`);
+		await axios.post(`/api/orders/confirm/${confirmData?.confirmationLink}`);
 
 		dispatch(checkoutSuccess());
 		dispatch(emptyCart());
@@ -900,6 +906,8 @@ export const changePreferenceAutoFillAction = (autofill: boolean) => async (disp
 	dispatch(preferencesLoaded(preferences));
 }
 
+//Search
+
 export const searchRequestAction = (searchQuery: string, page?: number) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	dispatch(searchRequest(searchQuery));
 
@@ -973,6 +981,8 @@ export const loadMoreSearchResultsAction = () => async (dispatch: AppDispatch, g
 		dispatch(searchError(e));
 	}
 }
+
+//Collections
 
 export const loadCollectionData = (colId: number, sort?: string ) => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();

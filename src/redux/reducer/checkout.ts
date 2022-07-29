@@ -1,16 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 interface IConfirmationDataProduct {
-	productId: string,
+	product_id: string,
 	amount: number,
 	total: number
 }
 
 export interface IConfirmationData {
-	orderId: string,
-	paymentMethod: string,
-	deliveryMethod: string,
+	id: number,
+	name: string,
+	surname: string,
+	phone: string,
+	email: string,
+	payment_method: string,
+	delivery_method: string,
 	total: number,
+	confirmed: boolean,
+	confirmationLink: string,
 	products: IConfirmationDataProduct[]
 }
 

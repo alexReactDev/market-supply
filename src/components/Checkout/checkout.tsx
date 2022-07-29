@@ -1,5 +1,6 @@
-import { cartProductsSelector, cartSelector, checkoutConfirmationDataProductsWithPropsSelector, checkoutConfirmationDataSelector, checkoutSelector, loggedInSelector, outletsSelector, preferencesSelector, userDataSelector } from "../../redux/selectors";
-import { cancelCheckoutConfirmationAction, checkoutAction, confirmCheckoutAction, loadCartProductsAction, loadOutletsAction, loadUserDataAction } from "../../redux/actions";
+
+import { cartProductsSelector, checkoutConfirmationDataProductsWithPropsSelector, checkoutConfirmationDataSelector, checkoutSelector, loggedInSelector, outletsSelector, preferencesSelector, userDataSelector } from "../../redux/selectors";
+import { cancelCheckoutConfirmationAction, checkoutAction, confirmCheckoutAction, loadOutletsAction, loadUserDataAction } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { FC, useEffect } from "react";
@@ -62,7 +63,7 @@ const Checkout: FC<{}> = () => {
 			if(!formik.touched.surname) formik.setFieldValue("surname", profileData.surname);
 			if(!formik.touched.phone) formik.setFieldValue("phone", profileData.phone);
 			if(!formik.touched.email) formik.setFieldValue("email", profileData.email);
-			if(!formik.touched.apartmentNumber) formik.setFieldValue("apartment", profileData.apartment);
+			if(!formik.touched.apartment_no) formik.setFieldValue("apartment", profileData.apartment);
 			if(!formik.touched.house) formik.setFieldValue("house", profileData.house);
 			if(!formik.touched.street) formik.setFieldValue("street", profileData.street);
 			if(!formik.touched.town) formik.setFieldValue("town", profileData.town);
@@ -84,15 +85,15 @@ const Checkout: FC<{}> = () => {
 			surname: "",
 			phone: "",
 			email: "",
-			deliveryMethod: "pickup",
 			outlet_id: "1",
-			apartmentNumber: "",
+			delivery_method: "pickup",
+			apartment_no: "",
 			house: "",
 			street: "",
 			town: "",
 			zip: "",
 			preferableDate: "",
-			paymentMethod: "online",
+			payment_method: "online",
 			onlinePaymentOption: "card"
 		},
 		onSubmit(values) {
@@ -106,7 +107,7 @@ const Checkout: FC<{}> = () => {
 			if(!values.phone) errors.phone = "phone required";
 			if(!values.email) errors.email = "email required";
 
-			if(values.deliveryMethod === "delivery") {
+			if(values.delivery_method === "delivery") {
 				if(!values.house) errors.house = "house number required";
 				if(!values.street) errors.street = "street required";
 				if(!values.town) errors.town = "town required";
@@ -151,7 +152,7 @@ const Checkout: FC<{}> = () => {
 							{
 								confirmDataProducts.map((item) => {
 									return(
-										<li key={item.productId} className={`${style.modal__listItem} ${style.item}`}>
+										<li key={item.product_id} className={`${style.modal__listItem} ${style.item}`}>
 											<div className={style.item__picture}>
 												<img className={style.item__img} src={item.img} alt={item.name} />
 											</div>
@@ -185,7 +186,7 @@ const Checkout: FC<{}> = () => {
 								Delivery method:
 							</p>
 							<p className={style.entry__value}>
-								{confirmData.deliveryMethod}
+								{confirmData.delivery_method}
 							</p>
 						</div>
 						<div className={`${style.modal__entry} ${style.entry}`}>
@@ -193,7 +194,7 @@ const Checkout: FC<{}> = () => {
 								Payment method:
 							</p>
 							<p className={style.entry__value}>
-								{confirmData.paymentMethod}
+								{confirmData.payment_method}
 							</p>
 						</div>
 						<div className={`${style.modal__entry} ${style.entry}`}>
@@ -315,16 +316,16 @@ const Checkout: FC<{}> = () => {
 				</h3>
 				<div className={style.checkout__deliveryMethod}>
 					<span 
-						className={`${style.checkout__deliveryMethodOption} ${style.deliveryMethodOption} ${formik.values.deliveryMethod === "pickup" ? style.deliveryMethodOption_active : ""}`}
-						onClick={() => checkoutData.loading ? null : formik.setFieldValue("deliveryMethod", "pickup")}	
+						className={`${style.checkout__deliveryMethodOption} ${style.deliveryMethodOption} ${formik.values.delivery_method === "pickup" ? style.deliveryMethodOption_active : ""}`}
+						onClick={() => checkoutData.loading ? null : formik.setFieldValue("delivery_method", "pickup")}	
 					>
 						<p className={`${style.deliveryMethodOption__text} ${style.deliveryMethodOption_pickup}`}>
 							Pickup
 						</p>
 					</span>
 					<span 
-						className={`${style.checkout__deliveryMethodOption} ${style.deliveryMethodOption} ${formik.values.deliveryMethod === "delivery" ? style.deliveryMethodOption_active : ""}`}
-						onClick={() => checkoutData.loading ? null : formik.setFieldValue("deliveryMethod", "delivery")}
+						className={`${style.checkout__deliveryMethodOption} ${style.deliveryMethodOption} ${formik.values.delivery_method === "delivery" ? style.deliveryMethodOption_active : ""}`}
+						onClick={() => checkoutData.loading ? null : formik.setFieldValue("delivery_method", "delivery")}
 					>
 						<p className={`${style.deliveryMethodOption__text} ${style.deliveryMethodOption_delivery}`}>
 							Delivery
@@ -332,7 +333,7 @@ const Checkout: FC<{}> = () => {
 					</span>
 				</div>
 				{
-					formik.values.deliveryMethod === "pickup"
+					formik.values.delivery_method === "pickup"
 					?
 					outlets.loaded
 					?
@@ -388,11 +389,11 @@ const Checkout: FC<{}> = () => {
 							<input 
 								type="text"
 								className={style.checkout__input}
-								id="apartmentNumber"
-								name="apartmentNumber"
+								id="apartment_no"
+								name="apartment_no"
 								placeholder="Apartment number (optional)"
 								disabled={checkoutData.loading}
-								value={formik.values.apartmentNumber}
+								value={formik.values.apartment_no}
 								onChange={formik.handleChange}
 							/>
 						</span>
@@ -466,16 +467,16 @@ const Checkout: FC<{}> = () => {
 				<div className={`${style.checkout__payment} ${style.payment}`}>
 					<div className={style.payment__methods}>
 						<span 
-							className={`${style.payment__method} ${formik.values.paymentMethod === "onReceive" ? style.payment__method_active : ""}`}
-							onClick={() => checkoutData.loading ? null : formik.setFieldValue("paymentMethod", "onReceive")}
+							className={`${style.payment__method} ${formik.values.payment_method === "onReceive" ? style.payment__method_active : ""}`}
+							onClick={() => checkoutData.loading ? null : formik.setFieldValue("payment_method", "onReceive")}
 						>
 							<p className={style.payment__methodText}>
 								On receive
 							</p>
 						</span>
 						<span 
-							className={`${style.payment__method} ${formik.values.paymentMethod === "online" ? style.payment__method_active : ""}`}
-							onClick={() => checkoutData.loading ? null : formik.setFieldValue("paymentMethod", "online")}
+							className={`${style.payment__method} ${formik.values.payment_method === "online" ? style.payment__method_active : ""}`}
+							onClick={() => checkoutData.loading ? null : formik.setFieldValue("payment_method", "online")}
 						>
 							<p className={style.payment__methodText}>
 								Online
@@ -483,7 +484,7 @@ const Checkout: FC<{}> = () => {
 						</span>
 					</div>
 					{
-						formik.values.paymentMethod === "online"
+						formik.values.payment_method === "online"
 						?
 						<ul className={style.payment__options}>
 							<li 
