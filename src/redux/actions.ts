@@ -570,7 +570,7 @@ export const loginAction = (loginData: loginData) => async (dispatch: AppDispatc
 
 		dispatch(loginError({error: e.response.data}));
 
-		if(e.response.status !== 400) dispatch(push("/error"));
+		if(e.response.status !== 400 && e.response.status !== 403) dispatch(push("/error"));
 
 		return;
 	}
