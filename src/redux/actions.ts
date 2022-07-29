@@ -610,7 +610,7 @@ export const signUpAction = (signUpData: signUpData) => async (dispatch: AppDisp
 	let savedUser;
 
 	try {
-		savedUser = await (await axios.post("/api/user", signUpData)).data;
+		savedUser = (await axios.post("/api/user", {payload: signUpData})).data;
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
@@ -625,7 +625,7 @@ export const signUpAction = (signUpData: signUpData) => async (dispatch: AppDisp
 	dispatch(loginStart());
 
 	try {
-		await axios.post("/api/login", {email: savedUser.email, password: signUpData.password});
+		await axios.post("/api/login", {payload: savedUser.email, password: signUpData.password});
 	}
 	catch(e: any) {
 		if(!e.response) throw e;
