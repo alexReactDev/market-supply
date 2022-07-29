@@ -11,6 +11,7 @@ const ordersRouter = require("./ordersRouter");
 const preferencesRouter = require("./preferencesRouter");
 const searchRouter = require("./searchRouter");
 const collectionsRouter = require("./collectionsRouter");
+const outletsRouter = require("./outletsRouter");
 
 const router = new express.Router();
 
@@ -25,5 +26,6 @@ router.use("/orders", ordersRouter);
 router.use("/preferences", preferencesRouter);
 router.use("/search", searchRouter);
 router.use("/collections", collectionsRouter);
+router.use("/outlets", outletsRouter);
 
 module.exports = router;
