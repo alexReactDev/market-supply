@@ -31,13 +31,13 @@ const AsideNav: FC<IProps> = ({ className="" }) => {
 								{
 									cat.items.map((item) => {
 										return (
+										<Link to={`/categories/${cat.url_name}/${item.url_name}`} className={`${style.folder__itemLink} nav-link`}>
 											<li className={style.folder__item} key={item.id}>
-												<Link to={`/categories/${cat.url_name}/${item.url_name}`} className={`${style.folder__itemLink} nav-link`}>
 													<p className={style.folder__itemName}>
 														{item.name}
 													</p>
-												</Link>
 											</li>
+										</Link>
 										)
 									})
 								}

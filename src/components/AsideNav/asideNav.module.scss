@@ -66,6 +66,8 @@
 	visibility: hidden;
 	opacity: 0;
 	max-height: 0px;
+	margin-top: -1px;
+	border-top: solid 1px transparent;
 	transition: max-height 0.3s ease-out 0.1s, opacity 0.3s ease 0s, visibility 0.3s ease 0s;
 }
 
@@ -79,16 +81,15 @@
 	transition-delay: 0s, 0.1s, 0.1s;
 }
 
-.folder__item {
-	list-style: none;
+.folder__itemLink {
+	display: block;
 	padding: 12px 10px 12px 60px;
-	font-size: $defaultFzSmaller;
 	color: $lightblack;
 	transition-property: background-color;
 	transition-duration: 0.3s;
 
 	&:first-child {
-		padding-top: 5px;
+		margin-top: -5px;
 	}
 
 	&:hover {
@@ -101,4 +102,9 @@
 		transition-property: background-color;
 		transition-duration: 0.1s;
 	}
+}
+
+.folder__item {
+	list-style: none;
+	font-size: $defaultFzSmaller;
 }
