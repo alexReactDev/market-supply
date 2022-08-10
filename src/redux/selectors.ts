@@ -168,3 +168,13 @@ export const searchProductsWithPropsSelector = (state: AppState) => {
 		})
 	})
 }
+
+export const productIdSelector = (state: AppState) => {
+	const path = state.router.location.pathname.split("/");
+
+	const productIndex = path.findIndex((item) => item === "product");
+
+	if(!productIndex) return "";
+
+	return path[productIndex + 1];
+}

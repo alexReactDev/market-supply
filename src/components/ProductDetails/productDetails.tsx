@@ -1,9 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { productsDetailsSelector, productsReviewsSelector, productsSelector, URLPathEndSelector } from "../../redux/selectors";
+import { productIdSelector, productsDetailsSelector, productsReviewsSelector, productsSelector} from "../../redux/selectors";
 import { loadProductByIdAction, loadProductDetailsAction, loadProductReviewsAction } from "../../redux/actions";
-import { IProduct } from "../../redux/reducer/products";
 import Loader from "../Loader";
 import Rate from "../Rate";
 import style from "./productDetails.module.scss";
@@ -20,13 +19,16 @@ import AddToWhitelist from "../AddToWhitelist";
 
 const ProductDetails: FC<{}> = () => {
 
-	const productId = useSelector(URLPathEndSelector);
+	const productId = useSelector(productIdSelector);
 	const product = useSelector(productsSelector)[productId];
 	const productDetails = useSelector(productsDetailsSelector)[productId];
 	const productReviews = useSelector(productsReviewsSelector)[productId];
 	const dispatch = useDispatch();
 
+	console.log(productId);
+
 	useEffect(() => {
+		if(!productId) return;
 		if(!product) dispatch(loadProductByIdAction(productId));
 		if(!productDetails) dispatch(loadProductDetailsAction(productId));
 		if(!productReviews) dispatch(loadProductReviewsAction(productId));
@@ -40,13 +42,15 @@ const ProductDetails: FC<{}> = () => {
 		if(product && product.pictures.length > 0) setPicture(product.pictures[0]);
 	}, [product])
 
+	if(!productId) return null;
+
 	if (!product || !productDetails || !productReviews || product.loading || productDetails.loading || productReviews.loading) return <Loader />
 
 	if (product?.error?.response?.status === 404) return <Redirect to="/404" />
 
 	if(product.error) return <Redirect to="/error" />
 
-	const { name, webId, rate, price, oldPrice, pictures } = product as IProduct;
+	const { name, webId, rate, price, oldPrice, pictures } = product;
 
 	const { description } = productDetails.details;
 
@@ -72,7 +76,6 @@ const ProductDetails: FC<{}> = () => {
 						<Slider className={style.product__slider} ref={e => setSliderRef(e)} {...sliderConfig}>
 							{
 								pictures.map((src) => {
-									console.log(src);
 									return(
 										<div className={style.sliderPicture} key={src} onClick={() => setPicture(src)} >
 											<img src={src} className={style.sliderImg} alt="productPicture" />

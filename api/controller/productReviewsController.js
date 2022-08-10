@@ -9,10 +9,10 @@ class ProductReviewsController {
 			product = (await db.query("SELECT * FROM products where id = $1;", [id])).rows[0];
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
-		if(!product) res.sendStatus(404);
+		if(!product) return res.sendStatus(404);
 
 		let reviews;
 
@@ -20,7 +20,7 @@ class ProductReviewsController {
 			reviews = (await db.query("SELECT * FROM products_reviews where product_id = $1;", [product.id])).rows.map((review) => ({...review, timestamp: +review.timestamp}));
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
 		res.send(reviews);
@@ -37,10 +37,10 @@ class ProductReviewsController {
 			product = (await db.query("SELECT * FROM products where id = $1;", [id])).rows[0];
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
-		if(!product) res.sendStatus(400);
+		if(!product) return res.sendStatus(400);
 
 		let review;
 
@@ -49,7 +49,7 @@ class ProductReviewsController {
 			[data.title, data.text, data.rate, data.timestamp, product.id])).rows[0];
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 		
 		res.send(review);
