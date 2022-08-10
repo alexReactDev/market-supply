@@ -25,8 +25,6 @@ const ProductDetails: FC<{}> = () => {
 	const productReviews = useSelector(productsReviewsSelector)[productId];
 	const dispatch = useDispatch();
 
-	console.log(productId);
-
 	useEffect(() => {
 		if(!productId) return;
 		if(!product) dispatch(loadProductByIdAction(productId));
@@ -41,6 +39,8 @@ const ProductDetails: FC<{}> = () => {
 	useEffect(() => {
 		if(product && product.pictures.length > 0) setPicture(product.pictures[0]);
 	}, [product])
+
+	const [sliderIdx, setSliderIdx] = useState(0);
 
 	if(!productId) return null;
 
@@ -58,6 +58,8 @@ const ProductDetails: FC<{}> = () => {
 		slidesToShow: 3,
 		arrows: false,
 		draggable: false,
+		infinite: false,
+		afterChange: (idx: number) => setSliderIdx(idx)
 	}
 
 	return(
@@ -65,12 +67,12 @@ const ProductDetails: FC<{}> = () => {
 			<div className={style.product__basicInfo}>
 				<div className={style.product__pictures}>
 					<div className={style.product__mainPicture}>
-						<img className={style.product__image} src={currentPicture || productPlaceholder} alt={product.name} />
+						<img className={style.product__image} src={currentPicture || productPlaceholder} alt={product.name} onError={(e: any) => e.target.src = productPlaceholder} />
 					</div>
-					<div className={style.product__additionalPictures}>
+					<div className={`${style.product__additionalPictures} ${product.pictures.length >= 3 && sliderIdx !== 0 ? style.product__additionalPictures_shadowLeft : ""} ${product.pictures.length >= 3 && sliderIdx < product.pictures.length - 3 ? style.product__additionalPictures_shadowRight : ""}`}>
 						<IoMdArrowDropleftCircle
 							color="#f10e34" size="27px" 
-							className={style.sliderButtonPrev}
+							className={`${style.sliderButtonPrev} ${sliderIdx === 0 || product.pictures.length < 3 ? style.sliderButtonPrev_inactive : ""}`}
 							onClick={() => sliderRef?.slickPrev()}
 						/>
 						<Slider className={style.product__slider} ref={e => setSliderRef(e)} {...sliderConfig}>
@@ -78,7 +80,7 @@ const ProductDetails: FC<{}> = () => {
 								pictures.map((src) => {
 									return(
 										<div className={style.sliderPicture} key={src} onClick={() => setPicture(src)} >
-											<img src={src} className={style.sliderImg} alt="productPicture" />
+											<img src={src} className={style.sliderImg} alt="productPicture" onError={(e: any) => e.target.src = productPlaceholder} />
 										</div>
 									)
 								})
@@ -86,7 +88,7 @@ const ProductDetails: FC<{}> = () => {
 						</Slider>
 						<IoMdArrowDroprightCircle 
 							color="#f10e34" size="27px" 
-							className={style.sliderButtonNext} 
+							className={`${style.sliderButtonNext} ${sliderIdx === product.pictures.length - 3 || product.pictures.length < 3 ? style.sliderButtonNext_inactive: ""}`} 
 							onClick={() => sliderRef?.slickNext()}
 						/>
 					</div>

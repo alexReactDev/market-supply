@@ -31,6 +31,28 @@
 	position: relative;
 	height: 100px;
 	overflow: hidden;
+	border: solid $borderC 1px;
+	padding: 1.5px 0px;
+
+	&_shadowLeft::before {
+		content: '';
+		position: absolute;
+		z-index: 9;
+		left: 0px;
+		top: 0px;
+		height: 100%;
+		box-shadow: 0px 2px 12px 8px rgb(94, 94, 94);
+	}
+
+	&_shadowRight::after {
+		content: '';
+		position: absolute;
+		z-index: 9;
+		right: 0px;
+		top: 0px;
+		height: 100%;
+		box-shadow: 0px 2px 12px 8px rgb(94, 94, 94);
+	}
 }
 
 .product__slider {
@@ -42,11 +64,15 @@
 	top: calc(50% - 13.5px);
 	z-index: 10;
 	border-radius: 2.5px;
-	background-color: rgb(223, 222, 222);
+	background-color: rgb(255, 255, 255);
 	box-shadow: 0px 2px 5px 0px black;
 	
 	&:active {
 		top: calc(50% - 12.5px);
+	}
+
+	&_inactive {
+		display: none;
 	}
 }
 
@@ -73,6 +99,10 @@
 	width: 100px;
 	box-sizing: border-box;
 	padding: 0px 3px;
+	
+	&:focus {
+		outline: none;
+	}
 }
 
 .sliderImg {
