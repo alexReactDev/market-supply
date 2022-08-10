@@ -8,6 +8,9 @@
 
 .product__picture {
 	height: 205px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .product__img {
@@ -15,6 +18,21 @@
 	height: 100%;
 	object-fit: cover;
 	object-position: center;
+
+	&:hover {
+		width: 99%;
+		height: 99%;
+		transition-delay: 0.1s;
+		transition-duration: 0.3s;
+	}
+
+	&_active:hover {
+		width: 95%;
+		height: 95%;
+		outline: solid lightgrey 1px;
+		transition-delay: 0ms;
+		transition-duration: 0.15s;
+	}
 }
 
 .product__title {

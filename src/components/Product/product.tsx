@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, MouseEvent, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { productsSelector } from "../../redux/selectors";
 import { IProduct } from "../../redux/reducer/products";
@@ -40,7 +40,15 @@ const Product: FC<IProps> = ({ className="", id}) => {
 				null
 			}
 			<div className={style.product__picture}>
-				<img className={style.product__img} src={pictures[0] || picturePlaceholder} alt="product" onError={(e: any) => e.target.src = picturePlaceholder} />
+				<img 
+					className={style.product__img} 
+					src={pictures[0] || picturePlaceholder} 
+					alt="product" 
+					onError={(e: any) => e.target.src = picturePlaceholder}
+					onMouseDown={(e: any) => e.target.classList.add(style.product__img_active)}
+					onMouseUp={(e: any) => e.target.classList.remove(style.product__img_active)}
+					onMouseLeave={(e: any) => e.target.classList.remove(style.product__img_active)}
+					/>
 			</div>
 			<h4 className={style.product__title}>
 				{name}
