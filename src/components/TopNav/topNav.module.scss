@@ -180,9 +180,14 @@
 	color: $fontCLight;
 	text-decoration: none;
 
+	&:hover {
+		background-color: #e60f32;
+		transition-duration: 0.2s;
+	}
+
 	&:active {
 		background-color: $darkerred;
-		transition-duration: 0s;
+		transition-duration: 0.05s;
 	}
 }
 

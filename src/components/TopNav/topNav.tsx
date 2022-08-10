@@ -56,7 +56,7 @@ const TopNav: FC<IProps> = ({ className='' }) => {
 										const collection = collections[col];
 
 										return(
-											<li className={style.hiddenMenu__category}>
+											<li key={collection.id} className={style.hiddenMenu__category}>
 												<Link to={`/collections/${collection.url_name}`} className={`${style.hiddenMenu__link} nav-link`} >
 													{collection.name}
 												</Link>
