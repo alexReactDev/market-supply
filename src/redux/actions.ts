@@ -1,6 +1,6 @@
 import { AppDispatch, AppState } from ".";
 import { categoriesListLoaded, categoryDataLoaded, categoryLoaded, categoryLoadError, categoryLoadStart, ICategoryInitialData } from "./reducer/categories";
-import { IProduct, productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
+import { productsLoaded, productsLoadError, productsLoadStart } from "./reducer/products";
 import { productDetailsLoaded, productDetailsLoadError, productDetailsLoadStart } from "./reducer/productsDetails";
 import { IReview, productReviewsLoaded, productReviewsLoadError, productReviewsLoadStart } from "./reducer/productsReviews";
 import { cartProductsSelector, checkoutConfirmationDataSelector, productsSelector, searchSelector, userIdSelector, userOrdersSelector, whitelistProductsSelector } from "./selectors";
@@ -24,6 +24,9 @@ import { searchDataLoaded, searchDataLoadedAction, searchDataLoading, searchErro
 import { foldersLoaded, IFolder } from "./reducer/folders";
 import { collectionDataLoaded, collectionLoaded, collectionLoadError, collectionLoadStart, collectionsListLoaded } from "./reducer/collections";
 import { outletsLoadError, outletsLoadStart, outletsLoadSuccess } from "./reducer/outlets";
+
+
+//Initialization
 
 export const initialize = () => async (dispatch: AppDispatch) => {
 
@@ -89,6 +92,8 @@ export const initialize = () => async (dispatch: AppDispatch) => {
 	dispatch(init());
 }
 
+
+//Categories
 interface ICategoryData {
 	totalPages: number,
 	page: number,
@@ -190,15 +195,7 @@ export const loadMoreCategoryProducts = (catId: number) => async (dispatch: AppD
 	}))
 }
 
-export const subscribeToNewsletterAction = (email: string) => async () => {
-	try {
-		await axios.post("/api/newsletter", {email});
-		alert("You've subscribed newsletter");
-	}
-	catch(e) {
-		alert("Failed to subscribe. Try again later.")
-	}
-}
+//Products
 
 export const loadProductByIdAction = (id: string) => async (dispatch: AppDispatch) => {
 	try {
@@ -283,6 +280,27 @@ export const loadProductReviewsAction = (id: string) => async (dispatch: AppDisp
 	}
 }
 
+interface IReviewToPublish extends IReview {
+	email: string
+}
+
+export const publishReviewAction = (productId: string, review: IReviewToPublish) => async (dispatch: AppDispatch) => {
+	
+	try {
+		const savedReview = (await axios.post(`api/product/${productId}/reviews`, {review})).data;
+
+		dispatch(productReviewsLoaded({
+			id: productId,
+			reviews: [savedReview]
+		}));
+	}
+	catch(e: any) {
+		if(!e.response) throw e;
+
+		alert("Failed to publish review. Try again later.");
+	}
+}
+
 //Cart
 
 export const loadCartAction = () => async (dispatch: AppDispatch) => {
@@ -352,10 +370,6 @@ export const emptyCartAction = () => async (dispatch: AppDispatch) => {
 	}
 }
 
-interface IReviewToPublish extends IReview {
-	email: string
-}
-
 export const loadCartProductsAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
 	const state = getState();
 	const cartProducts = cartProductsSelector(state);
@@ -388,23 +402,6 @@ export const loadCartProductsAction = () => async (dispatch: AppDispatch, getSta
 		}
 
 		dispatch(cartProductsLoadError(e));
-	}
-}
-
-export const publishReviewAction = (productId: string, review: IReviewToPublish) => async (dispatch: AppDispatch) => {
-	
-	try {
-		const savedReview = (await axios.post(`api/product/${productId}/reviews`, {review})).data;
-
-		dispatch(productReviewsLoaded({
-			id: productId,
-			reviews: [savedReview]
-		}));
-	}
-	catch(e: any) {
-		if(!e.response) throw e;
-
-		alert("Failed to publish review. Try again later.");
 	}
 }
 
@@ -1080,4 +1077,16 @@ export const loadCollectionDataByUrlName = (url: string, sort?: string) => (disp
 	const state = getState();
 
 	dispatch(loadCollectionData(state.collections[url].id, sort));
+}
+
+//Other
+
+export const subscribeToNewsletterAction = (email: string) => async () => {
+	try {
+		await axios.post("/api/newsletter", {email});
+		alert("You've subscribed newsletter");
+	}
+	catch(e) {
+		alert("Failed to subscribe. Try again later.")
+	}
 }
