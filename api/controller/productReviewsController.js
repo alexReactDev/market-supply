@@ -37,6 +37,7 @@ class ProductReviewsController {
 			product = (await db.query("SELECT * FROM products where id = $1;", [id])).rows[0];
 		}
 		catch(e) {
+			console.log(e);
 			return res.sendStatus(500);
 		}
 
@@ -49,10 +50,14 @@ class ProductReviewsController {
 			[data.title, data.text, data.rate, data.timestamp, product.id])).rows[0];
 		}
 		catch(e) {
+			console.log(e);
 			return res.sendStatus(500);
 		}
 		
-		res.send(review);
+		res.send({
+			...review,
+			timestamp: +review.timestamp
+		});
 	}
 }
 

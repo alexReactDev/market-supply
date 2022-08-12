@@ -14,17 +14,17 @@ const PublishReview: FC<IProps> = ({ className="", productId }) => {
 
 	const dispatch = useAppDispatch();
 
-	const [rate, changeRate] = useState(0);
 	const [rateError, setRateError] = useState("");
 
 	const formik = useFormik({
 		initialValues: {
 			name: "",
 			email: "",
-			text: ""
+			text: "",
+			rate: 0
 		},
 		onSubmit(values) {
-			if(rate === 0) {
+			if(values.rate === 0) {
 				setRateError("Rate required");
 				return;
 			}
@@ -32,7 +32,6 @@ const PublishReview: FC<IProps> = ({ className="", productId }) => {
 			dispatch(publishReviewAction(productId, {
 				...values,
 				title: values.name,
-				rate,
 				timestamp: new Date().getTime()
 			}));
 
@@ -127,7 +126,7 @@ const PublishReview: FC<IProps> = ({ className="", productId }) => {
 					: 
 					null
 				}
-				<SetRate onRate={(r) => {changeRate(r); setRateError("")}} />
+				<SetRate onRate={(r) => {formik.setFieldValue("rate", r); setRateError("")}} rate={formik.values.rate} />
 				<span className={style.publishReview__submit}>
 					<input
 						type="submit"

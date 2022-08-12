@@ -281,13 +281,17 @@ export const loadProductReviewsAction = (id: string) => async (dispatch: AppDisp
 }
 
 interface IReviewToPublish extends IReview {
-	email: string
+	email: string,
+	title: string,
+	text: string,
+	rate: number,
+	timestamp: number
 }
 
 export const publishReviewAction = (productId: string, review: IReviewToPublish) => async (dispatch: AppDispatch) => {
 	
 	try {
-		const savedReview = (await axios.post(`api/product/${productId}/reviews`, {review})).data;
+		const savedReview = (await axios.post(`api/product/reviews/${productId}`, review)).data;
 
 		dispatch(productReviewsLoaded({
 			id: productId,

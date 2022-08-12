@@ -3,26 +3,41 @@ import style from "./setRate.module.scss";
 
 interface IProps {
 	className?: string,
-	initialRate?: number,
+	rate: number,
 	onRate: (r: number) => void
 }
 
-const SetRate: FC<IProps> = ({ className="", onRate, initialRate }) => {
+const SetRate: FC<IProps> = ({ className="", onRate, rate }) => {
 
-	const [rate, setRate] = useState(initialRate || 0);
-
-	const rateHandler = (r: number) => {
-		setRate(r);
-		onRate(r);
-	}
+	const [visualRate, setVisualRate] = useState(0);
 
 	return(
 		<div className={`${className} ${style.rate}`}>
-			<span className={`${style.rate__star} ${rate >= 1 ? style.rate__star_active : ""}`} onClick={() => rateHandler(1)} />
-			<span className={`${style.rate__star} ${rate >= 2 ? style.rate__star_active : ""}`} onClick={() => rateHandler(2)} />
-			<span className={`${style.rate__star} ${rate >= 3 ? style.rate__star_active : ""}`} onClick={() => rateHandler(3)} />
-			<span className={`${style.rate__star} ${rate >= 4 ? style.rate__star_active : ""}`} onClick={() => rateHandler(4)} />
-			<span className={`${style.rate__star} ${rate >= 5 ? style.rate__star_active : ""}`} onClick={() => rateHandler(5)} />
+			<span className={`${style.rate__star} ${visualRate >= 1 ? style.rate__star_active : rate >= 1 && !visualRate ? style.rate__star_active : ""}`} 
+			onClick={() => onRate(1)} 
+			onMouseEnter={() => setVisualRate(1)}
+			onMouseLeave={() => setVisualRate(0)}
+			/>
+			<span className={`${style.rate__star} ${visualRate >= 2 ? style.rate__star_active : rate >= 2 && !visualRate ? style.rate__star_active : ""}`} 
+			onClick={() => onRate(2)} 
+			onMouseEnter={() => setVisualRate(2)}
+			onMouseLeave={() => setVisualRate(0)}
+			/>
+			<span className={`${style.rate__star} ${visualRate >= 3 ? style.rate__star_active : rate >= 3 && !visualRate ? style.rate__star_active : ""}`} 
+			onClick={() => onRate(3)} 
+			onMouseEnter={() => setVisualRate(3)}
+			onMouseLeave={() => setVisualRate(0)}
+			/>
+			<span className={`${style.rate__star} ${visualRate >= 4 ? style.rate__star_active : rate >= 4 && !visualRate ? style.rate__star_active : ""}`} 
+			onClick={() => onRate(4)} 
+			onMouseEnter={() => setVisualRate(4)}
+			onMouseLeave={() => setVisualRate(0)}
+			/>
+			<span className={`${style.rate__star} ${visualRate >= 5 ? style.rate__star_active : rate >= 5 && !visualRate ? style.rate__star_active : ""}`} 
+			onClick={() => onRate(5)} 
+			onMouseEnter={() => setVisualRate(5)}
+			onMouseLeave={() => setVisualRate(0)}
+			/>
 		</div>
 	)
 }
