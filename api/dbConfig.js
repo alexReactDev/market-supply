@@ -90,7 +90,7 @@ async function createProduct(catURL) {
 
 	const product = (await db.query("INSERT INTO products (id, web_id, name, price, old_price, rate, is_new) values($1, $2, $3, $4, $5, $6, $7) RETURNING *;", [id, webId, name, price, oldPrice, rate, isNew])).rows[0];
 
-	for (let i = 0; i < lodash.random(1, 7); i++) {
+	for (let i = 0; i < 7; i++) {
 		await db.query("INSERT INTO products_pictures (product_id, picture) values($1, $2);", [product.id, picture]);
 	}
 

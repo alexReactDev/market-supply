@@ -176,7 +176,7 @@ const MyAccount: FC<{}> = () => {
 					:
 					orders.orders.map((order) => {
 						return(
-							<div key={order.webId} className={style.orders__item}>
+							<div key={order.id} className={style.orders__item}>
 								<div className={`${style.orders__order} ${style.order}`}>
 									<div className={style.order__picture}>
 										<img className={style.order__img} src={order.picture} alt={order.name} onError={(e: any) => e.target.src = imgPlaceholder} />
