@@ -2,23 +2,24 @@ import { FC, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { loadMoreSearchResultsAction, searchRequestAction } from "../../redux/actions";
-import { searchProductsWithPropsSelector, searchSelector, URLLocationSelector, URLPathEndSelector } from "../../redux/selectors";
+import { searchProductsWithPropsSelector, searchSelector, URLLocationSelector, URLSearchQuerySelector } from "../../redux/selectors";
 import Loader from "../Loader";
 import Price from "../Price";
 import Rate from "../Rate";
 import style from "./searchPage.module.scss";
+import picturePlaceholder from "../../images/products/placeholder.png";
 
 const SearchPage: FC<{}> = () => {
 
 	const search = useAppSelector(searchSelector);
 	const searchProducts = useAppSelector(searchProductsWithPropsSelector);
-	const query = useAppSelector(URLPathEndSelector);
+	const query = useAppSelector(URLSearchQuerySelector);
 	const page = +useAppSelector(URLLocationSelector).query.page;
 	
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		if(!search.loaded && !search.loading && !search.error) {
+		if(!search.loaded && !search.loading && !search.error && query) {
 			dispatch(searchRequestAction(query, page));
 		}
 	}, [search.loaded, search.loading, search.error])
@@ -49,7 +50,9 @@ const SearchPage: FC<{}> = () => {
 						return(
 							<li key={product.productId} className={`${style.search__item} ${style.item}`}>
 								<div className={style.item__picture}>
-									<img className={style.item__img} src={product.pictures[0]} alt={product.name} />
+									<Link to={`/product/${product.productId}`} className="nav-link" >
+										<img className={style.item__img} src={product.pictures[0]} alt={product.name} onError={(e: any) => e.target.src = picturePlaceholder} />
+									</Link>
 								</div>
 								<div className={style.item__info}>
 									<h3 className={style.item__name}>

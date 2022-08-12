@@ -66,6 +66,14 @@ export const URLPathEndSelector = (state: AppState) => {
 	return urlEnd;
 }
 
+export const URLSearchQuerySelector = (state: AppState) => {
+	const path = URLPathSelector(state);
+
+	if(!path.startsWith("/search")) return null;
+
+	return URLLocationSelector(state).query.q;
+}
+
 export const foldersWithItemsSelector = (state: AppState) => {
 	const folders = foldersSelector(state);
 

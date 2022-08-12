@@ -912,7 +912,7 @@ export const searchRequestAction = (searchQuery: string, page?: number) => async
 	dispatch(searchRequest(searchQuery));
 
 	try {
-		const searchResult = (await axios.get(`api/search/${searchQuery}?page=${page ? page : 1}`)).data as searchDataLoadedAction;
+		const searchResult = (await axios.get(`api/search/?q=${searchQuery}&page=${page ? page : 1}`)).data as searchDataLoadedAction;
 
 		const state = getState();
 		const products = productsSelector(state);
@@ -932,7 +932,7 @@ export const searchRequestAction = (searchQuery: string, page?: number) => async
 		}))
 
 		dispatch(searchDataLoaded(searchResult));
-		dispatch(push(`/search/${searchResult.search}?page=${searchResult.page}`));
+		dispatch(push(`/search/?q=${searchResult.search}&page=${searchResult.page}`));
 	}
 	catch(e: any) {
 		if(!e.response) {
@@ -951,7 +951,7 @@ export const loadMoreSearchResultsAction = () => async (dispatch: AppDispatch, g
 	dispatch(searchDataLoading());
 
 	try {
-		const searchResult = (await axios.get(`/api/search/${search.search}?page=${search.page + 1}`)).data as searchDataLoadedAction;
+		const searchResult = (await axios.get(`/api/search/?q=${search.search}&page=${search.page + 1}`)).data as searchDataLoadedAction;
 
 		const state = getState();
 		const products = productsSelector(state);

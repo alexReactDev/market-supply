@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { searchRequestAction } from "../../redux/actions";
 import { searchSelector } from "../../redux/selectors";
@@ -22,6 +22,15 @@ const Search: FC<IProps> = ({ className='' }) => {
 			dispatch(searchRequestAction(values.search));
 		}
 	})
+
+	useEffect(() => {
+		if(search.loaded) formik.setFieldValue("search", "");
+		console.log("test");
+	}, [search.loaded])
+
+	useEffect(() => {
+		if(search.search && search.loading) formik.setFieldValue("search", search.search);
+	}, [search.search, search.loading])
 
 	return (
 		<form className={`${className} ${style.search}`} onSubmit={formik.handleSubmit} >
