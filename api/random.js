@@ -86,12 +86,14 @@ async function createProduct(catURL) {
 
 	if(isNew) isNew = lodash.random(1) ? false : true;
 
-	const picture = `/images/${catURL}/${lodash.random(1, 20)}.jpg`;
+	const picture = `/images/${catURL}/${lodash.random(1, 20)}.webp`;
 
 	const product = (await db.query("INSERT INTO products (id, web_id, name, price, old_price, rate, is_new) values($1, $2, $3, $4, $5, $6, $7) RETURNING *;", [id, webId, name, price, oldPrice, rate, isNew])).rows[0];
 
-	for (let i = 0; i < 7; i++) {
-		await db.query("INSERT INTO products_pictures (product_id, picture) values($1, $2);", [product.id, picture]);
+	await db.query("INSERT INTO products_pictures (product_id, picture) values($1, $2);", [product.id, picture]);
+
+	for (let i = 2; i < 8; i++) {
+		await db.query("INSERT INTO products_pictures (product_id, picture) values($1, $2);", [product.id, `/images/products/${i}.png`]);
 	}
 
 	if(isNew) {
