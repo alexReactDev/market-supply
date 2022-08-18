@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../hooks";
 import { collectionsSelector, foldersWithItemsSelector } from "../../redux/selectors";
+import Burger from "../Burger";
 import style from './topNav.module.scss';
 
 interface IProps {
@@ -21,9 +22,7 @@ const TopNav: FC<IProps> = ({ className='' }) => {
 				<ul className={style.navbar__items}>
 					<li className={`${style.navbar__hiddenMenu} ${style.hiddenMenu}`}>
 						<div className={`${style.hiddenMenu__modal} ${menuOpen ? style.hiddenMenu__modal_visible : ""}`} onClick={() => setMenuOpen(false)} />
-						<div className={`${style.hiddenMenu__burger} ${menuOpen ? style.hiddenMenu__burger_active : ""}`} onClick={() => setMenuOpen(!menuOpen)}>
-							<span />
-						</div>
+						<Burger className={style.hiddenMenu__burger} active={menuOpen} onClick={() => setMenuOpen(!menuOpen)} />
 						<div className={`${style.hiddenMenu__body} ${menuOpen ? style.hiddenMenu__body_visible : ""}`}>
 							{
 								folders.map((folder) => {

@@ -35,60 +35,10 @@
 }
 
 .hiddenMenu__burger {
-	position: relative;
 	width: 27px;
 	height: 20px;
 	z-index: 10;
 	margin-left: 5px;
-
-	&::before, &::after, & span {
-		display: block;
-		position: absolute;
-		width: 100%;
-		height: 2px;
-		background-color: $white;
-	}
-
-	&::before, &::after {
-		content: '';
-	}	
-
-	&::before {
-		top: 0px;
-		transition-duration: 0.6s;
-	}
-	
-	& span {
-		top: calc(50% - 1px);
-		transition-duration: 0.7s;
-	}
-	
-	&::after {
-		bottom: 0px;
-		transition-duration: 0.6s;
-	}
-}
-
-.hiddenMenu__burger_active {
-	& span {
-		opacity: 0;
-		visibility: hidden;
-		transition-duration: 0s;
-	}
-
-	&::before {
-		transform: rotate(-45deg);
-		top: calc(50% - 1px);
-		transition-property: transform;
-		transition-duration: 0.3s;
-	}
-
-	&::after {
-		transform: rotate(45deg);
-		bottom: calc(50% - 1px);
-		transition-property: transform;
-		transition-duration: 0.4s;
-	}
 }
 
 .hiddenMenu__body {
