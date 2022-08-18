@@ -5,7 +5,6 @@ import { logoutAction } from "../../redux/actions";
 import { setMenuClosed, setMenuOpen } from "../../redux/reducer/menu";
 import { cartAmountSelector, loggedInSelector, menuOpenSelector, whitelistAmountSelector } from "../../redux/selectors";
 import Burger from "../Burger";
-import Links from "../Links";
 import Logo from "../Logo";
 import MiniCart from "../MiniCart";
 import Search from "../Search";

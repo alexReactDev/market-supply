@@ -20,6 +20,7 @@
 
 .burger::before {
 	top: 0px;
+	transition-duration: 0.5s;
 }
 
 .burger__stripe {
@@ -28,6 +29,7 @@
 
 .burger::after {
 	bottom: 0px;
+	transition-duration: 0.5s;
 }
 
 .burger_active {
@@ -41,10 +43,12 @@
 
 	&::before {
 		transform: rotate(-45deg);
+		transition-duration: 0.3s;
 	}
 
 	&::after {
 		transform: rotate(45deg);
+		transition-duration: 0.3s;
 	}
 }
 
