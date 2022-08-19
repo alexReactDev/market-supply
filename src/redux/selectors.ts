@@ -54,6 +54,8 @@ export const menuOpenSelector = (state: AppState) => state.menu.isOpen;
 
 export const outletsSelector = (state: AppState) => state.outlets;
 
+export const popupSelector = (state: AppState) => state.popup;
+
 export const cartAmountSelector = (state: AppState) => Array.from(Object.keys(cartProductsSelector(state))).length;
 
 export const whitelistAmountSelector = (state: AppState) => Array.from(Object.keys(whitelistProductsSelector(state))).length;

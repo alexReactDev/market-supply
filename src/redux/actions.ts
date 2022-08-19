@@ -24,6 +24,7 @@ import { searchDataLoaded, searchDataLoadedAction, searchDataLoading, searchErro
 import { foldersLoaded, IFolder } from "./reducer/folders";
 import { collectionDataLoaded, collectionLoaded, collectionLoadError, collectionLoadStart, collectionsListLoaded } from "./reducer/collections";
 import { outletsLoadError, outletsLoadStart, outletsLoadSuccess } from "./reducer/outlets";
+import { displayPopup } from "./reducer/popup";
 
 
 //Initialization
@@ -301,7 +302,7 @@ export const publishReviewAction = (productId: string, review: IReviewToPublish)
 	catch(e: any) {
 		if(!e.response) throw e;
 
-		alert("Failed to publish review. Try again later.");
+		dispatch(displayPopup("Failed to publish review. Try again later."));
 	}
 }
 
@@ -476,7 +477,7 @@ export const confirmCheckoutAction = () => async (dispatch: AppDispatch, getStat
 
 		dispatch(checkoutSuccess());
 		dispatch(emptyCart());
-		alert("Thanks for order");
+		dispatch(displayPopup("Thanks for order"));
 	}
 	catch(e: any) {
 		if(!e.response) {
@@ -804,7 +805,7 @@ export const editProfileAction = (profileData: {[key: string]: string | null}) =
 		dispatch(userDataLoaded(newUserData));
 		dispatch(editProfileSuccess());
 		dispatch(push("/account"));
-		alert("Profile data successfully changed");
+		dispatch(displayPopup("Profile data successfully changed"));
 	}
 	catch(e: any) {
 		if(!e.response) {
@@ -828,7 +829,7 @@ export const editEmailAction = (data: {email: string, password: string}) => asyn
 		dispatch(editEmailSuccess());
 		dispatch(userDataLoaded(updatedUserData));
 		dispatch(push("/account"));
-		alert("Email successfully changed");
+		dispatch(displayPopup("Email successfully changed"));
 	}
 	catch(e: any) {
 		if(!e.response) {
@@ -851,7 +852,7 @@ export const editPasswordAction = (data: {oldPassword: string, newPassword: stri
 		dispatch(editPasswordSuccess());
 		await dispatch(logoutAction());
 		dispatch(push("/login"));
-		alert("Password successfully changed");
+		dispatch(displayPopup("Password successfully changed"));
 	}
 	catch(e: any) {
 		if(!e.response) {
@@ -875,7 +876,7 @@ export const deleteAccountAction = (password: string) => async (dispatch: AppDis
 		dispatch(deleteAccountSuccess());
 		await dispatch(logoutAction());
 		dispatch(push("/"));
-		alert("Account successfully deleted");
+		dispatch(displayPopup("Account successfully deleted"));
 	}
 	catch(e: any) {
 		if(!e.response) {
@@ -1085,12 +1086,12 @@ export const loadCollectionDataByUrlName = (url: string, sort?: string) => (disp
 
 //Other
 
-export const subscribeToNewsletterAction = (email: string) => async () => {
+export const subscribeToNewsletterAction = (email: string) => async (dispatch: AppDispatch) => {
 	try {
 		await axios.post("/api/newsletter", {email});
-		alert("You've subscribed newsletter");
+		dispatch(displayPopup("Thanks for subscription"));
 	}
 	catch(e) {
-		alert("Failed to subscribe. Try again later.")
+		dispatch(displayPopup("Failed to subscribe. Try again later."));
 	}
 }

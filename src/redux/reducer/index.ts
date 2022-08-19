@@ -26,6 +26,7 @@ import menu from "./menu";
 import folders from "./folders";
 import collections from "./collections";
 import outlets from "./outlets";
+import popup from "./popup";
 
 const rootReducer = combineReducers({
 	router: connectRouter(history),
@@ -52,7 +53,8 @@ const rootReducer = combineReducers({
 	menu,
 	folders,
 	collections,
-	outlets
+	outlets,
+	popup
 })
 
 export default rootReducer;
