@@ -11,7 +11,7 @@ const ErrorPage: FC<{}> = () => {
 				Ooops... something went wrong
 			</h2>
 			<div className={style.error__picture}>
-				<img className={style.error__img} src={img} />
+				<img className={style.error__img} src={img} alt="error" />
 			</div>
 			<Link to="/" className={style.error__link} >
 				Get back to homepage
