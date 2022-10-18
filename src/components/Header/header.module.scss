@@ -70,10 +70,11 @@
 
 .links__amount {
 	position: absolute;
-	width: 20px;
-	height: 20px;
-	top: -13px;
-	right: -16px;
+	width: 0px;
+	height: 0px;
+	top: -3px;
+	right: -6px;
+	overflow: hidden;
 	border-radius: 50%;
 	display: flex;
 	justify-content: center;
@@ -81,6 +82,19 @@
 	color: $white;
 	font-size: 10px;
 	background-color: rgb(134, 44, 44);
+	transition-property: width, height, top, right;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-out;
+}
+
+.links__amount_visible {
+	width: 20px;
+	height: 20px;
+	top: -13px;
+	right: -16px;
+	transition-property: width, height, top, right;
+	transition-duration: 0.3s;
+	transition-timing-function: ease-in;
 }
 
 .links__logoutBtn {

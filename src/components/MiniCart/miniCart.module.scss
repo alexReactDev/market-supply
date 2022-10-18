@@ -21,10 +21,11 @@
 
 .cart__amount {
 	position: absolute;
-	width: 20px;
-	height: 20px;
-	top: -4px;
-	right: -4px;
+	width: 0px;
+	height: 0px;
+	top: 6px;
+	right: 6px;
+	overflow: hidden;
 	border-radius: 50%;
 	display: flex;
 	justify-content: center;
@@ -32,6 +33,19 @@
 	color: $white;
 	font-size: 10px;
 	background-color: rgb(134, 44, 44);
+	transition-property: width, height, top, right;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-out;
+}
+
+.cart__amount_visible {
+	width: 20px;
+	height: 20px;
+	top: -4px;
+	right: -4px;
+	transition-property: width, height, top, right;
+	transition-duration: 0.3s;
+	transition-timing-function: ease-in;
 }
 
 .cart__body {

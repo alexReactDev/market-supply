@@ -18,17 +18,10 @@ const MiniCart: FC<IProps> = ({ className='' }) => {
 	return (
 		<Link className={`${className} ${style.cart} nav-link`} to="/cart">
 			<div className={style.cart__picture}>
-				{
-					amount > 0
-					?
-					<div className={style.cart__amount}>
-						{amount}
-					</div>
-					:
-					null
-				}
-				
-				<img src={cartIcon} alt='cartIcon' />
+			<div className={`${style.cart__amount} ${amount > 0 ? style.cart__amount_visible : ""}`}>
+				{amount}
+			</div>
+			<img src={cartIcon} alt='cartIcon' />
 			</div>
 			<div className={style.cart__body}>
 				<h4 className={style.cart__title}>

@@ -52,29 +52,17 @@ const Header: FC<{}> = () => {
 							</li>
 							<li className={style.links__link}>
 								<Link to={"/whitelist"} className={`${style.links__text} nav-link`}>
-									{
-										whitelistAmount > 0
-										?
-										<div className={style.links__amount}>
-											{whitelistAmount}
-										</div>	
-										:
-										null
-									}
+									<div className={`${style.links__amount} ${whitelistAmount > 0 ? style.links__amount_visible : ""}`}>
+										{whitelistAmount}
+									</div>	
 									Wishlist
 								</Link>
 							</li>
 							<li className={style.links__link}>
 								<Link to={"/cart"} className={`${style.links__text} nav-link`}>
-									{
-										cartAmount > 0
-										?
-										<div className={style.links__amount}>
-											{cartAmount}
-										</div>	
-										:
-										null
-									}
+									<div className={`${style.links__amount} ${cartAmount > 0 ? style.links__amount_visible : ""}`}>
+										{cartAmount}
+									</div>	
 									Cart
 								</Link>
 							</li>
