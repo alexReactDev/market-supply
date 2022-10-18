@@ -90,6 +90,8 @@ export const initialize = () => async (dispatch: AppDispatch) => {
 
 	await dispatch(loadWishlistAction());
 
+	await dispatch(loadUserPreferencesAction());
+
 	dispatch(init());
 }
 
@@ -889,6 +891,22 @@ export const deleteAccountAction = (password: string) => async (dispatch: AppDis
 }
 
 //Preferences
+
+export const loadUserPreferencesAction = () => async (dispatch: AppDispatch, getState: () => AppState) => {
+	let preferences;
+
+	try {
+		preferences = (await axios.get("/api/preferences")).data;
+	}
+	catch(e: any) {
+		if(!e.response) {
+			dispatch(generalError(e));
+			throw e;
+		}
+	}
+
+	dispatch(preferencesLoaded(preferences));
+}
 
 export const changePreferenceAutoFillAction = (autofill: boolean) => async (dispatch: AppDispatch) => {
 	let preferences;
