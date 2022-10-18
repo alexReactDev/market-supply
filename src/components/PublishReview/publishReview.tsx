@@ -1,7 +1,8 @@
 import { FormikValues, useFormik } from "formik";
-import { FC, useState } from "react";
-import { useAppDispatch } from "../../hooks";
-import { publishReviewAction } from "../../redux/actions";
+import { FC, useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { loadUserDataAction, publishReviewAction } from "../../redux/actions";
+import { loggedInSelector, preferencesSelector, userDataSelector } from "../../redux/selectors";
 import SetRate from "../SetRate";
 import style from "./publishReview.module.scss";
 
@@ -12,9 +13,37 @@ interface IProps {
 
 const PublishReview: FC<IProps> = ({ className="", productId }) => {
 
+	const userData = useAppSelector(userDataSelector);
+	const profileData = userData.userData;
+	const preferences = useAppSelector(preferencesSelector);
+	const loggedIn = useAppSelector(loggedInSelector);
+
 	const dispatch = useAppDispatch();
 
 	const [rateError, setRateError] = useState("");
+
+	useEffect(() => {
+		if(
+			loggedIn 
+			&& preferences.auto_fill 
+			&& !profileData.loaded 
+			&& !profileData.loading 
+			&& !profileData.error
+		) {
+			dispatch(loadUserDataAction());
+		}
+	}, [loggedIn, preferences, profileData]);
+
+	useEffect(() => {
+		if(
+			loggedIn
+			&& preferences.auto_fill
+			&& userData.loaded
+		) {
+			if(!formik.touched.name) formik.setFieldValue("name", profileData.name);
+			if(!formik.touched.email) formik.setFieldValue("email", profileData.email);
+		}
+	}, [userData.loaded, preferences.auto_fill, loggedIn]);
 
 	const formik = useFormik({
 		initialValues: {

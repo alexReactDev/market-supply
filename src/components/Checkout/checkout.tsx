@@ -51,7 +51,7 @@ const Checkout: FC<{}> = () => {
 		) {
 			dispatch(loadUserDataAction());
 		}
-	}, []);
+	}, [loggedIn, preferences, profileData]);
 
 	useEffect(() => {
 		if(
@@ -69,7 +69,7 @@ const Checkout: FC<{}> = () => {
 			if(!formik.touched.town) formik.setFieldValue("town", profileData.town);
 			if(!formik.touched.zip) formik.setFieldValue("zip", profileData.zip);
 		}
-	}, [userData.loaded, preferences.auto_fill, loggedIn])
+	}, [userData.loaded, preferences.auto_fill, loggedIn]);
 
 	useEffect(() => () => {
 			dispatch(cancelCheckoutConfirmationAction());
