@@ -49,7 +49,7 @@ const HomePage: FC<{}> = () => {
 
 	return(
 		<div className={style.homePage}>
-			<Banner className={style.homePage__item} src={banner1} />
+			<Banner className={style.homePage__item} src={banner1} href="/categories/clothing/subcategory-1" />
 			<Carousel 
 				className={style.homePage__item} 
 				title="NEW PRODUCTS" 
@@ -70,7 +70,7 @@ const HomePage: FC<{}> = () => {
 				autoplay={true} 
 				link="/collections/latest"
 			/>
-			<Banner className={style.homePage__item} src={banner4} />
+			<Banner className={style.homePage__item} src={banner4} href="/categories/electronics/subcategory-1" />
 			<CarouselMiniatures 
 				className={style.homePage__item}
 				title="FEATURED PRODUCTS"
