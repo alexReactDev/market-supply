@@ -97,8 +97,8 @@ const EditProfile: FC<{}> = () => {
 					<input
 						type="text"
 						className={style.userData__input}
-						id="surnname"
-						name="surnname"
+						id="surname"
+						name="surname"
 						placeholder="Surname"
 						disabled={data.loading}
 						value={formik.values.surname}
