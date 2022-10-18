@@ -14,7 +14,9 @@ class PreferencesController {
 			return res.sendStatus(500);
 		}
 
-		res.send(preferences);
+		let {person_id, ...pref} = preferences;
+
+		return res.send(pref);
 	}
 
 	async changeAutoFill(req, res) {
@@ -30,7 +32,9 @@ class PreferencesController {
 			return res.sendStatus(500);
 		}
 
-		res.send(alteredPreferences);
+		let {person_id, ...pref} = alteredPreferences;
+
+		return res.send(pref);
 	}
 
 	async changeCurrency(req, res) {
@@ -47,7 +51,9 @@ class PreferencesController {
 			return res.sendStatus(500);
 		}
 
-		res.send(alteredPreferences);
+		let {person_id, ...pref} = alteredPreferences;
+
+		return res.send(pref);
 	}
 }
 

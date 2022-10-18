@@ -57,6 +57,13 @@ class UserController {
 			return res.sendStatus(500);
 		}
 
+		try {
+			await(db.query("INSERT INTO users_preferences (person_id) values($1);", [userPersonId]));
+		}
+		catch(e) {
+			return res.sendStatus(500);
+		}
+
 		const tokenData = {
 			authorized: true,
 			userId: createdUser.id,

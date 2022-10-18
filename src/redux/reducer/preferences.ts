@@ -2,11 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { LOGOUT } from "../../constants";
 
 interface IState {
-	autoFill: boolean
+	auto_fill: boolean,
+	currency: string
 }
 
 const initialState: IState = {
-	autoFill: false
+	auto_fill: false,
+	currency: "USD"
 }
 
 const preferencesSlice = createSlice({

@@ -28,7 +28,7 @@ const MyAccount: FC<{}> = () => {
 	const profileData = userData.userData;
 
 	function changeAutofill() {
-		dispatch(changePreferenceAutoFillAction(!preferences.autoFill));
+		dispatch(changePreferenceAutoFillAction(!preferences.auto_fill));
 	}
 
 	if(!loggedIn) return <Redirect to="/login"/>
@@ -99,7 +99,7 @@ const MyAccount: FC<{}> = () => {
 					</span>
 					<input
 						type="checkbox"
-						checked={preferences.autoFill}
+						checked={preferences.auto_fill}
 						onChange={() => changeAutofill()}
 					/>
 					<span className={style.hint}>

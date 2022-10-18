@@ -44,7 +44,7 @@ const Checkout: FC<{}> = () => {
 	useEffect(() => {
 		if(
 			loggedIn 
-			&& preferences.autoFill 
+			&& preferences.auto_fill 
 			&& !profileData.loaded 
 			&& !profileData.loading 
 			&& !profileData.error
@@ -56,20 +56,20 @@ const Checkout: FC<{}> = () => {
 	useEffect(() => {
 		if(
 			loggedIn
-			&& preferences.autoFill
+			&& preferences.auto_fill
 			&& userData.loaded
 		) {
 			if(!formik.touched.name) formik.setFieldValue("name", profileData.name);
 			if(!formik.touched.surname) formik.setFieldValue("surname", profileData.surname);
 			if(!formik.touched.phone) formik.setFieldValue("phone", profileData.phone);
 			if(!formik.touched.email) formik.setFieldValue("email", profileData.email);
-			if(!formik.touched.apartment_no) formik.setFieldValue("apartment", profileData.apartment);
+			if(!formik.touched.apartment_no) formik.setFieldValue("apartment_no", profileData.apartment);
 			if(!formik.touched.house) formik.setFieldValue("house", profileData.house);
 			if(!formik.touched.street) formik.setFieldValue("street", profileData.street);
 			if(!formik.touched.town) formik.setFieldValue("town", profileData.town);
 			if(!formik.touched.zip) formik.setFieldValue("zip", profileData.zip);
 		}
-	}, [userData.loaded])
+	}, [userData.loaded, preferences.auto_fill, loggedIn])
 
 	useEffect(() => () => {
 			dispatch(cancelCheckoutConfirmationAction());
@@ -270,6 +270,7 @@ const Checkout: FC<{}> = () => {
 							disabled={checkoutData.loading}
 							value={formik.values.name}
 							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
 						/>
 					</span>
 					<span className={style.checkout__field}>
@@ -282,6 +283,7 @@ const Checkout: FC<{}> = () => {
 							disabled={checkoutData.loading}
 							value={formik.values.surname}
 							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
 						/>
 					</span>
 					<span className={style.checkout__field}>
@@ -294,6 +296,7 @@ const Checkout: FC<{}> = () => {
 							disabled={checkoutData.loading}
 							value={formik.values.phone}
 							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
 						/>
 					</span>
 					<span className={style.checkout__field}>
@@ -306,6 +309,7 @@ const Checkout: FC<{}> = () => {
 							disabled={checkoutData.loading}
 							value={formik.values.email}
 							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
 						/>
 					</span>
 				</div>
@@ -395,6 +399,7 @@ const Checkout: FC<{}> = () => {
 								disabled={checkoutData.loading}
 								value={formik.values.apartment_no}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 							/>
 						</span>
 						<span className={style.checkout__field}>
@@ -407,6 +412,7 @@ const Checkout: FC<{}> = () => {
 								disabled={checkoutData.loading}
 								value={formik.values.house}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 							/>
 						</span>
 						<span className={style.checkout__field}>
@@ -419,6 +425,7 @@ const Checkout: FC<{}> = () => {
 								disabled={checkoutData.loading}
 								value={formik.values.street}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 							/>
 						</span>
 						<span className={style.checkout__field}>
@@ -431,6 +438,7 @@ const Checkout: FC<{}> = () => {
 								disabled={checkoutData.loading}
 								value={formik.values.town}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 							/>
 						</span>
 						<span className={style.checkout__field}>
@@ -443,6 +451,7 @@ const Checkout: FC<{}> = () => {
 								disabled={checkoutData.loading}
 								value={formik.values.zip}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 							/>
 						</span>
 						<span className={style.checkout__field}>
@@ -455,6 +464,7 @@ const Checkout: FC<{}> = () => {
 								disabled={checkoutData.loading}
 								value={formik.values.preferableDate}
 								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
 							/>
 						</span>
 					</div>
