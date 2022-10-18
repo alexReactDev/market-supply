@@ -27,6 +27,17 @@
 	}
 }
 
+.links__linkText {
+	&:hover {
+		text-decoration: underline;
+		color: $fontCLightHover;
+	}
+
+	&:active {
+		color: $fontCLightActive;
+	}
+}
+
 @media(max-width: $md2) {
 	.links {
 		flex-wrap: wrap;

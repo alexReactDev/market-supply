@@ -17,7 +17,7 @@ const Links: FC<IProps> = ({ className='', links }) => {
 				links.map((link) => {
 					return(
 						<li className={style.links__link} key={link.link} >
-							<Link className="nav-link" to={link.link}>
+							<Link className={`${style.links__linkText} nav-link`} to={link.link}>
 								{link.text}
 							</Link>
 						</li>

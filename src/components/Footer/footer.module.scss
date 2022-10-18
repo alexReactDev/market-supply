@@ -35,6 +35,15 @@
 	line-height: 2em;
 }
 
+a.footerTop__item:hover {
+	text-decoration: underline;
+	color: $fontCLightHover;
+}
+
+a.footerTop__item:active {
+	color: $fontCLightActive;
+}
+
 .footerTop__item_withIcon {
 	position: relative;
 	padding-left: 30px;
