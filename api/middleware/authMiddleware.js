@@ -1,11 +1,13 @@
 const jwt = require("jsonwebtoken");
 const { createTemporaryUser, updateTemporaryUser } = require("../controller/userController");
+const db = require("../db");
 
 const authMiddleware = (allowUnauthorized) => async (req, res, next) => {
 	const token = req.cookies.jwt;
 
-	let invalidToken;
 	let tokenData;
+	let invalidToken;
+	let userExist;
 	
 	try {
 		tokenData = jwt.verify(token, process.env.JWT_SECRET).data;
@@ -14,7 +16,14 @@ const authMiddleware = (allowUnauthorized) => async (req, res, next) => {
 		if(e) invalidToken = true;
 	}
 
-	if(!token || invalidToken) {
+	try {
+		userExist = (await db.query("SELECT id FROM persons where id = $1;", [tokenData.personId])).rows[0];
+	}
+	catch(e) {
+		console.log(e);
+	}
+
+	if(!token || invalidToken || !userExist) {
 		const tempUser = await createTemporaryUser();
 		const tokenData = {
 			data: {

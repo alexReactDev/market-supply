@@ -250,6 +250,13 @@ class UserController {
 			throw new Error(e);
 		}
 
+		try {
+			await(db.query("INSERT INTO users_preferences (person_id) values($1);", [createdUserPersonId]));
+		}
+		catch(e) {
+			throw new Error(e);
+		}
+
 		return {
 			...createdUser,
 			personId: createdUserPersonId
