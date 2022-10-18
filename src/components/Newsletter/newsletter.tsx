@@ -17,6 +17,7 @@ const Newsletter: FC<IProps> = ({ className="" }) => {
 		},
 		onSubmit(values) {
 			dispatch(subscribeToNewsletterAction(values.email));
+			formik.setFieldValue("email", "");
 		},
 		validate(values) {
 			return values.email ? {} : {email: "Email shouldn't be empty"};
