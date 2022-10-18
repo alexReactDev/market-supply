@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { IoMdArrowDropleftCircle, IoMdArrowDroprightCircle } from "react-icons/io";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
@@ -16,6 +16,12 @@ interface IProps {
 const CarouselMiniatures: FC<IProps> = ({ className="", title, products, autoplay, link }) => {
 
 	const [sliderRef, setRef] = useState<any>(null);
+
+	const sliderConfig = {
+		speed: 900,
+		autoplaySpeed: 4000,
+		autoplay: autoplay
+	}
 	
 	if(products.length === 0) return null;
 
@@ -53,7 +59,7 @@ const CarouselMiniatures: FC<IProps> = ({ className="", title, products, autopla
 					/>
 				</div>
 			</div>
-			<Slider className={style.carousel__slider} ref={(e) => setRef(e)}>
+			<Slider className={style.carousel__slider} ref={(e) => setRef(e)} {...sliderConfig}>
 				{
 					productsChunks.map((productChunk, i) => {
 						return(

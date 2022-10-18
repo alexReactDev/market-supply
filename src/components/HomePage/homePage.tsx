@@ -76,6 +76,7 @@ const HomePage: FC<{}> = () => {
 				title="FEATURED PRODUCTS"
 				products={collections["featured"].products}
 				link="/collections/featured"
+				autoplay={true}
 			/>
 		</div>
 	)
