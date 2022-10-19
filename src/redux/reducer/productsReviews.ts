@@ -60,8 +60,8 @@ const productsReviewsSlice = createSlice({
 			state[id].loading = false;
 			state[id].loaded = true;
 			state[id].reviews = [
-				...state[id].reviews,
-				...reviews
+				...reviews,
+				...state[id].reviews
 			];
 		}
 	}
