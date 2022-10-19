@@ -283,7 +283,7 @@ export const loadProductReviewsAction = (id: string) => async (dispatch: AppDisp
 	}
 }
 
-interface IReviewToPublish extends IReview {
+interface IReviewToPublish {
 	email: string,
 	title: string,
 	text: string,

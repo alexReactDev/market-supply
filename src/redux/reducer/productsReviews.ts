@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface IReview {
+	id: number,
+	product_id: string
 	title: string,
 	rate: number,
 	text: string,
@@ -10,19 +12,24 @@ export interface IReview {
 export interface IProductReviews {
 	id: string,
 	loading: boolean,
+	loaded: boolean,
 	error: any,
 	reviews: IReview[]
 }
 
-interface IProductReviewsLoading extends Pick<IProductReviews, "id" | "loading"> {};
-interface IProductReviewsError extends Pick<IProductReviews, "id" | "error" | "loading"> {};
-
 interface IState {
-	[key: string]: IProductReviews | IProductReviewsLoading | IProductReviewsError
+	[key: string]: IProductReviews
 }
 
-interface IProductReviewsErrorAction extends Pick<IProductReviewsError, "id" | "error"> {};
-interface IProductReviewsLoadedAction extends Omit<IProductReviews, "loading" | "error"> {};
+interface IProductReviewsErrorAction {
+	id: string,
+	error: any
+};
+
+interface IProductReviewsLoadedAction {
+	id: string,
+	reviews: IReview[]
+};
 
 const initialState: IState = {};
 
@@ -35,33 +42,24 @@ const productsReviewsSlice = createSlice({
 
 			state[id] = {
 				id,
-				loading: true
+				loading: true,
+				loaded: false,
+				error: null,
+				reviews: []
 			}
 		}, 
 		productReviewsLoadError(state, action: PayloadAction<IProductReviewsErrorAction>) {
 			const { id, error } = action.payload;
 
-			state[id] = {
-				...state[id],
-				error,
-				loading: false
-			}
+			state[id].error = error;
+			state[id].loading = false;
 		},
 		productReviewsLoaded(state, action: PayloadAction<IProductReviewsLoadedAction>) {
-			const { id, reviews: loadedReviews } = action.payload;
+			const { id, reviews } = action.payload;
 
-			const reviews = [
-				...loadedReviews,
-				//@ts-ignore
-				...state[id].reviews ? state[id].reviews : []
-			]
-
-			state[id] = {
-				id,
-				loading: false,
-				error: null,
-				reviews,
-			}
+			state[id].loading = false;
+			state[id].loaded = true;
+			state[id].reviews = reviews;
 		}
 	}
 })
