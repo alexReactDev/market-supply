@@ -168,6 +168,8 @@
 
 .order__picture {
 	width: 40%;
+	display: block;
+	text-decoration: none;
 }
 
 .order__img {
@@ -184,9 +186,22 @@
 }
 
 .order__name {
+	display: block;
 	margin-bottom: 7.5px;
 	color: $titleC;
 	font-size: $titleFzSmaller;
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: underline;
+		color: $fontCHover;
+	}
+
+	&:active {
+		position: relative;
+		top: 1px;
+		color: $fontCActive;
+	}
 }
 
 .order__webId {

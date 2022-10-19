@@ -178,13 +178,13 @@ const MyAccount: FC<{}> = () => {
 						return(
 							<div key={order.id} className={style.orders__item}>
 								<div className={`${style.orders__order} ${style.order}`}>
-									<div className={style.order__picture}>
+									<a href={`/product/${order.product_id}`} className={style.order__picture}>
 										<img className={style.order__img} src={order.picture} alt={order.name} onError={(e: any) => e.target.src = imgPlaceholder} />
-									</div>
+									</a>
 									<div className={style.order__info}>
-										<h4 className={style.order__name}>
+										<a href={`/product/${order.product_id}`}  className={style.order__name}>
 											{order.name}
-										</h4>
+										</a>
 										<h5 className={style.order__webId}>
 											WebId: {order.webId}
 										</h5>

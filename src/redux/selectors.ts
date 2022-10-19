@@ -128,7 +128,8 @@ export const userOrdersWithProductDataSelector = (state: AppState) => {
 				...orderData,
 				picture: products[product_id].pictures[0],
 				name: products[product_id].name,
-				webId: products[product_id].webId
+				webId: products[product_id].webId,
+				product_id
 			}
 		})
 	}
