@@ -18,7 +18,7 @@ class SearchController {
 
 		const result = matchingProductsIds.slice(process.env.PAGE_LENGTH * page - process.env.PAGE_LENGTH, process.env.PAGE_LENGTH * page);
 
-		res.send({
+		return res.send({
 			search,
 			page,
 			done: matchingProductsIds.length <= process.env.PAGE_LENGTH * page,

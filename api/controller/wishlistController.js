@@ -13,7 +13,7 @@ class WishlistController {
 			return res.sendStatus(500);
 		}
 
-		res.send(items);
+		return res.send(items);
 	}
 
 	async addWishlistItem(req, res) {

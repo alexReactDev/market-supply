@@ -11,7 +11,7 @@ class OutletsController {
 			return res.sendStatus(500);
 		}
 
-		res.send(outlets);
+		return res.send(outlets);
 	}
 }
 

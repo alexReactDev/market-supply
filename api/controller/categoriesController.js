@@ -16,7 +16,7 @@ class CategoriesController {
 			return res.sendStatus(500);
 		}
 
-		if(!category) res.sendStatus(404);
+		if(!category) return res.sendStatus(404);
 
 		let subcategory;
 		
@@ -24,10 +24,10 @@ class CategoriesController {
 			subcategory = (await db.query("SELECT * FROM subcategories where url_name = $1 and category_id = $2;", [reqSubCategory, category.id])).rows[0];	
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
-		if(!subcategory) res.sendStatus(404);
+		if(!subcategory) return res.sendStatus(404);
 
 		let subcategoryItemsIds;
 
@@ -35,7 +35,7 @@ class CategoriesController {
 			subcategoryItemsIds = (await db.query("SELECT product_id FROM items_of_subcategories where subcategory_id = $1;", [subcategory.id])).rows.map((item) => item.product_id);
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
 		let products;
@@ -44,7 +44,7 @@ class CategoriesController {
 			products = (await db.query("SELECT * FROM products;")).rows;
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
 		const subcategoryItems = products.filter((product) => subcategoryItemsIds.includes(product.id));
@@ -87,7 +87,7 @@ class CategoriesController {
 		const totalPages = Math.ceil(sortedSubcategoryItems.length / pageLength);
 		const data = sortedSubcategoryItemsIds.slice(pageLength * page - pageLength, pageLength * page);
 
-		res.send({
+		return res.send({
 			page,
 			sort,
 			totalPages,
@@ -104,10 +104,10 @@ class CategoriesController {
 			cat = (await db.query("SELECT * FROM categories where url_name = $1;", [requestedCategory])).rows[0];	
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
-		if(!cat) res.sendStatus(404);
+		if(!cat) return res.sendStatus(404);
 
 		let catContent;
 
@@ -115,10 +115,10 @@ class CategoriesController {
 			catContent = (await db.query("SELECT * FROM subcategories where category_id = $1;", [cat.id])).rows;
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
-		res.send(catContent);
+		return res.send(catContent);
 	}
 
 	async getCategoriesList(req, res) {
@@ -128,10 +128,10 @@ class CategoriesController {
 			categories = (await db.query("SELECT * FROM categories;")).rows;
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 	
-		res.send(categories);
+		return res.send(categories);
 	}
 }
 

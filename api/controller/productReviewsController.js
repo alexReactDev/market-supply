@@ -23,7 +23,7 @@ class ProductReviewsController {
 			return res.sendStatus(500);
 		}
 
-		res.send(reviews);
+		return res.send(reviews);
 	}
 
 	async addReviewToProduct(req, res) {
@@ -54,7 +54,7 @@ class ProductReviewsController {
 			return res.sendStatus(500);
 		}
 		
-		res.send({
+		return res.send({
 			...review,
 			timestamp: +review.timestamp
 		});

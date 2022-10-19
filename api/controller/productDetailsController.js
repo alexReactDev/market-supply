@@ -23,7 +23,7 @@ class ProductDetailsController {
 			return res.sendStatus(500);
 		}
 
-		res.send(productDetails);
+		return res.send(productDetails);
 	}
 }
 

@@ -12,10 +12,10 @@ class CollectionsController {
 			collection = (await db.query("SELECT * FROM collections where url_name = $1;", [reqCollection])).rows[0];
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
-		if(!collection) res.sendStatus(404);
+		if(!collection) return res.sendStatus(404);
 
 		let collectionItemsIds;
 
@@ -23,7 +23,7 @@ class CollectionsController {
 			collectionItemsIds = (await db.query("SELECT product_id FROM items_of_collections where collection_id = $1;", [collection.id])).rows.map((item) => item.product_id);	
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 		
 		let products;
@@ -32,7 +32,7 @@ class CollectionsController {
 			products = (await db.query("SELECT * FROM products;")).rows;
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
 		const collectionItems = products.filter((product) => collectionItemsIds.includes(product.id));
@@ -64,7 +64,7 @@ class CollectionsController {
 		const totalPages = Math.ceil(sortedCollectionItems.length / pageLength);
 		const data = sortedCollectionItemsIds.slice(pageLength * page - pageLength, pageLength * page);
 
-		res.send({
+		return res.send({
 			page,
 			sort,
 			totalPages,
@@ -79,10 +79,10 @@ class CollectionsController {
 			collections = (await db.query("SELECT * FROM collections;")).rows;
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
-		res.send(collections);
+		return res.send(collections);
 	}
 }
 

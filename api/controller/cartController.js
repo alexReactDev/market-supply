@@ -23,7 +23,7 @@ class CartController {
 			return product.price * item.amount;
 		}))).reduce((total, productTotal) => total + productTotal, 0);
 
-		res.send({
+		return res.send({
 			products,
 			total
 		});

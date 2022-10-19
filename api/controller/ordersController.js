@@ -72,7 +72,7 @@ class OrdersController {
 			return res.sendStatus(500);
 		}
 
-		res.send({
+		return res.send({
 			...createdOrder,
 			products: orderProducts,
 			confirmationLink
@@ -132,7 +132,7 @@ class OrdersController {
 			return res.sendStatus(500);
 		}
 
-		res.sendStatus(200);
+		return res.sendStatus(200);
 	}
 
 	async getUserOrders(req, res) {
@@ -154,7 +154,7 @@ class OrdersController {
 		const data = userOrders.concat().reverse().slice(pageLength * page - pageLength, pageLength * page);
 		const totalPages = Math.ceil(userOrders.length / pageLength);
 
-		res.send({
+		return res.send({
 			page,
 			totalPages,
 			data

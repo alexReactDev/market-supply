@@ -37,7 +37,7 @@ class authorizationController {
 		}
 		catch(e) {
 			console.log(e);
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
 		if(previousUserTokenData && !previousUserTokenData.authorized) {
@@ -58,7 +58,7 @@ class authorizationController {
 			}
 			catch(e) {
 				console.log(e);
-				res.sendStatus(500);
+				return res.sendStatus(500);
 			}
 
 			try {
@@ -74,7 +74,7 @@ class authorizationController {
 			}
 			catch(e) {
 				console.log(e);
-				res.sendStatus(500);
+				return res.sendStatus(500);
 			}
 		}
 
@@ -88,13 +88,13 @@ class authorizationController {
 
 		res.cookie("jwt", userToken);
 
-		res.sendStatus(200);
+		return res.sendStatus(200);
 	}
 
 	async logout(req, res) {
 		res.cookie("jwt", "", {maxAge: 0});
 
-		res.sendStatus(200);
+		return res.sendStatus(200);
 	}
 }
 

@@ -6,7 +6,7 @@ class UserController {
 	async getUserId(req, res) {
 		const userId = req.tokenData.userId;
 
-		res.send(userId);
+		return res.send(userId);
 	}
 
 	async getUser(req, res) {
@@ -25,7 +25,7 @@ class UserController {
 
 		if(!user) return res.sendStatus(404);
 
-		res.send(user);
+		return res.send(user);
 	}
 
 	async createUser(req, res) {
@@ -74,14 +74,14 @@ class UserController {
 
 		res.cookie("jwt", token);
 
-		res.status(201).send(createdUser);
+		return res.status(201).send(createdUser);
 	}
 
 	async changeUserProfile(req, res) {
 		const userId = req.params.userId;
 		const { payload } = req.body;
 
-		if(req.tokenData.userId !== userId) res.sendStatus(403);
+		if(req.tokenData.userId !== userId) return res.sendStatus(403);
 		
 		let user;
 
@@ -105,14 +105,14 @@ class UserController {
 			return res.sendStatus(500);
 		}
 
-		res.send(updatedProfile);
+		return res.send(updatedProfile);
 	}
 
 	async changeUserEmail(req, res) {
 		const userId = req.params.userId;
 		const {password, payload} = req.body;
 
-		if(req.tokenData.userId !== userId) res.sendStatus(403);
+		if(req.tokenData.userId !== userId) return res.sendStatus(403);
 		
 		let user;
 
@@ -121,7 +121,7 @@ class UserController {
 			if(!user) return res.sendStatus(400);
 		}
 		catch(e) {
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
 		try {
@@ -144,7 +144,7 @@ class UserController {
 			return res.sendStatus(500);
 		}
 
-		res.send(updatedEmail);
+		return res.send(updatedEmail);
 	}
 
 	async changeUserPassword(req, res) {
@@ -187,20 +187,20 @@ class UserController {
 
 		res.cookie("jwt", "", {maxAge: 0});
 		
-		res.sendStatus(200);
+		return res.sendStatus(200);
 	}
 
 	async deleteUser(req, res) {
 		const userId = req.params.userId;
 		const {password} = req.body;
 
-		if(req.tokenData.userId !== userId) res.sendStatus(403);
+		if(req.tokenData.userId !== userId) return res.sendStatus(403);
 
 		let user;
 
 		try {
 			user = (await db.query("SELECT * FROM users where id = $1;", [userId])).rows[0];
-			if(!user) res.sendStatus(400);
+			if(!user) return res.sendStatus(400);
 		}
 		catch(e) {
 			console.log(e);
@@ -224,12 +224,12 @@ class UserController {
 		}
 		catch(e) {
 			console.log(e);
-			res.sendStatus(500);
+			return res.sendStatus(500);
 		}
 
 		res.cookie("jwt", "", 0);
 
-		res.sendStatus(200);
+		return res.sendStatus(200);
 	}
 
 	async createTemporaryUser() {
