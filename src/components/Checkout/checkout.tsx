@@ -45,13 +45,13 @@ const Checkout: FC<{}> = () => {
 		if(
 			loggedIn 
 			&& preferences.auto_fill 
-			&& !profileData.loaded 
-			&& !profileData.loading 
-			&& !profileData.error
+			&& !userData.loaded 
+			&& !userData.loading 
+			&& !userData.error
 		) {
 			dispatch(loadUserDataAction());
 		}
-	}, [loggedIn, preferences, profileData]);
+	}, [loggedIn, preferences, userData]);
 
 	useEffect(() => {
 		if(
