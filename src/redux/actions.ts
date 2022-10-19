@@ -641,6 +641,7 @@ export const loginAction = (loginData: loginData) => async (dispatch: AppDispatc
 		return dispatch(loginError(e));
 	}
 
+	dispatch(loadUserPreferencesAction());
 	return dispatch(loginSuccess());
 }
 
@@ -905,7 +906,7 @@ export const loadUserPreferencesAction = () => async (dispatch: AppDispatch, get
 		}
 	}
 
-	dispatch(preferencesLoaded(preferences));
+	return dispatch(preferencesLoaded(preferences));
 }
 
 export const changePreferenceAutoFillAction = (autofill: boolean) => async (dispatch: AppDispatch) => {
