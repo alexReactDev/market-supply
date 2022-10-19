@@ -4,6 +4,7 @@ import { cancelCheckoutConfirmationAction, checkoutAction, confirmCheckoutAction
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { FC, useEffect } from "react";
+import { useAppSelector } from "../../hooks";
 import style from "./checkout.module.scss";
 
 import mapPlaceholder from "../../images/map/map.jpg";
@@ -18,7 +19,6 @@ import paypalIcon from "../../images/icons/paypal.png";
 import bitcoinIcon from "../../images/icons/bitcoin.png";
 import Loader from "../Loader";
 import CurrencyConverter from "../CurrencyConverter";
-import { useAppSelector } from "../../hooks";
 
 const Checkout: FC<{}> = () => {
 

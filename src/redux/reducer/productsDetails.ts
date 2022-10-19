@@ -16,10 +16,6 @@ interface IState {
 
 const initialState: IState = {};
 
-interface IProductsDetailsAction {
-	id: string
-}
-
 interface IProductDetailsErrorAction {
 	id: string,
 	error: any
@@ -33,8 +29,8 @@ const productsDetailsSlice = createSlice({
 	name: "productDetails",
 	initialState,
 	reducers: {
-		productDetailsLoadStart(state, action: PayloadAction<IProductsDetailsAction>) {
-			const { id } = action.payload;
+		productDetailsLoadStart(state, action: PayloadAction<string>) {
+			const id = action.payload;
 
 			state[id] = {
 				id,

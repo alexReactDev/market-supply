@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { productsSelector } from "../../redux/selectors";
 import { IProduct } from "../../redux/reducer/products";

@@ -21,7 +21,6 @@ interface IState {
 	[key: string]: IProductReviews | IProductReviewsLoading | IProductReviewsError
 }
 
-interface IProductReviewsLoadingAction extends Pick<IProductReviewsLoading, "id"> {};
 interface IProductReviewsErrorAction extends Pick<IProductReviewsError, "id" | "error"> {};
 interface IProductReviewsLoadedAction extends Omit<IProductReviews, "loading" | "error"> {};
 
@@ -31,8 +30,8 @@ const productsReviewsSlice = createSlice({
 	name: "productsReviews",
 	initialState,
 	reducers: {
-		productReviewsLoadStart(state, action: PayloadAction<IProductReviewsLoadingAction>) {
-			const { id } = action.payload;
+		productReviewsLoadStart(state, action: PayloadAction<string>) {
+			const id = action.payload;
 
 			state[id] = {
 				id,

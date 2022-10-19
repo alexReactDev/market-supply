@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { categoriesSelector, foldersWithItemsSelector } from "../../redux/selectors";
+import { foldersWithItemsSelector } from "../../redux/selectors";
 
 import style from "./asideNav.module.scss";
 

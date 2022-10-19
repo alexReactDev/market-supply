@@ -31,13 +31,13 @@ const initialProduct: IProduct = {
 	promise: null
 }
 
+export interface IState {
+	[key: string]: IProduct 
+}
+
 interface IProductError {
 	id: string,
 	error: any
-}
-
-export interface IState {
-	[key: string]: IProduct 
 }
 
 interface IProductLoadedAction {

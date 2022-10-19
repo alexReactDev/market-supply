@@ -25,7 +25,6 @@ const Search: FC<IProps> = ({ className='' }) => {
 
 	useEffect(() => {
 		if(search.loaded) formik.setFieldValue("search", "");
-		console.log("test");
 	}, [search.loaded])
 
 	useEffect(() => {

@@ -3,7 +3,6 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import CollectionsAndCategoriesHoc from "../../hocs/collectionsAndCategoriesHoc";
 import Aside from "../Aside";
 import Cart from "../Cart";
-import Categories from "../Categories";
 import Checkout from "../Checkout";
 import DeleteAccount from "../DeleteAccount";
 import EditEmail from "../EditEmail";

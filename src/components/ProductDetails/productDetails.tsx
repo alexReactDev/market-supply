@@ -30,7 +30,7 @@ const ProductDetails: FC<{}> = () => {
 		if(!product) dispatch(loadProductByIdAction(productId));
 		if(!productDetails) dispatch(loadProductDetailsAction(productId));
 		if(!productReviews) dispatch(loadProductReviewsAction(productId));
-	})
+	}, [productId, product, productDetails, productReviews])
 	
 	const [isDescriptionOpen, setDescriptionOpen] = useState(false);
 	const [sliderRef, setSliderRef] = useState<any>(null);

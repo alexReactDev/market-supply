@@ -1,4 +1,4 @@
-import { FormikErrors, useFormik } from "formik";
+import { useFormik } from "formik";
 import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { editEmailAction } from "../../redux/actions";

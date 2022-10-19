@@ -1,13 +1,13 @@
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { collectionsSelector } from "../../redux/selectors";
+import { loadCollectionDataByUrlName } from "../../redux/actions";
 import AsideNav from "../AsideNav";
 import Banner from "../Banner";
 import Newsletter from "../Newsletter";
 import Carousel from "../Carousel";
 import style from "./aside.module.scss";
 import banner from "../../images/banners/1.jpg";
-import { loadCollectionDataByUrlName } from "../../redux/actions";
 interface IProps {
 	className?: string
 }

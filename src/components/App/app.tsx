@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import { useAppDispatch } from "../../hooks";
 import { initialize } from "../../redux/actions";
-import { generalErrorSelector, initialized as initializedSelector, popupSelector } from "../../redux/selectors";
+import { generalErrorSelector, initialized as initializedSelector } from "../../redux/selectors";
 import ErrorPage from "../ErrorPage";
 import Footer from "../Footer";
 import Header from "../Header";
@@ -18,7 +18,6 @@ const App: FC<{}> = () => {
 
 	const initialized = useSelector(initializedSelector);
 	const generalError = useSelector(generalErrorSelector);
-	const popup = useSelector(popupSelector);
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {

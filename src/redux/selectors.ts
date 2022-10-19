@@ -60,14 +60,6 @@ export const cartAmountSelector = (state: AppState) => Array.from(Object.keys(ca
 
 export const whitelistAmountSelector = (state: AppState) => Array.from(Object.keys(whitelistProductsSelector(state))).length;
 
-export const URLPathEndSelector = (state: AppState) => {
-	const url = URLPathSelector(state);
-	const cleanUrl = url.endsWith("/") ? url.slice(0, url.length - 1) : url;
-	const urlEnd = cleanUrl.slice(cleanUrl.lastIndexOf("/") + 1);
-
-	return urlEnd;
-}
-
 export const URLSearchQuerySelector = (state: AppState) => {
 	const path = URLPathSelector(state);
 

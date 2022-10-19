@@ -3,9 +3,9 @@ import { FC } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { loggedInSelector, loginErrorSelector, loginLoadingSelector } from "../../redux/selectors";
 import { useAppDispatch, useAppSelector } from "../../hooks";
+import { loginAction } from "../../redux/actions";
 import style from "./login.module.scss";
 import Loader from "../Loader";
-import { loginAction } from "../../redux/actions";
 
 const Login: FC<{}> = () => {
 

@@ -7,10 +7,6 @@ interface IState {
 	products: string[]
 }
 
-interface IAction {
-	id: string
-}
-
 const initialState: IState = {
 	loading: false,
 	loaded: false,
@@ -22,13 +18,13 @@ const whitelistSlice = createSlice({
 	name: "whitelist",
 	initialState,
 	reducers: {
-		addToWhitelist(state, action: PayloadAction<IAction>) {
-			const { id } = action.payload;
+		addToWhitelist(state, action: PayloadAction<string>) {
+			const id  = action.payload;
 
 			state.products.push(id);
 		},
-		removeFromWhitelist(state, action: PayloadAction<IAction>) {
-			const { id } = action.payload;
+		removeFromWhitelist(state, action: PayloadAction<string>) {
+			const id  = action.payload;
 
 			state.products = state.products.filter((productId) => productId !== id);
 		},
