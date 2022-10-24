@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use("/api", router);
 
 app.get("*", (req, res) => {
-	res.status(404).send();
+	return res.sendFile(path.join(__dirname, "public", "index.html"));
 })
 
 app.listen(4500, () => console.log("Server started on port 4500"));

@@ -10,6 +10,10 @@ node_modules
 
 # production
 /build
+/api/public
+
+#config
+.env
 
 # misc
 .DS_Store
