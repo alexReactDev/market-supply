@@ -6,14 +6,14 @@ async function errorHandler(e) {
 	let logData = "";
 
 	try {
-		logData = await fs.readFile(path.join(process.cwd(), "_log", "error.log"));
+		logData = await fs.readFile(path.join(process.cwd(), "log", "error.log"));
 	}
 	catch(e) {
 		process.exit();
 	}
 
 	try {
-		await fs.writeFile(path.join(process.cwd(), "_log", "error.log"), newLogData + logData);
+		await fs.writeFile(path.join(process.cwd(), "log", "error.log"), newLogData + logData);
 	}
 	catch(e) {
 		process.exit();
