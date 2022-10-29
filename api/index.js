@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const cookie = require("cookie-parser");
 const maintenance = require("./maintenance/maintenance.js");
 const errorHandler = require("./maintenance/errorHandler.js");
+const loggerMiddleware = require("./middleware/loggerMiddleware.js");
 
 dotenv.config({
 	path: path.join(__dirname, '.env')
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(cors());
 app.use(cookie());
 app.use(express.static(path.join(__dirname, "/public")));
+app.use(loggerMiddleware);
 
 app.use("/api", router);
 

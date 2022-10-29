@@ -30,6 +30,15 @@ function maintenance() {
 			throw new Error(`Failed to clear error log!\n${e}`);
 		}
 	}, +process.env.LOGFILE_CLEAN_TIME);
+
+	setInterval(() => {
+		try {
+			fs.truncate(path.join(process.cwd(), "_log", "connections.log"), +process.env.MAX_LOGFILE_SIZE);
+		}
+		catch(e) {
+			throw new Error(`Failed to clear connections log!\n${e}`);
+		}
+	}, +process.env.LOGFILE_CLEAN_TIME);
 }
 
 module.exports = maintenance;
