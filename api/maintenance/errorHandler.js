@@ -9,19 +9,41 @@ async function errorHandler(e) {
 		logData = await fs.readFile(path.join(process.cwd(), "log", "error.log"));
 	}
 	catch(e) {
-		process.exit();
+		console.log("No error log file found");
+		console.log(e);
 	}
 
-	try {
-		await fs.writeFile(path.join(process.cwd(), "log", "error.log"), newLogData + logData);
-	}
-	catch(e) {
-		process.exit();
-	}
-	
-	console.log(newLogData);
+	let writeAttempts = 0;
+
+	writeLog();
 
 	process.exit();
+
+	async function writeLog() {
+		try {
+			await fs.writeFile(path.join(process.cwd(), "log", "error.log"), newLogData + logData);
+		}
+		catch(e) {
+			if(e.code !== "ENOENT" || writeAttempts > 0) {
+				console.log(e);
+				process.exit();
+			}
+
+			createLogFolder();
+			writeLog();
+		}
+	}
+
+	async function createLogFolder() {
+		try {
+			await fs.mkdir(path.join(process.cwd(), "log"));
+		}
+		catch(e) {
+			console.log("Failed to create log folder");
+			console.log(e);
+			process.exit();
+		}
+	}
 }
 
 module.exports = errorHandler;
