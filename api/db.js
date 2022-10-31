@@ -1,7 +1,8 @@
 const Pool = require("pg").Pool;
 const dotenv = require("dotenv");
+const path = require("path");
 
-dotenv.config({path: __dirname + "\\.env"});
+dotenv.config({path: path.join(__dirname, ".env")});
 
 const db = new Pool({
 	user: "postgres",
