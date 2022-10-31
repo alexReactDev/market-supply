@@ -16,11 +16,14 @@ const authMiddleware = (allowUnauthorized) => async (req, res, next) => {
 		if(e) invalidToken = true;
 	}
 
-	try {
-		userExist = (await db.query("SELECT id FROM persons where id = $1;", [tokenData.personId])).rows[0];
-	}
-	catch(e) {
-		console.log(e);
+	if(!invalidToken) {
+		try {
+			userExist = (await db.query("SELECT id FROM persons where id = $1;", [tokenData.personId])).rows[0];
+		}
+		catch(e) {
+			console.log(e);
+			throw e;
+		}
 	}
 
 	if(!token || invalidToken || !userExist) {
