@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { ICategory } from "../../redux/reducer/categories";
@@ -74,40 +74,49 @@ const Categories: FC<IProps> = ({ cat, loadCategory, loadCategoryProducts}) => {
 						High price
 					</li>
 				</ul>
-				<select className={style.category__selectSortOptions}>
+				<select 
+					className={style.category__selectSortOptions}
+					onChange={(e: React.ChangeEvent<HTMLSelectElement>) => changeSort(e.target.value)}
+				>
 					<option 
-						className={style.category__selectSortOption} selected={sort === "default"}
-						onClick={() => changeSort("default")}
+						className={style.category__selectSortOption} 
+						selected={sort === "default"}
+						value="default"
 					>
 						Default
 					</option>
 					<option 
-						className={style.category__selectSortOption} selected={sort === "alphabet"}
-						onClick={() => changeSort("alphabet")}
+						className={style.category__selectSortOption} 
+						selected={sort === "alphabet"}
+						value="alphabet"
 					>
 						Alphabet
 					</option>
 					<option 
-						className={style.category__selectSortOption} selected={sort === "low-rate"}
-						onClick={() => changeSort("low-rate")}
+						className={style.category__selectSortOption} 
+						selected={sort === "low-rate"}
+						value="low-rate"
 					>
 						Low rate
 					</option>
 					<option 
-						className={style.category__selectSortOption} selected={sort === "high-rate"}
-						onClick={() => changeSort("high-rate")}
+						className={style.category__selectSortOption} 
+						selected={sort === "high-rate"}
+						value="high-rate"
 					>
 						High rate
 					</option>
 					<option 
-						className={style.category__selectSortOption} selected={sort === "low-price"}
-						onClick={() => changeSort("low-price")}
+						className={style.category__selectSortOption} 
+						selected={sort === "low-price"}
+						value="low-price"
 						>
 						Low price
 					</option>
 					<option 
-						className={style.category__selectSortOption} selected={sort === "high-price"}
-						onClick={() => changeSort("high-price")}
+						className={style.category__selectSortOption} 
+						selected={sort === "high-price"}
+						value="high-price"
 						>
 						High price
 					</option>
