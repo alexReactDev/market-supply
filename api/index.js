@@ -8,6 +8,8 @@ const maintenance = require("./maintenance/maintenance.js");
 const errorHandler = require("./maintenance/errorHandler.js");
 const loggerMiddleware = require("./middleware/loggerMiddleware.js");
 
+process.on("uncaughtException", errorHandler);
+
 dotenv.config({
 	path: path.join(__dirname, '.env')
 });
@@ -29,5 +31,3 @@ app.get("*", (req, res) => {
 app.listen(4500, () => console.log("Server started on port 4500"));
 
 maintenance();
-
-process.on("uncaughtException", errorHandler);
